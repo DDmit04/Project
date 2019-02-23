@@ -13,7 +13,4 @@
 	<#include "parts/posts/showPost.ftl">
 </#if>
 
-
-
-
 </@shell.htmlPage>

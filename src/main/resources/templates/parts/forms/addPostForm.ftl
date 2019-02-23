@@ -25,6 +25,7 @@ aria-expanded="false" aria-controls="collapseExample">
 					add	
 			</#if>
 		</button>
+		<input type="hidden" name="_csrf" value="${_csrf.token}" />
 	</form>	
 	<script type="application/javascript">
 			$('.custom-file-input').on('change', function() { 
