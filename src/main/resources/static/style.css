@@ -1,0 +1,23 @@
+.sidebar-fixed {
+    height: 100vh;
+    width: 270px;
+    z-index: 1050;
+    background-color: white;
+}
+.sidebar-fixed .list-group {
+    border-radius: 5px;
+    padding: 2.5rem;
+}
+body {
+    padding-top: 70px;
+    background: #DCDCDC;
+}
+html body {
+    background-color: #E6E6FA	;
+}
+.btn-primary-outline {
+  padding:20px 40px;
+  background: #fff;
+  border:0;
+  position:relative;
+}
