@@ -1,12 +1,12 @@
 <nav class="navbar navbar-expand-lg navbar-primary navbar-default bg-light scrolling-navbar fixed-top shadow">
   <div class="container-fluid">
-	 <a class="navbar-brand" href="/posts">
+	 <a class="navbar-brand" href="/">
 		 <img src="http://localhost:8080/static/images/title1.png" width="30" height="30" class="d-inline-block align-top">
 	 </a>
 	 <div class="collapse navbar-collapse" id="navbarContent">
 	    <ul class="navbar-nav mr-auto">
 	    	<li class="nav-item">
-	    		<a class="nav-link waves-effect" href="greetings">greeting</a>
+	    		<a class="nav-link waves-effect" href="/">greeting</a>
 	    	</li>
 	    	<li class="nav-item">
 	    		<a class="nav-link waves-effect" href="/posts">Posts</a>

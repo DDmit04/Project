@@ -20,9 +20,16 @@ public class MainController {
 	@Autowired
 	private PostService postService;
 	
-	@GetMapping("greetings")
-	public String greetingPage() {
-		return "greeting";
+	@GetMapping("/login")
+	public String greetingPage(Model model) {
+		return "login";
+	}
+	
+	@PostMapping()
+	
+	@GetMapping("/registration")
+	public String userRegistration() {
+		return "registrationForm";
 	}
 	
 	@GetMapping("/posts")
