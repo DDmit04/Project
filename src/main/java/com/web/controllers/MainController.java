@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
@@ -16,21 +17,23 @@ import org.springframework.web.multipart.MultipartFile;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.UserRoles;
+import com.web.exceptions.UserException;
 import com.web.repository.UserRepo;
 import com.web.service.PostService;
+import com.web.service.UserService;
 
 @Controller
 public class MainController {
 	
 	@Autowired
-	private UserRepo userRepo;
+	private UserService userService;
 	
 	@Autowired
 	private PostService postService;
 	
 	@GetMapping("/")
 	public String greetingPage(Model model) {
-		return "login";
+		return "redirect:/posts";
 	}
 	
 	@GetMapping("/registration")
@@ -39,18 +42,15 @@ public class MainController {
 	}
 	
 	@PostMapping("/registration")
-	public String addNewUser(@RequestParam String username, 
-			   				 @RequestParam String password,
-			   				 User user,
-			   				 Model model) {
-		User userFromDb = userRepo.findByUsername(user.getUsername());
-		if(userFromDb != null) {
-			model.addAttribute("userError" , true);
+	public String addNewUser(@RequestParam("userPic") MultipartFile userPic,
+							 User user,
+			   				 Model model) throws IllegalStateException, IOException {
+		try {
+			userService.addUser(user, userPic);
+		} catch (UserException e) {
+			model.addAttribute("usernameError", e.getMessage());
+			model.addAttribute("registrationName" ,e.getUser().getUsername());
 			return "registrationForm";
-		} else {
-			user.setActive(true);
-			user.setRoles(Collections.singleton(UserRoles.USER));
-			userRepo.save(user);
 		}
 		return "redirect:/posts";
 	}
@@ -65,13 +65,14 @@ public class MainController {
 	}
 	
 	@PostMapping("/posts")
-	public String addPost(@RequestParam String text, 
+	public String addPost(@AuthenticationPrincipal User user,
+						  @RequestParam String text, 
 						  @RequestParam String tags,
 						  @RequestParam(required = false) String search,
 						  @RequestParam("file") MultipartFile file,
 						  Post post,
 						  Model model) throws IllegalStateException, IOException {
-		postService.updatePost(post, text, tags, file);
+		postService.addPost(post, text, tags, file, user);
 		model.addAttribute("search", search);
 		return "redirect:/posts";
 	}

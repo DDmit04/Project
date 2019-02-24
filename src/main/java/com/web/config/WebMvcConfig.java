@@ -9,8 +9,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 	
-    @Value("${upload.path}")
-    private String uploadPath;
+    @Value("${upload.path.posts}")
+    private String uploadPathPosts;
+    
+    @Value("${upload.path.userPics}")
+    private String uploadPathUserPics;
     
 //    @Bean
 //    public RestTemplate getRestTemplate() {
@@ -24,7 +27,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/img/**")
-                .addResourceLocations("file:/" + uploadPath + "/");
+                .addResourceLocations("file:/" + uploadPathPosts + "/");
+        
+        registry.addResourceHandler("/imgUserPic/**")
+        		.addResourceLocations("file:/" + uploadPathUserPics + "/");
         
         registry.addResourceHandler("/static/**")
         		.addResourceLocations("classpath:/static/");

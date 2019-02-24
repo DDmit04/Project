@@ -13,21 +13,34 @@ import com.web.data.Post;
 @Service
 public class FileService {
 	
-	@Value("${upload.path}")
+	@Value("${upload.path.posts}")
+	private String uploadPathPosts;
+	
+	@Value("${upload.path.userPics}")
+	private String uploadPathUserPics;
+	
 	private String uploadPath;
 	
-	public void uploadFile(MultipartFile file, Post post) throws IllegalStateException, IOException {
+	public String uploadFile(MultipartFile file, UploadType type) throws IllegalStateException, IOException {
+		String resultFilename = null;
+		if(type == UploadType.POST) {
+			System.out.println("upload post");
+			uploadPath = uploadPathPosts;
+		}
+		if(type == UploadType.USERPIC) {
+			System.out.println("upload userpic");
+			uploadPath = uploadPathUserPics;
+		}
 		if (file != null && !file.getOriginalFilename().isEmpty()) {
-			System.out.println("file");
 			File uploadDir = new File(uploadPath);
 			if (!uploadDir.exists()) {
 				uploadDir.mkdir();
 			}
 			String uuidFile = UUID.randomUUID().toString();
-			String resultFilename = uuidFile + "." + file.getOriginalFilename();
+			resultFilename = uuidFile + "." + file.getOriginalFilename();
 			file.transferTo(new File(uploadPath + "/" + resultFilename));
-			post.setFilename(resultFilename);
 		}
+		return resultFilename;
 	}
 
 }

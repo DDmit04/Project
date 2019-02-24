@@ -17,8 +17,11 @@
 			<!--     <script src='https://www.google.com/recaptcha/api.js'></script> -->
 		</head>
 		<body>
+			<#include "security.ftl">
 			<#include "bars/navbar.ftl">
-			<#include "bars/sidebar.ftl">
+			<#if username??>
+				<#include "bars/sidebar.ftl">
+			</#if>
 			<div class="container-fluid mt-5">
 				<div class="row">
 				<div class="col-3"></div>

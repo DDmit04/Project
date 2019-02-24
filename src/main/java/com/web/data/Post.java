@@ -34,7 +34,9 @@ public class Post {
 		this.tags = tags;
 		this.creationDate = creationDate;
 	}
-	
+	public String getAuthorName() {
+    	return postAuthor.getUsername();
+    }
 	public User getPostAthor() {
 		return postAuthor;
 	}
