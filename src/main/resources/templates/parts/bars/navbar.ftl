@@ -1,5 +1,3 @@
-<#include "/parts/security.ftl">
-
 <nav class="navbar navbar-expand-lg navbar-primary navbar-default bg-light scrolling-navbar fixed-top shadow">
   <div class="container-fluid">
 		 <a class="navbar-brand" href="/">

@@ -9,22 +9,23 @@
 			</div>
 			<form method="post" enctype="multipart/form-data" onsubmit="return validateRegistration();">
 				<div class="form-group">
-				    <label for="exampleInputEmail1">Username:</label>
-					<input class="form-control mb-2 ${(usernameError??)?string('is-invalid', '')}" type="text" name="username" id="username" placeholder="enter username" 
-						onfocus="disposeAlertUsername();" value="${registrationName?ifExists}">
-					<#if usernameError??>
-						<div class="invalid-feedback">${usernameError}</div>
-					</#if>
+				    <label>Username:</label>
+					<input class="form-control mb-2 ${(usernameError??)?string('is-invalid', '')}" type="text" 
+						name="username" id="username" placeholder="enter username" 
+						value="${registrationName?ifExists}" onfocus="disposeAlertUsername();">
+					<div id="usernameError" class="invalid-feedback"><#if usernameError??>${usernameError}</#if></div>
 				</div>
 				<div class="form-group">
-				    <label for="exampleInputEmail1">Passowd:</label>
-					<input class="form-control mb-2" type="password" name="password" id="password" placeholder="enter password" 
+				    <label>Passowd:</label>
+					<input name="password" id="password" class="form-control mb-2" type="password" placeholder="enter password" 
 						onfocus="disposeAlertPassword();">
+					<div id="passwordError" class="invalid-feedback"></div>
 				</div>
-				<div class="input-group mt-3">
+				<div class="form-group my-3">
+					<label>Profile picture (optional)</label>
 	  				<div class="custom-file">
-	    				<input type="file" name="userPic" class="custom-file-input" id="inputGroupFile03" aria-describedby="inputGroupFileAddon03" >
-	    				<label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+	    				<input type="file" name="userPic" class="custom-file-input">
+	    				<label class="custom-file-label">Choose file</label>
 	  				</div>
 				</div>
 				<button class="btn btn-primary" type="submit">create user</button>
@@ -34,5 +35,11 @@
 	</div>
 	<div class="col-2"></div>
 </div>
+<script type="application/javascript">
+			$('.custom-file-input').on('change', function() { 
+				   let fileName = $(this).val().split('\\').pop(); 
+				   $(this).next('.custom-file-label').addClass("selected").html(fileName); 
+				});
+</script>
 <script src="/customJs/formValidate.js"></script>
 </@shell.htmlPage> 

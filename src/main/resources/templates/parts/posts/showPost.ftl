@@ -1,12 +1,10 @@
-<#include "/parts/security.ftl">
-
 <div class="card mt-3 border-dark shadow">
 	<div class="card-header border-dark media">
-	<#if post.postAthor.userPicName??>
-		<img class="mr-2 rounded-circle border border-dark" src="/imgUserPic/${post.postAthor.userPicName}" width="75" height="75" class="mr-3">
-	<#else>
-		<img class="mr-2 rounded-circle border border-dark" src="http://localhost:8080/static/images/title.png" width="75" height="75" class="mr-3">
-	</#if>
+		<#if post.postAthor.userPicName??>
+			<img class="mr-2 rounded-circle border border-dark" src="/imgUserPic/${post.postAthor.userPicName}" width="55" height="55" class="mr-3">
+		<#else>
+			<img class="mr-2 rounded-circle border border-dark" src="http://localhost:8080/static/images/title.png" width="55" height="55" class="mr-3">
+		</#if>
 		<div class="media-body mt-0">
 			<div class="mb-2 ml-2">
 				<a href="${post.postAthor.username}/prifile" class="h5">${post.postAthor.username}</a>

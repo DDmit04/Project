@@ -1,6 +1,5 @@
 <#import "parts/HTMLshell.ftl" as shell> <@shell.htmlPage> 
 
-
 <#include "parts/forms/addPostForm.ftl">
 
 <#if !isEdit>

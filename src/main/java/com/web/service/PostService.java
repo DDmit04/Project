@@ -33,7 +33,7 @@ public class PostService {
 	public void updatePost(Post post, String text, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		post.setPostText(text);
 		post.setTags(tags);
-		post.setCreationDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		post.setCreationDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " (edited)");
 		post.setFilename(fileService.uploadFile(file, UploadType.POST));
 		postRepo.save(post);
 	}
