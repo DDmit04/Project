@@ -41,12 +41,21 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy = "postAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Post> userPosts;
 	
+	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<Comment> userComments;
+	
 	public User() {
 	}
 	public User (String username, String password, String registrationDate) {
 		this.username = username;
 		this.password = password;
 		this.registrationDate = registrationDate;
+	}
+	public Set<Comment> getUserComments() {
+		return userComments;
+	}
+	public void setUserComments(Set<Comment> userComments) {
+		this.userComments = userComments;
 	}
 	public Set<Post> getUserPosts() {
 		return userPosts;

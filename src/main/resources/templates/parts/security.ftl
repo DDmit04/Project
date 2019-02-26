@@ -6,8 +6,9 @@
 
 <#if known>
 	<#assign 
-		user = Session.SPRING_SECURITY_CONTEXT.authentication.principal
-		username = user.getUsername()
+		currentUser = Session.SPRING_SECURITY_CONTEXT.authentication.principal
+		currentUsername = currentUser.getUsername()
+		currentUserId = currentUser.getId()
 	>
 </#if>
 

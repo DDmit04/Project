@@ -12,7 +12,7 @@
 		    		<a class="nav-link waves-effect" href="/posts">Posts</a>
 		    	</li>
 		    	<li class="nav-item">
-		    		<#if username??>
+		    		<#if currentUser??>
 			    		<form class="form-inline my-2 my-lg-0">
 			 				<input class="form-control mr-sm-2" type="text" name="search" placeholder="Search" value="${search?ifExists}">
 			 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -21,8 +21,8 @@
 		    	</li>
 		    </ul>
 		 </div>
-		 <#if username??>
-		 	<div class="mr-3">${username}</div>
+		 <#if currentUser??>
+		 	<div class="mr-3">${currentUsername}</div>
 		 	<#include "/parts/forms/logout.ftl">
 		 <#else>
 		 	<div class="mr-3">Gest</div>

@@ -1,10 +1,10 @@
-<div class="card mt-3 border-dark shadow">
+<div class="card mt-3 shadow border-secondary">
 	<div class="card-header border-secondary media">
-		<a href="${post.postAthor.username}/profile">
+		<a href="/${post.postAthor.username}/profile">
 			<#if post.postAthor.userPicName??>
-				<img class="mr-2 rounded-circle border border-dark" src="/imgUserPic/${post.postAthor.userPicName}" width="55" height="55" class="mr-3">
+				<img class="mr-2 rounded-circle border border-secondary" src="/imgUserPic/${post.postAthor.userPicName}" width="55" height="55" class="mr-3">
 			<#else>
-				<img class="mr-2 rounded-circle border border-dark" src="http://localhost:8080/static/images/title.png" width="55" height="55" class="mr-3">
+				<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="55" height="55" class="mr-3">
 			</#if>
 		</a>
 		<div class="media-body mt-0">
@@ -13,7 +13,7 @@
 			</div>
 			<small class="ml-2">${post.creationDate}</small>
 		</div>
-		<#if username == post.postAthor.username>
+		<#if currentUsername == post.postAthor.username>
 			<div class="col dropdown" align="right">
 				<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 					<i class="fas fa-ellipsis-v"></i>
@@ -27,7 +27,7 @@
 			</div>
 		</#if>
 	</div>
-	<div class="card-body">
+	<div class="card-body border-secondary">
 		<#if post.tags != "">
 			<strong class="row ml-1 mb-1"><a href="/posts?search=${post.tags}">#${post.tags}</a></strong>
 		</#if>
@@ -37,5 +37,11 @@
 	       		<img src="/img/${post.filename}" width="89" class="card-img-top">
 	    	</#if>
     	</div>
+	</div>
+	<div class="card-footer bg-transparent border-secondary">
+		<a href="/${post.id}/comments">
+			<i class="far fa-comment"></i>*comment count*
+		</a>
+	</div>
 	</div>
 </div>

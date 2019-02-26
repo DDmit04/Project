@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.data.Comment;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.exceptions.UserException;
+import com.web.repository.CommentRepo;
 import com.web.service.PostService;
 import com.web.service.UserService;
 
@@ -25,7 +27,49 @@ public class MainController {
 	private UserService userService;
 	
 	@Autowired
+	private CommentRepo commentRepo;
+	
+	@Autowired
 	private PostService postService;
+	
+	@GetMapping("{post}/comments")
+	public String getComments(@PathVariable Post post,
+							  Model model) {
+		Iterable<Comment> searchByCommentedPost = commentRepo.findByCommentedPost(post);
+		model.addAttribute("comments", searchByCommentedPost);
+		model.addAttribute("post", post);
+		return "commentList";
+	}
+	
+	@PostMapping("{post}/comments")
+	public String addComment(@PathVariable Post post,
+							 @RequestParam String commentText,
+							 Comment comment,
+			  				 Model model) {
+		model.addAttribute("post", post);
+		return "redirect:/commentList";
+	}
+	
+	@GetMapping("{post}/comments/{comment}/delete")
+	public String deleteComment(@PathVariable Post post,
+								@PathVariable Comment comment,
+								Model model) {
+		return null;
+	}
+	
+	@GetMapping("{post}/comments/{comment}/edit")
+	public String getEditComment(@PathVariable Post post,
+							     @PathVariable Comment comment,
+							     Model model) {
+		return null;
+	}
+	
+	@PostMapping("{post}/comments/{comment}/edit")
+	public String editComment(@PathVariable Post post,
+							  @PathVariable Comment comment,
+							  Model model) {
+		return null;
+	}
 	
 	@GetMapping("{user}/profile")
 	public String getUserPrifile(
@@ -38,10 +82,18 @@ public class MainController {
 	}
 	
 	@PostMapping("{user}/profile")
-	public String userProfile(@PathVariable User user,
-			 				  Model model) {
+	public String userProfile(@AuthenticationPrincipal User currentUser,
+							  @RequestParam String postText, 
+							  @RequestParam String tags,
+							  @RequestParam("file") MultipartFile file,
+							  @PathVariable User user,
+							  Post post,
+			 				  Model model) throws IllegalStateException, IOException {
+		Iterable<Post> searchByPostAuthor = postService.findPostsByUser(user);
+		postService.addPost(post, postText, tags, file, currentUser);
 		model.addAttribute("user", user);
-		return "userProfile";
+		model.addAttribute("posts", searchByPostAuthor);		
+		return "redirect:/" + user.getId() + "/profile";
 	}
 	
 	@GetMapping("/")
@@ -78,14 +130,14 @@ public class MainController {
 	}
 	
 	@PostMapping("/posts")
-	public String addPost(@AuthenticationPrincipal User user,
-						  @RequestParam String text, 
+	public String addPost(@AuthenticationPrincipal User currentUser,
+						  @RequestParam String postText, 
 						  @RequestParam String tags,
 						  @RequestParam(required = false) String search,
 						  @RequestParam("file") MultipartFile file,
 						  Post post,
 						  Model model) throws IllegalStateException, IOException {
-		postService.addPost(post, text, tags, file, user);
+		postService.addPost(post, postText, tags, file, currentUser);
 		model.addAttribute("search", search);
 		return "redirect:/posts";
 	}
@@ -98,11 +150,11 @@ public class MainController {
 	
 	@PostMapping("{post}/edit")
 	public String editPost(@PathVariable Post post, 
-					       @RequestParam String text,
+					       @RequestParam String postText,
 						   @RequestParam String tags, 
 						   @RequestParam("file") MultipartFile file,
 						   Model model) throws IllegalStateException, IOException {
-		postService.updatePost(post, text, tags, file);
+		postService.updatePost(post, postText, tags, file);
 		return "redirect:/posts";
 	}
 	

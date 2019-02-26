@@ -19,7 +19,7 @@
 		<body>
 			<#include "security.ftl">
 			<#include "bars/navbar.ftl">
-			<#if username??>
+			<#if currentUser??>
 				<#include "bars/sidebar.ftl">
 			</#if>
 			<div class="container-fluid mt-4">

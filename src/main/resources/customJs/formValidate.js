@@ -23,6 +23,19 @@ function validateRegistration() {
 	return true;
 }
 
+function validatePost() {
+	var tags = document.getElementById("tags");
+	var postText = document.getElementById("postText");
+	var file = document.getElementById("postFile");
+	if(!tags.value  && !postText.value && !file.value) {
+		postText.classList.add('is-invalid');
+		var postTextError = document.getElementById("postTextError");
+		postTextError.innerHTML = 'post can not be empty!';
+		return false;
+	}
+	return true;
+}
+
 function validateLogin() {
 	if (window.location.href.substring(window.location.href.length - 5, window.location.href.length) == 'error') {
 		var password = document.getElementById("password");

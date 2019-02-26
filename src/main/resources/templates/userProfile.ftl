@@ -18,13 +18,13 @@
 	<div class="col-8 ml-4">
 		<div class="card border-secondary shadow mb-3">
 			<div class="card-header">
-				Username
+				${user.username}
 			</div>
 			<div class="card-body">
 				User Information
 			</div>
 		</div>
-		<#if currentUser == username>
+		<#if currentUsername == user.username>
 			<#include "parts/forms/addPostForm.ftl">
 		</#if>
 		<#if !isEdit>
