@@ -1,13 +1,11 @@
 package com.web.controllers;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.Post;
 import com.web.data.User;
-import com.web.data.UserRoles;
 import com.web.exceptions.UserException;
-import com.web.repository.UserRepo;
 import com.web.service.PostService;
 import com.web.service.UserService;
 
@@ -30,6 +26,23 @@ public class MainController {
 	
 	@Autowired
 	private PostService postService;
+	
+	@GetMapping("{user}/profile")
+	public String getUserPrifile(
+								 @PathVariable User user,
+								 Model model) {
+		Iterable<Post> searchByPostAuthor = postService.findPostsByUser(user);
+		model.addAttribute("user", user);
+		model.addAttribute("posts", searchByPostAuthor);		
+		return "userProfile";
+	}
+	
+	@PostMapping("{user}/profile")
+	public String userProfile(@PathVariable User user,
+			 				  Model model) {
+		model.addAttribute("user", user);
+		return "userProfile";
+	}
 	
 	@GetMapping("/")
 	public String greetingPage(Model model) {
@@ -49,7 +62,7 @@ public class MainController {
 			userService.addUser(user, userPic);
 		} catch (UserException e) {
 			model.addAttribute("usernameError", e.getMessage());
-			model.addAttribute("registrationName" ,e.getUser().getUsername());
+			model.addAttribute("registrationName", e.getUser().getUsername());
 			return "registrationForm";
 		}
 		return "redirect:/posts";

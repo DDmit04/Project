@@ -22,13 +22,12 @@
 			<#if username??>
 				<#include "bars/sidebar.ftl">
 			</#if>
-			<div class="container-fluid mt-5">
+			<div class="container-fluid mt-4">
 				<div class="row">
-				<div class="col-3"></div>
-					<div class="col-6 mb-5">
+					<div class="col-md-3"></div>
+					<div class="col-md-9 mb-3">
 						<#nested>
 					</div>
-					<div class="col-3"></div>
 				</div>
 			</div>	
 		</body>

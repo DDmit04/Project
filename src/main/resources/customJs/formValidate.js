@@ -1,7 +1,13 @@
 function validateRegistration() {
 	var username = document.getElementById("username");
 	var password = document.getElementById("password");
-	if (!username.value || !password.value) {
+	var retypePassword = document.getElementById("retypePassword");
+	if (!username.value || !password.value || password.value != retypePassword.value) {
+		if(password != retypePassword) {
+			retypePassword.classList.add('is-invalid');
+			var retypePasswordError = document.getElementById("retypePasswordError");
+			retypePasswordError.innerHTML = 'passwords are different!';
+		}
 		if (!username.value) {
 			username.classList.add('is-invalid');
 			var usernameError = document.getElementById("usernameError");
@@ -17,43 +23,23 @@ function validateRegistration() {
 	return true;
 }
 
-function disposeAlertUsername() {
-	var username = document.getElementById("username");
-	var usernameError = document.getElementById("usernameError");
-	usernameError.innerHTML = '';
-	username.style.border = "1px solid grey";
-	event.preventDefault();
-}
-
-function disposeAlertPassword() {
-	var password = document.getElementById("password");
-	var passwordError = document.getElementById("passwordError");
-	passwordError.innerHTML = '';
-	password.style.border = "1px solid grey";
-	event.preventDefault();
-}
-
 function validateLogin() {
 	if (window.location.href.substring(window.location.href.length - 5, window.location.href.length) == 'error') {
 		var password = document.getElementById("password");
 		password.classList.add('is-invalid');
 		var username = document.getElementById("username");
 		username.classList.add('is-invalid');
-		var accesError = document.getElementById("accesError");
+		var accesError = document.getElementById("usernameError");
 		accesError.innerHTML = 'wrong username or password!';
 		return false;
 	}
 	return true;
 }
 
-function validateLogin() {
-	if (window.location.href.substring(window.location.href.length - 5,
-			window.location.href.length) == 'error') {
-		var password = document.getElementById("password");
-		password.classList.add('is-invalid');
-		var username = document.getElementById("username");
-		username.classList.add('is-invalid');
-		var usernameError = document.getElementById("usernameError");
-		usernameError.innerHTML = 'wrong username or password!';
-	}
+function disposeAlert(elementName) {
+	var element = document.getElementById(elementName);
+	var elementError = element.nextSibling;
+	elementError.innerHTML = '';
+	element.classList.remove('is-invalid');
+	event.preventDefault();
 }

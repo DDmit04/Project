@@ -24,11 +24,9 @@ public class FileService {
 	public String uploadFile(MultipartFile file, UploadType type) throws IllegalStateException, IOException {
 		String resultFilename = null;
 		if(type == UploadType.POST) {
-			System.out.println("upload post");
 			uploadPath = uploadPathPosts;
 		}
 		if(type == UploadType.USERPIC) {
-			System.out.println("upload userpic");
 			uploadPath = uploadPathUserPics;
 		}
 		if (file != null && !file.getOriginalFilename().isEmpty()) {

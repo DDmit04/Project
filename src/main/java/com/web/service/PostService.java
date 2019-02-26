@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.repository.PostRepo;
+import com.web.repository.UserRepo;
 
 @Service
 public class PostService {
@@ -52,4 +53,7 @@ public class PostService {
 		return searchResult;
 	}
 
+	public Iterable<Post> findPostsByUser(User user) {
+		return postRepo.findByPostAuthor(user);
+	}
 }

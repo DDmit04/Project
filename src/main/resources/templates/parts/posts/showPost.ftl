@@ -1,13 +1,15 @@
 <div class="card mt-3 border-dark shadow">
-	<div class="card-header border-dark media">
-		<#if post.postAthor.userPicName??>
-			<img class="mr-2 rounded-circle border border-dark" src="/imgUserPic/${post.postAthor.userPicName}" width="55" height="55" class="mr-3">
-		<#else>
-			<img class="mr-2 rounded-circle border border-dark" src="http://localhost:8080/static/images/title.png" width="55" height="55" class="mr-3">
-		</#if>
+	<div class="card-header border-secondary media">
+		<a href="${post.postAthor.username}/profile">
+			<#if post.postAthor.userPicName??>
+				<img class="mr-2 rounded-circle border border-dark" src="/imgUserPic/${post.postAthor.userPicName}" width="55" height="55" class="mr-3">
+			<#else>
+				<img class="mr-2 rounded-circle border border-dark" src="http://localhost:8080/static/images/title.png" width="55" height="55" class="mr-3">
+			</#if>
+		</a>
 		<div class="media-body mt-0">
 			<div class="mb-2 ml-2">
-				<a href="${post.postAthor.username}/prifile" class="h5">${post.postAthor.username}</a>
+				<a href="${post.postAthor.username}/profile" class="h5">${post.postAthor.username}</a>
 			</div>
 			<small class="ml-2">${post.creationDate}</small>
 		</div>
