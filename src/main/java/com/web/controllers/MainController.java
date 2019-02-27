@@ -1,6 +1,8 @@
 package com.web.controllers;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +19,7 @@ import com.web.data.Post;
 import com.web.data.User;
 import com.web.exceptions.UserException;
 import com.web.repository.CommentRepo;
+import com.web.service.CommentService;
 import com.web.service.PostService;
 import com.web.service.UserService;
 
@@ -27,7 +30,7 @@ public class MainController {
 	private UserService userService;
 	
 	@Autowired
-	private CommentRepo commentRepo;
+	private CommentService commentService;
 	
 	@Autowired
 	private PostService postService;
@@ -35,19 +38,21 @@ public class MainController {
 	@GetMapping("{post}/comments")
 	public String getComments(@PathVariable Post post,
 							  Model model) {
-		Iterable<Comment> searchByCommentedPost = commentRepo.findByCommentedPost(post);
+		Iterable<Comment> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
 		model.addAttribute("comments", searchByCommentedPost);
 		model.addAttribute("post", post);
 		return "commentList";
 	}
 	
 	@PostMapping("{post}/comments")
-	public String addComment(@PathVariable Post post,
+	public String addComment(@AuthenticationPrincipal User currentUser,
+							 @PathVariable Post post,
 							 @RequestParam String commentText,
 							 Comment comment,
 			  				 Model model) {
+		commentService.addComment(post, commentText, currentUser);
 		model.addAttribute("post", post);
-		return "redirect:/commentList";
+		return "redirect:/" + post.getId() + "/comments";
 	}
 	
 	@GetMapping("{post}/comments/{comment}/delete")
@@ -87,10 +92,9 @@ public class MainController {
 							  @RequestParam String tags,
 							  @RequestParam("file") MultipartFile file,
 							  @PathVariable User user,
-							  Post post,
 			 				  Model model) throws IllegalStateException, IOException {
 		Iterable<Post> searchByPostAuthor = postService.findPostsByUser(user);
-		postService.addPost(post, postText, tags, file, currentUser);
+		postService.addPost(postText, tags, file, currentUser);
 		model.addAttribute("user", user);
 		model.addAttribute("posts", searchByPostAuthor);		
 		return "redirect:/" + user.getId() + "/profile";
@@ -135,9 +139,8 @@ public class MainController {
 						  @RequestParam String tags,
 						  @RequestParam(required = false) String search,
 						  @RequestParam("file") MultipartFile file,
-						  Post post,
 						  Model model) throws IllegalStateException, IOException {
-		postService.addPost(post, postText, tags, file, currentUser);
+		postService.addPost(postText, tags, file, currentUser);
 		model.addAttribute("search", search);
 		return "redirect:/posts";
 	}

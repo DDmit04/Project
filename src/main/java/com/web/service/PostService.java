@@ -22,11 +22,9 @@ public class PostService {
 	@Autowired
 	private PostRepo postRepo;
 	
-	public void addPost(Post post, String text, String tags, MultipartFile file, User user) throws IllegalStateException, IOException {
-		post.setPostAthor(user);
-		post.setPostText(text);
-		post.setTags(tags);
-		post.setCreationDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+	public void addPost(String postText, String tags, MultipartFile file, User user) throws IllegalStateException, IOException {
+		Post post = new Post(postText, tags, LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		post.setPostAuthor(user);
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
 		postRepo.save(post);
 	}

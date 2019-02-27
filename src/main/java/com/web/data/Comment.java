@@ -26,6 +26,9 @@ public class Comment {
 	@JoinColumn(name = "user_id")
 	private User commentAuthor;
 	
+	public Comment() {
+		
+	}
 	public Comment(String commentText, String creationDate) {
 		this.commentText = commentText;
 		this.creationDate = creationDate;

@@ -41,13 +41,16 @@ public class Post {
 		this.tags = tags;
 		this.creationDate = creationDate;
 	}
+	public int getCommentsCount() {
+		return postComments.size();
+	}
 	public String getAuthorName() {
     	return postAuthor.getUsername();
     }
-	public User getPostAthor() {
+	public User getPostAuthor() {
 		return postAuthor;
 	}
-	public void setPostAthor(User postAthor) {
+	public void setPostAuthor(User postAthor) {
 		this.postAuthor = postAthor;
 	}
 	public void setId(Long id) {
