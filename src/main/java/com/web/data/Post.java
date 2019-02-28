@@ -31,7 +31,7 @@ public class Post {
 	@JoinColumn(name = "user_id")
 	private User postAuthor;
 	
-	@OneToMany(mappedBy = "commentedPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "commentedPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	private Set<Comment> postComments;
 	
 	public Post() {

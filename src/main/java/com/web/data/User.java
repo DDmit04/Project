@@ -38,10 +38,10 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Set<UserRoles> roles;
 	
-	@OneToMany(mappedBy = "postAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "postAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	private Set<Post> userPosts;
 	
-	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	private Set<Comment> userComments;
 	
 	public User() {

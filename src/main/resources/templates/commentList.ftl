@@ -4,7 +4,6 @@
 
 <div class="col-8">
 	<#include "parts/posts/showPost.ftl">
-	<div class="col-8 mt-3">
 		<#list comments as comment>
 			<ul class="list-group list-group-flush shadow border border-secondary mt-1">
 				  <li class="list-group-item">
@@ -22,9 +21,28 @@
 						  </div>
 						  <div class="ml-2">
 							  <div>${comment.commentText}</div>
-							  <small>${comment.creationDate}</small>
+							  <div class="my-2">
+					  			<#if comment.commentPicName??>
+	       							<img src="/imgCommentPic/${comment.commentPicName}" width="120" height="120">
+	    						</#if>
+	    					
+							  <div><small>${comment.creationDate}</small></div>
 						  </div>
 					  </div>
+    				  </div>
+					  <#if currentUsername == comment.commentAuthor.username>
+					  	<div class="col dropdown" align="right">
+							<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
+								<i class="fas fa-ellipsis-v"></i>
+							</button>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+								<#if !isEdit>
+									<a class="dropdown-item" href="/${post.id}/comments/${comment.id}/edit">edit</a> 
+								</#if>
+									<a class="dropdown-item" href="/${post.id}/comments/${comment.id}/delete">delete</a>
+							</div>
+						</div>
+				  	  </#if>
 				  </li>
 			</ul>
 		<#else>
@@ -33,6 +51,5 @@
 		<div class="mt-3">
 			<#include "parts/forms/addCommentForm.ftl">
 		</div>
-	</div>
 </div>
 </@shell.htmlPage>

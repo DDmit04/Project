@@ -49,6 +49,18 @@ function validateLogin() {
 	return true;
 }
 
+function validateComment() {
+	var comment = document.getElementById("commentText");
+	var commentPic = document.getElementById("commentPic");
+	if(!comment.value && !commentPic.value) {
+		comment.classList.add('is-invalid');
+		var commentTextError = document.getElementById("commentTextError");
+		commentTextError.innerHTML = 'comment can not be empty!';
+		return false;
+	}
+	return true;
+}
+
 function disposeAlert(elementName) {
 	var element = document.getElementById(elementName);
 	var elementError = element.nextSibling;

@@ -43,5 +43,4 @@
 			<i class="far fa-comment mr-1"></i>${post.commentsCount}
 		</a>
 	</div>
-	</div>
 </div>

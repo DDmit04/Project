@@ -17,6 +17,7 @@ public class Comment {
 	private Long id;
 	private String commentText;
 	private String creationDate;
+	private String commentPicName;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "post_id")
@@ -62,5 +63,11 @@ public class Comment {
 	}
 	public void setCommentAuthor(User commentAuthor) {
 		this.commentAuthor = commentAuthor;
+	}
+	public String getCommentPicName() {
+		return commentPicName;
+	}
+	public void setCommentPicName(String commentPicName) {
+		this.commentPicName = commentPicName;
 	}
 }

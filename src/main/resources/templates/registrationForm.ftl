@@ -43,11 +43,6 @@
 		<div class="col-md-6"></div>
 	</div>
 </div>
-<script type="application/javascript">
-			$('.custom-file-input').on('change', function() { 
-				   let fileName = $(this).val().split('\\').pop(); 
-				   $(this).next('.custom-file-label').addClass("selected").html(fileName); 
-				});
-</script>
+<script src="/customJs/checkFilename.js"></script>
 <script src="/customJs/formValidate.js"></script>
 </@shell.htmlPage> 

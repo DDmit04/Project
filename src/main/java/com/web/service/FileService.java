@@ -19,6 +19,9 @@ public class FileService {
 	@Value("${upload.path.userPics}")
 	private String uploadPathUserPics;
 	
+	 @Value("${upload.path.commentPics}")
+	 private String uploadPathCommentPics;
+	
 	private String uploadPath;
 	
 	public String uploadFile(MultipartFile file, UploadType type) throws IllegalStateException, IOException {
@@ -26,8 +29,11 @@ public class FileService {
 		if(type == UploadType.POST) {
 			uploadPath = uploadPathPosts;
 		}
-		if(type == UploadType.USERPIC) {
+		else if(type == UploadType.USERPIC) {
 			uploadPath = uploadPathUserPics;
+		}
+		else if(type == UploadType.COMMENT) {
+			uploadPath = uploadPathCommentPics;
 		}
 		if (file != null && !file.getOriginalFilename().isEmpty()) {
 			File uploadDir = new File(uploadPath);
