@@ -1,6 +1,7 @@
 package com.web.controllers;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,7 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.web.data.Comment;
 import com.web.data.Post;
 import com.web.data.User;
+import com.web.data.dto.CommentDto;
+import com.web.data.dto.PostDto;
 import com.web.service.CommentService;
+import com.web.service.PostService;
 
 @Controller
 public class CommentController {
@@ -23,12 +27,17 @@ public class CommentController {
 	@Autowired
 	private CommentService commentService;
 	
+	@Autowired
+	private PostService postService;
+	
 	@GetMapping("{post}/comments")
-	public String getComments(@PathVariable Post post,
+	public String getComments(@AuthenticationPrincipal User currentUser,
+							  @PathVariable Post post,
 							  Model model) {
-		Iterable<Comment> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
+		Iterable<CommentDto> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
+		PostDto commentedPost = postService.findOnePost(currentUser, post);
 		model.addAttribute("comments", searchByCommentedPost);
-		model.addAttribute("post", post);
+		model.addAttribute("post", commentedPost);
 		return "commentList";
 	}
 	
@@ -40,7 +49,8 @@ public class CommentController {
 							 Comment comment,
 			  				 Model model) throws IllegalStateException, IOException {
 		commentService.addComment(post, commentText, currentUser, commentPic);
-		model.addAttribute("post", post);
+		PostDto commentedPost = postService.findOnePost(currentUser, post);
+		model.addAttribute("post", commentedPost);
 		return "redirect:/" + post.getId() + "/comments";
 	}
 	
@@ -53,13 +63,14 @@ public class CommentController {
 	}
 	
 	@GetMapping("{post}/comments/{comment}/edit")
-	public String getEditComment(@PathVariable Post post,
+	public String getEditComment(@AuthenticationPrincipal User currentUser,
+								 @PathVariable Post post,
 							     @PathVariable Comment comment,
 							     Model model) {
-		Iterable<Comment> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
+		Iterable<CommentDto> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
+		PostDto commentedPost = postService.findOnePost(currentUser, post);
 		model.addAttribute("comments", searchByCommentedPost);
-		model.addAttribute("post", post);
-		model.addAttribute("editedComment", comment);
+		model.addAttribute("post", commentedPost);		model.addAttribute("editedComment", comment);
 		return "commentList";
 	}
 	

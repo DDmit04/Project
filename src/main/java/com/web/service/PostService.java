@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.Post;
 import com.web.data.User;
+import com.web.data.dto.PostDto;
 import com.web.repository.PostRepo;
 import com.web.repository.UserRepo;
 
@@ -41,17 +42,23 @@ public class PostService {
 		postRepo.delete(post);
 	}
 
-	public Iterable<Post> searchPostsByTag(String search) {
-		Iterable<Post> searchResult;
+	public Iterable<PostDto> searchPostsByTag(String search, User currentUser) {
+		Iterable<PostDto> searchResult;
 		if(search != null && search != "") {
-			searchResult = postRepo.findByTags(search);
+			searchResult = postRepo.findByTag(currentUser, search);
 		} else {
-			searchResult = postRepo.findAll();
+			searchResult = postRepo.findAll(currentUser);
 		}		
 		return searchResult;
 	}
 
-	public Iterable<Post> findPostsByUser(User user) {
-		return postRepo.findByPostAuthor(user);
+	public Iterable<PostDto> findPostsByUser(User currentUser, User user) {
+		return postRepo.findByPostAuthor(currentUser, user);
+	}
+	
+	public PostDto findOnePost(User currentUser, Post post) {
+		Iterable<PostDto> findPost = postRepo.findOne(currentUser, post.getId());
+		PostDto commentedPost = findPost.iterator().next();
+		return 	commentedPost;
 	}
 }

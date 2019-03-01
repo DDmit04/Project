@@ -39,6 +39,14 @@
     	</div>
 	</div>
 	<div class="card-footer bg-transparent border-secondary">
+		<a href="/posts/${post.id}/like">
+			<#if post.liked>
+				<i class="fas fa-heart"></i>
+			<#else>
+				<i class="far fa-heart"></i>
+			</#if>
+			${post.likes}
+		</a>
 		<a href="/${post.id}/comments">
 			<i class="far fa-comment mr-1"></i>${post.commentsCount}
 		</a>

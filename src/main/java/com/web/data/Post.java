@@ -1,5 +1,6 @@
 package com.web.data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -9,10 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-
 
 @Entity
 public class Post {
@@ -26,14 +27,21 @@ public class Post {
 //	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private String creationDate;
 	private String filename;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	private User postAuthor;
-	
-	@OneToMany(mappedBy = "commentedPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
+
+	@OneToMany(mappedBy = "commentedPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Comment> postComments;
-	
+
+	@ManyToMany
+	@JoinTable(name = "post_likes", 
+				joinColumns = { @JoinColumn(name = "post_id") }, 
+				inverseJoinColumns = { @JoinColumn(name = "user_id") }
+	)
+	private Set<User> postLikes = new HashSet<User>();
+
 	public Post() {
 	}
 	public Post(String postText, String tags, String creationDate) {
@@ -45,8 +53,8 @@ public class Post {
 		return postComments.size();
 	}
 	public String getAuthorName() {
-    	return postAuthor.getUsername();
-    }
+		return postAuthor.getUsername();
+	}
 	public User getPostAuthor() {
 		return postAuthor;
 	}
@@ -89,5 +97,10 @@ public class Post {
 	public void setPostComments(Set<Comment> postComments) {
 		this.postComments = postComments;
 	}
-	
+	public Set<User> getPostLikes() {
+		return postLikes;
+	}
+	public void setPostLikes(Set<User> postLikes) {
+		this.postLikes = postLikes;
+	}
 }

@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.Post;
 import com.web.data.User;
+import com.web.data.dto.PostDto;
 import com.web.service.PostService;
 
 @Controller
@@ -23,10 +24,10 @@ public class UserProfileController {
 	private PostService postService;
 	
 	@GetMapping("{user}/profile")
-	public String getUserPrifile(
+	public String getUserPrifile(@AuthenticationPrincipal User currentUser,
 								 @PathVariable User user,
 								 Model model) {
-		Iterable<Post> searchByPostAuthor = postService.findPostsByUser(user);
+		Iterable<PostDto> searchByPostAuthor = postService.findPostsByUser(currentUser, user);
 		model.addAttribute("user", user);
 		model.addAttribute("posts", searchByPostAuthor);		
 		return "userProfile";
@@ -39,7 +40,7 @@ public class UserProfileController {
 							  @RequestParam("file") MultipartFile file,
 							  @PathVariable User user,
 			 				  Model model) throws IllegalStateException, IOException {
-		Iterable<Post> searchByPostAuthor = postService.findPostsByUser(user);
+		Iterable<PostDto> searchByPostAuthor = postService.findPostsByUser(currentUser, user);
 		postService.addPost(postText, tags, file, currentUser);
 		model.addAttribute("user", user);
 		model.addAttribute("posts", searchByPostAuthor);		

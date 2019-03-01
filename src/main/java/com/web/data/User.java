@@ -1,6 +1,7 @@
 package com.web.data;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -50,6 +51,17 @@ public class User implements UserDetails {
 		this.username = username;
 		this.password = password;
 		this.registrationDate = registrationDate;
+	}
+	@Override
+	public boolean equals(Object obj) {
+    	if(this == obj) return true;
+    	if(obj == null || getClass() != obj.getClass()) return false;
+    	User user = (User) obj;
+		return Objects.equals(id, user.id);
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
 	}
 	public Set<Comment> getUserComments() {
 		return userComments;
