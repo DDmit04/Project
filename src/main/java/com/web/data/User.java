@@ -1,6 +1,7 @@
 package com.web.data;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,6 +16,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,7 +25,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name="usr")
+@Table(name = "usr")
 public class User implements UserDetails {
 
 	@Id
@@ -33,30 +36,57 @@ public class User implements UserDetails {
 	private boolean active;
 	private String registrationDate;
 	private String userPicName;
-	
-	@ElementCollection(targetClass=UserRoles.class, fetch= FetchType.EAGER)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+
+	@ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)
+	@CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
 	@Enumerated(EnumType.STRING)
 	private Set<UserRoles> roles;
-	
-	@OneToMany(mappedBy = "postAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
+
+	@OneToMany(mappedBy = "postAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Post> userPosts;
-	
-	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
+
+	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Comment> userComments;
+
+//	@ManyToMany(fetch = FetchType.EAGER)
+//	@JoinTable(name = "user_frednds", 
+//				joinColumns = {@JoinColumn(name = "user_frend_id") }, 
+//				inverseJoinColumns = { @JoinColumn(name = "frend_user_id") })
+//	private Set<User> frendsToUser = new HashSet<User>();
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "user_friendship", 
+	    joinColumns = @JoinColumn(name = "first_user_id"), 
+	    inverseJoinColumns = @JoinColumn(name = "second_user_id")
+	)
+	private Set<User> userFriends = new HashSet<User>();
+
+//	@ManyToMany(fetch = FetchType.EAGER)
+//	@JoinTable(name = "user_frednd_request", 
+//				joinColumns = {@JoinColumn(name = "user_from_id") }, 
+//				inverseJoinColumns = { @JoinColumn(name = "user_to_id") })
+//	private Set<User> frendRequersFrom = new HashSet<User>();
+//
+//	@ManyToMany(fetch = FetchType.EAGER)
+//	@JoinTable(name = "user_frednd_request", 
+//				joinColumns = {@JoinColumn(name = "user_to_id") }, 
+//				inverseJoinColumns = { @JoinColumn(name = "user_from_id") })
+//	private Set<User> frendRequersTo = new HashSet<User>();
+
 	public User() {
 	}
-	public User (String username, String password, String registrationDate) {
+	public User(String username, String password, String registrationDate) {
 		this.username = username;
 		this.password = password;
 		this.registrationDate = registrationDate;
 	}
 	@Override
 	public boolean equals(Object obj) {
-    	if(this == obj) return true;
-    	if(obj == null || getClass() != obj.getClass()) return false;
-    	User user = (User) obj;
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		User user = (User) obj;
 		return Objects.equals(id, user.id);
 	}
 	@Override
@@ -137,4 +167,34 @@ public class User implements UserDetails {
 	public void setUserPicName(String userPicName) {
 		this.userPicName = userPicName;
 	}
+	public Set<User> getUserFriends() {
+		return userFriends;
+	}
+	public void setUserFriends(Set<User> userFrends) {
+		this.userFriends = userFrends;
+	}
+	//	public Set<User> getFrendsToUser() {
+//		return frendsToUser;
+//	}
+//	public void setFrendsToUser(Set<User> frendsToUser) {
+//		this.frendsToUser = frendsToUser;
+//	}
+//	public Set<User> getUserToFrends() {
+//		return userToFrends;
+//	}
+//	public void setUserToFrends(Set<User> userToFrends) {
+//		this.userToFrends = userToFrends;
+//	}
+//	public Set<User> getFrendRequestFrom() {
+//		return frendRequersFrom;
+//	}
+//	public void setFrendRequestFrom(Set<User> frendRequersFrom) {
+//		this.frendRequersFrom = frendRequersFrom;
+//	}
+//	public Set<User> getFrendRequestTo() {
+//		return frendRequersTo;
+//	}
+//	public void setFrendRequestTo(Set<User> frendRequersTo) {
+//		this.frendRequersTo = frendRequersTo;
+//	}
 }

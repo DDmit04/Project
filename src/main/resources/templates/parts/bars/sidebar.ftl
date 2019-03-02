@@ -4,5 +4,7 @@
 		<a class="list-group-item" href=""><i class="far fa-envelope mr-2"></i>Messages</a>
 		<a class="list-group-item" href="/posts"><i class="fas fa-newspaper mr-2"></i>Posts</a>
 		<a class="list-group-item" href=""><i class="fas fa-users mr-2"></i>Groups</a>
+		<a class="list-group-item" href="/frendRequest"><i class="fas fa-tasks mr-2"></i>FrendReqests</a>
+		<a class="list-group-item" href="/${currentUserId}/prifile/frendlist"><i class="fas fa-user-friends mr-2"></i>Frendlist</a>
 	</div>
 </div>

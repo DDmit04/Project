@@ -1,6 +1,6 @@
 <div class="card mt-3 shadow border-secondary">
 	<div class="card-header border-secondary media">
-		<a href="/${post.postAuthor.username}/profile">
+		<a href="/${post.postAuthor.id}/profile">
 			<#if post.postAuthor.userPicName??>
 				<img class="mr-2 rounded-circle border border-secondary" src="/imgUserPic/${post.postAuthor.userPicName}" width="55" height="55" class="mr-3">
 			<#else>
@@ -9,7 +9,7 @@
 		</a>
 		<div class="media-body mt-0">
 			<div class="mb-2 ml-2">
-				<a href="${post.postAuthor.username}/profile" class="h5">${post.postAuthor.username}</a>
+				<a href="${post.postAuthor.id}/profile" class="h5">${post.postAuthor.username}</a>
 			</div>
 			<small class="ml-2">${post.creationDate}</small>
 		</div>
