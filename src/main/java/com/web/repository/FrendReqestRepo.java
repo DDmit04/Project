@@ -2,13 +2,13 @@ package com.web.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.web.data.FrendReqest;
+import com.web.data.FriendRequest;
 import com.web.data.User;
 
-public interface FrendReqestRepo extends CrudRepository<FrendReqest, Long> {
+public interface FrendReqestRepo extends CrudRepository<FriendRequest, Long> {
 	
-	Iterable<FrendReqest> findByReqiestFrom(User user);
+	Iterable<FriendRequest> findByRequestFrom(User user);
 	
-	Iterable<FrendReqest> findByReqiestTo(User user);
+	Iterable<FriendRequest> findByRequestTo(User user);
 	
 }

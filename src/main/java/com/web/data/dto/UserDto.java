@@ -9,17 +9,22 @@ public class UserDto {
 	private boolean active;
 	private String registrationDate;
 	private String userPicName;
-	private Long frendCount;
-	private boolean isFrend;
+	private Long frindCount;
+	private boolean isFriend;
+	private boolean isRequested;
 	
-	public UserDto(User user, Long frendCount, boolean isFrend) {
+	public UserDto(User user, Long frendCount, boolean isFriend, boolean isRequested) {
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.active = user.isActive();
 		this.registrationDate = user.getRegistrationDate();
 		this.userPicName = user.getUserPicName();
-		this.frendCount = frendCount;
-		this.isFrend = isFrend;
+		this.frindCount = frendCount;
+		this.isFriend = isFriend;
+		this.isRequested = isRequested;
+	}
+	public boolean getIsRequested() {
+		return isRequested;
 	}
 	public Long getId() {
 		return id;
@@ -36,11 +41,11 @@ public class UserDto {
 	public String getUserPicName() {
 		return userPicName;
 	}
-	public Long getFrendCount() {
-		return frendCount;
+	public Long getFriendCount() {
+		return frindCount;
 	}
-	public boolean getIsFrend() {
-		return isFrend;
+	public boolean getIsFriend() {
+		return isFriend;
 	}
 
 	

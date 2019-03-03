@@ -12,7 +12,6 @@ import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
 import com.web.repository.PostRepo;
-import com.web.repository.UserRepo;
 
 @Service
 public class PostService {

@@ -1,10 +1,6 @@
 package com.web.controllers;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,84 +12,77 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.web.data.FrendReqest;
+import com.web.data.FriendRequest;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
-import com.web.repository.FrendReqestRepo;
-import com.web.repository.UserRepo;
 import com.web.service.PostService;
+import com.web.service.ProfileService;
+import com.web.service.UserService;
 
 @Controller
 public class UserProfileController {
 	
 	@Autowired
 	private PostService postService;
-
-	@Autowired
-	private FrendReqestRepo frendReqestRepo;
 	
 	@Autowired
-	private UserRepo userRepo;
+	private UserService userService;
 	
-	@GetMapping("/frendRequest")
-	public String userFrendRequest(@AuthenticationPrincipal User currentUser,
+	@Autowired
+	private ProfileService profileService;
+	
+	@GetMapping("/friendRequest")
+	public String userFriendRequest(@AuthenticationPrincipal User currentUser,
 								   Model model) {
-		Iterable<FrendReqest> frendReqestsFrom = frendReqestRepo.findByReqiestFrom(currentUser);
-		Iterable<FrendReqest> frendReqestsTo = frendReqestRepo.findByReqiestTo(currentUser);
-		model.addAttribute("frendReqestsFrom", frendReqestsFrom);
-		model.addAttribute("frendReqestsTo", frendReqestsTo);
-		return "frendReqestList";
+		Iterable<FriendRequest> friendReqestsFrom = profileService.findRequestFrom(currentUser);
+		Iterable<FriendRequest> friendReqestsTo = profileService.findRequestTo(currentUser);
+		model.addAttribute("friendRequestsFrom", friendReqestsFrom);
+		model.addAttribute("friendRequestsTo", friendReqestsTo);
+		return "friendRequestList";
 	}
 	
-//	@GetMapping("{user}/frendRequest")
-//	public String frendRequest(@AuthenticationPrincipal User currentUser,
-//							   @PathVariable User user,
-//							   Model model) {
-//		return null;
-//	}
-	
-	@GetMapping("{user}/frendRequest")
-	public String addFrendRequest(@AuthenticationPrincipal User currentUser,
+	@GetMapping("{user}/friendRequest")
+	public String addFriendRequest(@AuthenticationPrincipal User currentUser,
 			   					  @PathVariable User user,
-			   					  @RequestParam(required = false) String frendReqestText,
+			   					  @RequestParam(required = false) String friendReqestText,
 			   					  Model model) {
-		FrendReqest frendReqest = new FrendReqest(" ", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-		frendReqest.setReqiestFrom(currentUser);
-		frendReqest.setReqiestTo(user);
-		frendReqestRepo.save(frendReqest);
+		profileService.addFriendRequest(friendReqestText, user, currentUser);
 		return "redirect:/" + user.getId() + "/profile";
 	}
 	
-	@GetMapping("{user}/frendRequest/{frendReqest}/accept")
-	public String acceptFrendRequest(@AuthenticationPrincipal User currentUser,
-									 @PathVariable FrendReqest frendReqest,
-			   						 @PathVariable User user,
-			   						 Model model) {
-		currentUser.getUserFriends().add(user);
-		userRepo.save(user);
-		user.getUserFriends().add(currentUser);
-		userRepo.save(currentUser);
-		frendReqestRepo.delete(frendReqest);
-		return "redirect:/frendRequest";
+	@GetMapping("{user}/friendRequest/{friendRequest}/accept")
+	public String acceptFriendRequest(@AuthenticationPrincipal User currentUser,
+									  @PathVariable FriendRequest friendRequest,
+									  @PathVariable User user,
+									  Model model) {
+		profileService.addFriend(user, currentUser, friendRequest);
+		return "redirect:/friendRequest";
 	}
 	
-	@GetMapping("{user}/frendRequest/{frendReqest}/denial")
-	public String denialFrendRequest(@AuthenticationPrincipal User currentUser,
-									 @PathVariable FrendReqest frendReqest,
-									 @PathVariable User user,
-									 Model model) {
-		frendReqestRepo.delete(frendReqest);
-		return "redirect:/frendRequest";
+	@GetMapping("/{user}/deleteFriend")
+	public String deleteFriend(@AuthenticationPrincipal User currentUser,
+							   @PathVariable User user) {
+		profileService.deleteFriend(user, currentUser);
+		return "redirect:/" + user.getId() + "/profile";
 	}
 	
-	@GetMapping("{user}/prifile/frendlist")
-	public String getFrendlist(@AuthenticationPrincipal User currentUser,
+	@GetMapping("{user}/friendRequest/{friendRequest}/denial")
+	public String denialFriendRequest(@AuthenticationPrincipal User currentUser,
+									  @PathVariable FriendRequest friendRequest,
+									  @PathVariable User user,
+									  Model model) {
+		profileService.deleteRequest(friendRequest);
+		return "redirect:/friendRequest";
+	}
+	
+	@GetMapping("{user}/profile/friendlist")
+	public String getFriendlist(@AuthenticationPrincipal User currentUser,
 							   @PathVariable User user,
 							   Model model) {
 		Iterable<User> userFrends = user.getUserFriends();
-		model.addAttribute("frends", userFrends);
-		return "frendList";
+		model.addAttribute("friends", userFrends);
+		return "friendList";
 	}
 	
 	@GetMapping("{user}/profile")
@@ -101,7 +90,7 @@ public class UserProfileController {
 								 @PathVariable User user,
 								 Model model) {
 		Iterable<PostDto> searchByPostAuthor = postService.findPostsByUser(currentUser, user);
-		UserDto userProfile = userRepo.findOneUser(user, user.getId());
+		UserDto userProfile = userService.findOneUser(currentUser, user);
 		model.addAttribute("user", userProfile);
 		model.addAttribute("posts", searchByPostAuthor);		
 		return "userProfile";
@@ -116,7 +105,7 @@ public class UserProfileController {
 			 				  Model model) throws IllegalStateException, IOException {
 		Iterable<PostDto> searchByPostAuthor = postService.findPostsByUser(currentUser, user);
 		postService.addPost(postText, tags, file, currentUser);
-		UserDto userProfile = userRepo.findOneUser(user, user.getId());
+		UserDto userProfile = userService.findOneUser(currentUser, user);
 		model.addAttribute("user", userProfile);
 		model.addAttribute("posts", searchByPostAuthor);		
 		return "redirect:/" + user.getId() + "/profile";

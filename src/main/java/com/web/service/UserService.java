@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.User;
 import com.web.data.UserRoles;
+import com.web.data.dto.UserDto;
 import com.web.exceptions.UserException;
 import com.web.repository.UserRepo;
 
@@ -42,5 +43,9 @@ public class UserService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return userRepo.findByUsername(username);
+	}
+
+	public UserDto findOneUser(User currentUser, User user) {
+		return  userRepo.findOneUser(currentUser, currentUser.getId(), user.getId());
 	}
 }

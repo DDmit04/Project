@@ -14,11 +14,11 @@ public interface UserRepo extends CrudRepository<User, Long> {
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
 			"   count(uf), " +
-            "   sum(case when uf = :user then 1 else 0 end) > 0" +
+            "   sum(case when uf = :currentUser then 1 else 0 end) > 0, " +
+			"   sum(select count(requestFrom) from FriendRequest where requestFromId = :currentUserId) > 0" +
             ") " +
             "from User u left join u.userFriends uf " +
             "where u.id = :id " +
             "group by u")
-    UserDto findOneUser(@Param("user") User user, @Param("id") Long id);
-	
+    UserDto findOneUser(@Param("currentUser") User currentUser, @Param("currentUserId") Long currentUserId, @Param("id") Long id);	
 }

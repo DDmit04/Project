@@ -47,12 +47,6 @@ public class User implements UserDetails {
 
 	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Comment> userComments;
-
-//	@ManyToMany(fetch = FetchType.EAGER)
-//	@JoinTable(name = "user_frednds", 
-//				joinColumns = {@JoinColumn(name = "user_frend_id") }, 
-//				inverseJoinColumns = { @JoinColumn(name = "frend_user_id") })
-//	private Set<User> frendsToUser = new HashSet<User>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_friendship", 
@@ -60,18 +54,7 @@ public class User implements UserDetails {
 	    inverseJoinColumns = @JoinColumn(name = "second_user_id")
 	)
 	private Set<User> userFriends = new HashSet<User>();
-
-//	@ManyToMany(fetch = FetchType.EAGER)
-//	@JoinTable(name = "user_frednd_request", 
-//				joinColumns = {@JoinColumn(name = "user_from_id") }, 
-//				inverseJoinColumns = { @JoinColumn(name = "user_to_id") })
-//	private Set<User> frendRequersFrom = new HashSet<User>();
-//
-//	@ManyToMany(fetch = FetchType.EAGER)
-//	@JoinTable(name = "user_frednd_request", 
-//				joinColumns = {@JoinColumn(name = "user_to_id") }, 
-//				inverseJoinColumns = { @JoinColumn(name = "user_from_id") })
-//	private Set<User> frendRequersTo = new HashSet<User>();
+	
 
 	public User() {
 	}
@@ -173,28 +156,4 @@ public class User implements UserDetails {
 	public void setUserFriends(Set<User> userFrends) {
 		this.userFriends = userFrends;
 	}
-	//	public Set<User> getFrendsToUser() {
-//		return frendsToUser;
-//	}
-//	public void setFrendsToUser(Set<User> frendsToUser) {
-//		this.frendsToUser = frendsToUser;
-//	}
-//	public Set<User> getUserToFrends() {
-//		return userToFrends;
-//	}
-//	public void setUserToFrends(Set<User> userToFrends) {
-//		this.userToFrends = userToFrends;
-//	}
-//	public Set<User> getFrendRequestFrom() {
-//		return frendRequersFrom;
-//	}
-//	public void setFrendRequestFrom(Set<User> frendRequersFrom) {
-//		this.frendRequersFrom = frendRequersFrom;
-//	}
-//	public Set<User> getFrendRequestTo() {
-//		return frendRequersTo;
-//	}
-//	public void setFrendRequestTo(Set<User> frendRequersTo) {
-//		this.frendRequersTo = frendRequersTo;
-//	}
 }

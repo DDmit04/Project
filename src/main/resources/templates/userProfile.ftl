@@ -10,10 +10,12 @@
 		  		<div class="container">
 			  		<div class="row mt-3">
 				  		<#if currentUsername != user.username>
-				  			<#if user.isFrend>
-								<a class="btn btn-primary" href="" role="button">Unfrend</a>
+				  			<#if user.isFriend>
+								<a class="btn btn-primary" href="/${user.id}/deleteFriend" role="button">Unfrend</a>
+							<#elseif user.isRequested>
+								<a class="btn btn-primary disabled" href="/${user.id}/deleteFriend" role="button">request sent</a>
 				  			<#else>
-								<a class="btn btn-primary" href="/${user.id}/frendRequest" role="button">Frend reqest</a>
+								<a class="btn btn-primary" href="/${user.id}/friendRequest" role="button">Frend reqest</a>
 				  			</#if>
 				  		</#if>
 			  		</div>
@@ -32,7 +34,8 @@
 				${user.username}
 			</div>
 			<div class="card-body">
-				User Information frends: ${user.frendCount}
+				User Information frends: ${user.friendCount}
+				${user.isFriend?c}
 			</div>
 		</div>
 		<#if currentUsername == user.username>
