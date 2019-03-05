@@ -15,24 +15,16 @@ public class FriendRequest {
 	private Long requestFromId;
 	private User requestTo;
 	private Long requestToId;
-	private String friendRequestText; 
 	private String creationDate;
 	
 	public FriendRequest() {
 	}
-	public FriendRequest(String frendReqestText, String creationDate, User requestFrom , User requestTo) {
+	public FriendRequest(String creationDate, User requestFrom , User requestTo) {
 		this.requestFrom = requestFrom;
 		this.requestTo = requestTo;
-		this.friendRequestText = frendReqestText;
 		this.creationDate = creationDate;
 		this.requestToId = requestTo.getId();
 		this.requestFromId = requestFrom.getId();
-	}
-	public String getFriendRequestText() {
-		return friendRequestText;
-	}
-	public void setFriendReuqestText(String frendReqestText) {
-		this.friendRequestText = frendReqestText;
 	}
 	public String getCreationDate() {
 		return creationDate;

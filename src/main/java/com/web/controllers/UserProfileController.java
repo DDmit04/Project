@@ -44,10 +44,9 @@ public class UserProfileController {
 	
 	@GetMapping("{user}/friendRequest")
 	public String addFriendRequest(@AuthenticationPrincipal User currentUser,
-			   					  @PathVariable User user,
-			   					  @RequestParam(required = false) String friendReqestText,
-			   					  Model model) {
-		profileService.addFriendRequest(friendReqestText, user, currentUser);
+			   					   @PathVariable User user,
+			   					   Model model) {
+		profileService.addFriendRequest(user, currentUser);
 		return "redirect:/" + user.getId() + "/profile";
 	}
 	
@@ -78,9 +77,11 @@ public class UserProfileController {
 	
 	@GetMapping("{user}/profile/friendlist")
 	public String getFriendlist(@AuthenticationPrincipal User currentUser,
-							   @PathVariable User user,
-							   Model model) {
+							    @PathVariable User user,
+							    Model model) {
 		Iterable<User> userFrends = user.getUserFriends();
+		model.addAttribute("user", user);
+		model.addAttribute("userFriendsCount", user.getUserFriends().size());
 		model.addAttribute("friends", userFrends);
 		return "friendList";
 	}

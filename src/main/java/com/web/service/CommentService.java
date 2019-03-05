@@ -13,6 +13,7 @@ import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.CommentDto;
 import com.web.repository.CommentRepo;
+import com.web.utils.DateUtil;
 
 @Service
 public class CommentService {
@@ -24,7 +25,7 @@ public class CommentService {
 	private FileService fileService;
 
 	public void addComment(Post post, String commentText, User currentUser, MultipartFile commentPic) throws IllegalStateException, IOException {
-		Comment comment = new Comment(commentText, LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		Comment comment = new Comment(commentText, DateUtil.getLocalDate());
 		comment.setCommentedPost(post);
 		comment.setCommentAuthor(currentUser);
 		comment.setCommentPicName(fileService.uploadFile(commentPic, UploadType.COMMENT));

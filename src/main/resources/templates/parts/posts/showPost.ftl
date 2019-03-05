@@ -39,7 +39,7 @@
     	</div>
 	</div>
 	<div class="card-footer bg-transparent border-secondary">
-		<a href="/posts/${post.id}/like">
+		<a class="mr-3" href="/posts/${post.id}/like">
 			<#if post.liked>
 				<i class="fas fa-heart"></i>
 			<#else>

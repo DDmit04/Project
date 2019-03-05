@@ -1,19 +1,18 @@
 <#import "parts/HTMLshell.ftl" as shell> <@shell.htmlPage> 
 
-<!-- <ul> -->
-<!-- <#list friends as frend> -->
-<!-- 	<li class="list-group-item"> -->
-<!-- 		<div>${frend.id}</div> -->
-<!-- 		<div>${frend.username}</div> -->
-<!-- 		<div>${frend.registrationDate}</div> -->
-<!-- 	</li> -->
-<!-- <#else> -->
-<!-- 	no frends -->
-<!-- </#list> -->
-<!-- </ul> -->
+<#include "parts/security.ftl">
 
 <div class="col-9">
-	<div><h3>Your friendlist:</h3></div>
+	<div>
+		<h3>
+			<#if currentUsername != user.username>
+				${user.username}'s
+			<#else>
+				Your
+			</#if> 
+			friendlist: (${userFriendsCount})
+		</h3>
+	</div>
 	<#list friends as friend>
 		<ul class="list-group list-group-flush shadow border border-secondary mt-1">
 			<li class="list-group-item">
@@ -27,11 +26,6 @@
 					</a>
 					<div class="media-body">
 						<a href="/${friend.id}/profile" class="h6 ml-2">${friend.username}</a>
-						<div class="ml-2">
-							<div class="my-2">
-								<small>${friend.registrationDate}</small>
-							</div>
-						</div>
 					</div>
 				</div>
 			</li>

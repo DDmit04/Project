@@ -1,8 +1,6 @@
 package com.web.service;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import com.web.data.UserRoles;
 import com.web.data.dto.UserDto;
 import com.web.exceptions.UserException;
 import com.web.repository.UserRepo;
+import com.web.utils.DateUtil;
 
 @Service
 public class UserService implements UserDetailsService{
@@ -33,7 +32,7 @@ public class UserService implements UserDetailsService{
 			throw new UserException("user with name " + user.getUsername() + " already exists!", user);
 		} else {
 			user.setUserPicName(fileService.uploadFile(userPic, UploadType.USERPIC));
-			user.setRegistrationDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+			user.setRegistrationDate(DateUtil.getLocalDate());
 			user.setActive(true);
 			user.setRoles(Collections.singleton(UserRoles.USER));
 			userRepo.save(user);

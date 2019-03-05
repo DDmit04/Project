@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-primary navbar-default bg-light scrolling-navbar fixed-top shadow">
   <div class="container-fluid">
-		 <a class="navbar-brand" href="/">
+		 <a class="navbar-brand" href="/posts">
 			 <img src="http://localhost:8080/static/images/title1.png" width="30" height="30" class="d-inline-block align-top">
 		 </a>
 		 <div class="collapse navbar-collapse" id="navbarContent">
@@ -13,7 +13,7 @@
 		    	</li>
 		    	<li class="nav-item">
 		    		<#if currentUser??>
-			    		<form class="form-inline my-2 my-lg-0">
+			    		<form class="form-inline my-2 my-lg-0" action="/posts?search=${search?ifExists}">
 			 				<input class="form-control mr-sm-2" type="text" name="search" placeholder="Search" value="${search?ifExists}">
 			 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 			 			</form>

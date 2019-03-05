@@ -16,7 +16,6 @@
 					<div class="media-body">
 						<a href="/${from.requestTo.id}/profile" class="h6 ml-2">${from.requestTo.username}</a>
 						<div class="ml-2">
-							${from.friendRequestText}
 							<div class="my-2">
 								<small>${from.creationDate}</small>
 							</div>
@@ -49,7 +48,6 @@
 					<div class="media-body">
 						<div><a href="/${to.requestFrom.id}/profile" class="h6 ml-2">${to.requestFrom.username}</a></div>
 						<div class="ml-2">
-							<div>${to.friendRequestText}</div>
 							<div class="my-2">
 								<small>${to.creationDate}</small>
 								<div class="mt-2">
@@ -63,7 +61,7 @@
 			</li>
 		</ul>
 	<#else>
-		<h2 class="display-4 mt-3" align="center">no reqest sent to you</h2>
+		<h2 class="display-4 mt-3" align="center">No reqest sent to you</h2>
 	</#list> 
 </div>
 </@shell.htmlPage> 

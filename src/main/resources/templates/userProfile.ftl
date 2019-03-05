@@ -31,11 +31,12 @@
 	<div class="col-8 ml-4">
 		<div class="card border-secondary shadow mb-3">
 			<div class="card-header">
-				${user.username}
+				<h5>${user.username}</h5>
 			</div>
 			<div class="card-body">
-				User Information frends: ${user.friendCount}
-				${user.isFriend?c}
+				<a href="/${user.id}/profile/friendlist" role="button" class="btn btn-primary">
+ 					friends: <span class="badge badge-light">${user.friendCount}</span>
+				</a>
 			</div>
 		</div>
 		<#if currentUsername == user.username>
