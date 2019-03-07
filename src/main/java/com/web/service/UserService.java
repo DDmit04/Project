@@ -14,6 +14,7 @@ import com.web.data.User;
 import com.web.data.UserRoles;
 import com.web.data.dto.UserDto;
 import com.web.exceptions.UserException;
+import com.web.exceptions.UserPasswordException;
 import com.web.repository.UserRepo;
 import com.web.utils.DateUtil;
 
@@ -46,5 +47,13 @@ public class UserService implements UserDetailsService{
 
 	public UserDto findOneUser(User currentUser, User user) {
 		return  userRepo.findOneUser(currentUser, currentUser.getId(), user.getId());
+	}
+
+	public void deleteUser(User currentUser, String currentPassword) throws UserPasswordException {
+		if(currentPassword.equals(currentUser.getPassword())) {
+			userRepo.delete(currentUser);
+		} else {
+			throw new UserPasswordException("Wrong " + currentUser.getUsername() + "'s password!", currentUser);
+		}
 	}
 }

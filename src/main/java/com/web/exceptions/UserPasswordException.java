@@ -2,16 +2,17 @@ package com.web.exceptions;
 
 import com.web.data.User;
 
-public class UserException extends Exception {
+public class UserPasswordException extends Exception{
 	
 	private User user;
-	
-	public UserException(String message, User user) {
+
+	public UserPasswordException(String message, User user) {
 		super(message);
 		this.user = user;
 	}
-
+	
 	public User getUser() {
 		return user;
 	}
+	
 }

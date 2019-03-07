@@ -1,17 +1,25 @@
 function validateRegistration() {
 	var username = document.getElementById("username");
-	var password = document.getElementById("password");
-	var retypePassword = document.getElementById("retypePassword");
-	if (!username.value || !password.value || password.value != retypePassword.value) {
-		if(password != retypePassword) {
-			retypePassword.classList.add('is-invalid');
-			var retypePasswordError = document.getElementById("retypePasswordError");
-			retypePasswordError.innerHTML = 'passwords are different!';
-		}
+	validatePasswords();
+	if (!username.value || !(validatePasswords())) {
 		if (!username.value) {
 			username.classList.add('is-invalid');
 			var usernameError = document.getElementById("usernameError");
 			usernameError.innerHTML = 'username can not be empty!';
+		}
+		return false;
+	}
+	return true;
+}
+
+function validatePasswords() {
+	var password = document.getElementById("password");
+	var retypePassword = document.getElementById("retypePassword");
+	if (!password.value || password.value != retypePassword.value) {
+		if(password != retypePassword) {
+			retypePassword.classList.add('is-invalid');
+			var retypePasswordError = document.getElementById("retypePasswordError");
+			retypePasswordError.innerHTML = 'passwords are different!';
 		}
 		if (!password.value) {
 			password.classList.add('is-invalid');

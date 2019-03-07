@@ -2,20 +2,27 @@ package com.web.controllers;
 
 import java.io.IOException;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.web.data.FriendRequest;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
+import com.web.exceptions.UserException;
+import com.web.exceptions.UserPasswordException;
 import com.web.service.PostService;
 import com.web.service.ProfileService;
 import com.web.service.UserService;
@@ -112,4 +119,42 @@ public class UserProfileController {
 		return "redirect:/" + user.getId() + "/profile";
 	}
 
+	@GetMapping("profile/settings")
+	public String settings(@ModelAttribute("redirectMessage") String redirectMessage,
+						   Model model) {
+		model.addAttribute(redirectMessage);
+		return "profileSettings";
+	}
+	
+	@PostMapping("profile/settings")
+	public String changePassword(@AuthenticationPrincipal User currentUser,
+								 @RequestParam String currentPassword,
+								 @RequestParam("password") String newPassword,
+							   	 RedirectAttributes redirectAttrs,
+								 Model model) {
+		try {
+			profileService.changePassword(currentUser, currentPassword, newPassword);
+		} catch (UserPasswordException e) {
+			model.addAttribute("currentPasswordError", e.getMessage());
+			return "profileSettings";
+		}
+		redirectAttrs.addFlashAttribute("redirectMessage", "password seccesfuli changed!");
+		return "redirect:/profile/settings";
+	}
+	
+	@PostMapping("/profile/settings/deleteAccount")
+	public String deleteAccount(@AuthenticationPrincipal User currentUser,
+								@RequestParam String currentPassword,
+								HttpServletRequest request,
+								Model model) throws ServletException {
+		try {
+			userService.deleteUser(currentUser, currentPassword);
+			request.logout();
+		} catch (UserPasswordException e) {
+			model.addAttribute("currentPasswordError", e.getMessage());
+			return "profileSettings";
+		}
+		return "redirect:/login";
+	}
+	
 }

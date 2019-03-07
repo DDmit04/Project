@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.web.data.FriendRequest;
 import com.web.data.User;
+import com.web.exceptions.UserPasswordException;
 import com.web.repository.FriendReqestRepo;
 import com.web.repository.UserRepo;
 import com.web.utils.DateUtil;
@@ -48,5 +49,17 @@ public class ProfileService {
 		userRepo.save(currentUser);	
 		user.getUserFriends().remove(currentUser);
 		userRepo.save(user);	
+	}
+	
+	public void changePassword(User currentUser, String currentPassword, String newPassword) throws UserPasswordException {
+		if(currentPassword.equals(newPassword)) {
+			throw new UserPasswordException("new password is " + currentUser.getUsername() + "'s current password!", currentUser);
+		}
+		if(currentPassword.equals(currentUser.getPassword())) {
+			currentUser.setPassword(newPassword);
+			userRepo.save(currentUser);
+		} else {
+			throw new UserPasswordException("Wrong " + currentUser.getUsername() + "'s password!", currentUser);
+		}
 	}
 }

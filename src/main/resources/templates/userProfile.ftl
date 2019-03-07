@@ -17,6 +17,8 @@
 				  			<#else>
 								<a class="btn btn-primary" href="/${user.id}/friendRequest" role="button">Frend reqest</a>
 				  			</#if>
+				  		<#else>
+				  			<a class="btn btn-primary btn-lg btn-block" href="/profile/redact" role="button">Redact</a>
 				  		</#if>
 			  		</div>
 		  		</div>
