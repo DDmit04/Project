@@ -1,7 +1,7 @@
 <#import "parts/HTMLshell.ftl" as shell> <@shell.htmlPage>
 
 <div class="col-8">
-		<#if redirectMessage != "">
+		<#if redirectMessage?? && redirectMessage != "">
 			<div class="alert alert-success alert-dismissible fade show" role="alert">
 			  ${redirectMessage}
 			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -48,7 +48,7 @@
         				delete account
        	 			</button>
 					<!-- Collapse menue -->
-	   				<div id="geleteAccount" class="collapse <#if currentPasswordError??>show</#if>" aria-labelledby="headingOne" data-parent="#accordion">
+	   				<div id="geleteAccount" class="collapse <#if accountDeleteError??>show</#if>" aria-labelledby="headingOne" data-parent="#accordion">
 	   					<div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
 							<strong>Warning!</strong> After this action your account will be permanently deleted!
 						  	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -58,10 +58,10 @@
 		    			<form method="post" action="/profile/settings/deleteAccount">
 							<div class="form-group mt-3">
 							    <label>Current Password:</label>
-								<input class="form-control mb-2 ${(currentPasswordError??)?string('is-invalid', '')}" type="text" 
-									name="currentPassword" id="currentPassword" placeholder="enter current password" 
-									onfocus="disposeAlert('currentPassword');">
-								<div id="currentPasswordError" class="invalid-feedback"><#if currentPasswordError??>${currentPasswordError}</#if></div>
+								<input class="form-control mb-2 ${(accountDeleteError??)?string('is-invalid', '')}" type="text" 
+									name="accountDeletePassword" id="accountDeletePassword" placeholder="enter current password" 
+									onfocus="disposeAlert('accountDeletePassword');">
+								<div id="currentPasswordError" class="invalid-feedback"><#if accountDeleteError??>${accountDeleteError}</#if></div>
 							</div>
 							<button class="btn btn-primary" type="submit">delete account</button>
 							<input type="hidden" name="_csrf" value="${_csrf.token}" />

@@ -55,6 +55,22 @@ public class User implements UserDetails {
 	)
 	private Set<User> userFriends = new HashSet<User>();
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = { @JoinColumn(name = "channel_id") },
+            inverseJoinColumns = { @JoinColumn(name = "subscriber_id") }
+    )
+    private Set<User> subscribers = new HashSet<User>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = { @JoinColumn(name = "subscriber_id") },
+            inverseJoinColumns = { @JoinColumn(name = "channel_id") }
+    )
+    private Set<User> subscriptions = new HashSet<>();
+	
 
 	public User() {
 	}
@@ -155,5 +171,17 @@ public class User implements UserDetails {
 	}
 	public void setUserFriends(Set<User> userFrends) {
 		this.userFriends = userFrends;
+	}
+	public Set<User> getSubscribers() {
+		return subscribers;
+	}
+	public void setSubscribers(Set<User> subscribers) {
+		this.subscribers = subscribers;
+	}
+	public Set<User> getSubscriptions() {
+		return subscriptions;
+	}
+	public void setSubscriptions(Set<User> subscriptions) {
+		this.subscriptions = subscriptions;
 	}
 }

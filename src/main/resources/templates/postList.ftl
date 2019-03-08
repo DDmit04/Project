@@ -2,16 +2,7 @@
 
 <div class="col-8">
 	<#include "parts/forms/addPostForm.ftl">
-	
-	<#if !isEdit>
-		<#list posts as post>
-			<#include "parts/posts/showPost.ftl">
-		<#else>
-			<h2 class="display-4 mt-5" align="center">Oops! Nothing here!</h2>
-		</#list>
-	<#else>
-		<#include "parts/posts/showPost.ftl">
-	</#if>
+	<#include "parts/postListHendle.ftl">
 </div>
 
 </@shell.htmlPage>

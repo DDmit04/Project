@@ -1,7 +1,6 @@
 package com.web.controllers;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

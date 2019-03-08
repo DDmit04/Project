@@ -20,9 +20,9 @@ public class FriendRequest {
 	public FriendRequest() {
 	}
 	public FriendRequest(String creationDate, User requestFrom , User requestTo) {
+		this.creationDate = creationDate;
 		this.requestFrom = requestFrom;
 		this.requestTo = requestTo;
-		this.creationDate = creationDate;
 		this.requestToId = requestTo.getId();
 		this.requestFromId = requestFrom.getId();
 	}

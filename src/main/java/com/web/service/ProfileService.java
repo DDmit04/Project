@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.web.data.FriendRequest;
 import com.web.data.User;
-import com.web.exceptions.UserPasswordException;
 import com.web.repository.FriendReqestRepo;
 import com.web.repository.UserRepo;
 import com.web.utils.DateUtil;
@@ -19,21 +18,29 @@ public class ProfileService {
 	@Autowired
 	private UserRepo userRepo;
 
+	public Iterable<FriendRequest> findRequestTo(User currentUser) {
+		return friendReqestRepo.findByRequestToId(currentUser.getId());
+	}
+
+	public Iterable<FriendRequest> findRequestFrom(User currentUser) {
+		return friendReqestRepo.findByRequestFromId(currentUser.getId());
+	}
+	
 	public void addFriendRequest(User user, User currentUser) {
 		FriendRequest friendReqest = new FriendRequest(DateUtil.getLocalDate(), currentUser, user);
 		friendReqestRepo.save(friendReqest);		
 	}
-
-	public Iterable<FriendRequest> findRequestTo(User currentUser) {
-		return friendReqestRepo.findByRequestTo(currentUser);
-	}
-
-	public Iterable<FriendRequest> findRequestFrom(User currentUser) {
-		return friendReqestRepo.findByRequestFrom(currentUser);
+	
+	public void deleteFriendRequest(FriendRequest frendReqest) {
+		friendReqestRepo.delete(frendReqest);		
 	}
 	
-	public void deleteRequest(FriendRequest frendReqest) {
-		friendReqestRepo.delete(frendReqest);		
+	public void deleteFriendRequest(User user, User currentUser, FriendRequest frendReqest) {
+		Long counterRequest = friendReqestRepo.findOneRequestId(user.getId(), currentUser.getId());
+		if(counterRequest != null) {
+			friendReqestRepo.deleteById(counterRequest);
+		}
+		friendReqestRepo.delete(frendReqest);	
 	}
 
 	public void addFriend(User user, User currentUser, FriendRequest frendReqest) {
@@ -41,7 +48,7 @@ public class ProfileService {
 		userRepo.save(currentUser);
 		user.getUserFriends().add(currentUser);
 		userRepo.save(user);
-		friendReqestRepo.delete(frendReqest);		
+		deleteFriendRequest(user, currentUser, frendReqest);
 	}
 
 	public void deleteFriend(User user, User currentUser) {
@@ -51,15 +58,13 @@ public class ProfileService {
 		userRepo.save(user);	
 	}
 	
-	public void changePassword(User currentUser, String currentPassword, String newPassword) throws UserPasswordException {
-		if(currentPassword.equals(newPassword)) {
-			throw new UserPasswordException("new password is " + currentUser.getUsername() + "'s current password!", currentUser);
-		}
-		if(currentPassword.equals(currentUser.getPassword())) {
-			currentUser.setPassword(newPassword);
-			userRepo.save(currentUser);
-		} else {
-			throw new UserPasswordException("Wrong " + currentUser.getUsername() + "'s password!", currentUser);
-		}
+	public void removeSubscription(User currentUser, User user) {
+		user.getSubscribers().remove(currentUser);
+		userRepo.save(user);
+	}
+
+	public void addSubscription(User currentUser, User user) {
+		user.getSubscribers().add(currentUser);
+		userRepo.save(user);
 	}
 }

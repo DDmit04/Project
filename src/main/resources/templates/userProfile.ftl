@@ -17,6 +17,11 @@
 				  			<#else>
 								<a class="btn btn-primary" href="/${user.id}/friendRequest" role="button">Frend reqest</a>
 				  			</#if>
+				  			<#if user.isSub>
+				  				<a class="btn btn-primary ml-2" href="/${user.id}/unsubscribe">unsub</a>
+				  			<#else>
+				  				<a class="btn btn-primary ml-2" href="/${user.id}/subscribe">sub</a>				  				
+				  			</#if>
 				  		<#else>
 				  			<a class="btn btn-primary btn-lg btn-block" href="/profile/redact" role="button">Redact</a>
 				  		</#if>
@@ -39,20 +44,15 @@
 				<a href="/${user.id}/profile/friendlist" role="button" class="btn btn-primary">
  					friends: <span class="badge badge-light">${user.friendCount}</span>
 				</a>
+				<a href="/${user.id}/profile/sublist" role="button" class="btn btn-primary">
+ 					subscribesrs: <span class="badge badge-light">${user.subCount}</span>
+				</a>
 			</div>
 		</div>
 		<#if currentUsername == user.username>
 			<#include "parts/forms/addPostForm.ftl">
 		</#if>
-		<#if !isEdit>
-			<#list posts as post>
-				<#include "parts/posts/showPost.ftl">
-			<#else>
-				<h2 class="display-4 mt-5" align="center">Oops! Nothing here!</h2>
-			</#list>
-		<#else>
-			<#include "parts/posts/showPost.ftl">
-	</#if>
+		<#include "parts/postListHendle.ftl">
 	</div>
 </div>
 </@shell.htmlPage>

@@ -9,19 +9,35 @@ public class UserDto {
 	private boolean active;
 	private String registrationDate;
 	private String userPicName;
-	private Long frindCount;
+	private Long friendCount;
+	private Long subCount;
 	private boolean isFriend;
 	private boolean isRequested;
+	private boolean isSub;
 	
-	public UserDto(User user, Long frendCount, boolean isFriend, boolean isRequested) {
+	public UserDto(User user, Long frendCount, Long subCount, boolean isFriend, boolean isRequested, boolean isSub) {
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.active = user.isActive();
 		this.registrationDate = user.getRegistrationDate();
 		this.userPicName = user.getUserPicName();
-		this.frindCount = frendCount;
+		this.friendCount = frendCount;
 		this.isFriend = isFriend;
 		this.isRequested = isRequested;
+		this.isSub = isSub;
+		this.subCount = subCount;
+	}
+	public UserDto(User user, Long frendCount, Long subCount) {
+		this.id = user.getId();
+		this.username = user.getUsername();
+		this.active = user.isActive();
+		this.registrationDate = user.getRegistrationDate();
+		this.userPicName = user.getUserPicName();
+		this.friendCount = frendCount;
+		this.isFriend = false;
+		this.isRequested = false;
+		this.isSub = false;
+		this.subCount = subCount;
 	}
 	public boolean getIsRequested() {
 		return isRequested;
@@ -42,11 +58,15 @@ public class UserDto {
 		return userPicName;
 	}
 	public Long getFriendCount() {
-		return frindCount;
+		return friendCount;
 	}
 	public boolean getIsFriend() {
 		return isFriend;
 	}
-
-	
+	public boolean getIsSub() {
+		return isSub;
+	}
+	public Long getSubCount() {
+		return subCount;
+	}
 }

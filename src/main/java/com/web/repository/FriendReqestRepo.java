@@ -1,14 +1,22 @@
 package com.web.repository;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import com.web.data.FriendRequest;
-import com.web.data.User;
 
 public interface FriendReqestRepo extends CrudRepository<FriendRequest, Long> {
 	
-	Iterable<FriendRequest> findByRequestFrom(User user);
+	Iterable<FriendRequest> findByRequestFromId(Long requestFromId);
 	
-	Iterable<FriendRequest> findByRequestTo(User user);
+	Iterable<FriendRequest> findByRequestToId(Long requestToId);
+
+	@Query("select id " + 
+		   "from FriendRequest fr " + 
+		   "where fr.requestToId = :requestToId and fr.requestFromId = :requestFromId " +
+		   "group by fr"
+		)
+	Long findOneRequestId(@Param("requestToId") Long requestToId, @Param("requestFromId") Long requestFromId);
 	
 }

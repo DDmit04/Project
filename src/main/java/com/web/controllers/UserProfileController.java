@@ -17,12 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.web.data.FriendRequest;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
 import com.web.exceptions.UserException;
-import com.web.exceptions.UserPasswordException;
 import com.web.service.PostService;
 import com.web.service.ProfileService;
 import com.web.service.UserService;
@@ -38,60 +36,6 @@ public class UserProfileController {
 	
 	@Autowired
 	private ProfileService profileService;
-	
-	@GetMapping("/friendRequest")
-	public String userFriendRequest(@AuthenticationPrincipal User currentUser,
-								   Model model) {
-		Iterable<FriendRequest> friendReqestsFrom = profileService.findRequestFrom(currentUser);
-		Iterable<FriendRequest> friendReqestsTo = profileService.findRequestTo(currentUser);
-		model.addAttribute("friendRequestsFrom", friendReqestsFrom);
-		model.addAttribute("friendRequestsTo", friendReqestsTo);
-		return "friendRequestList";
-	}
-	
-	@GetMapping("{user}/friendRequest")
-	public String addFriendRequest(@AuthenticationPrincipal User currentUser,
-			   					   @PathVariable User user,
-			   					   Model model) {
-		profileService.addFriendRequest(user, currentUser);
-		return "redirect:/" + user.getId() + "/profile";
-	}
-	
-	@GetMapping("{user}/friendRequest/{friendRequest}/accept")
-	public String acceptFriendRequest(@AuthenticationPrincipal User currentUser,
-									  @PathVariable FriendRequest friendRequest,
-									  @PathVariable User user,
-									  Model model) {
-		profileService.addFriend(user, currentUser, friendRequest);
-		return "redirect:/friendRequest";
-	}
-	
-	@GetMapping("/{user}/deleteFriend")
-	public String deleteFriend(@AuthenticationPrincipal User currentUser,
-							   @PathVariable User user) {
-		profileService.deleteFriend(user, currentUser);
-		return "redirect:/" + user.getId() + "/profile";
-	}
-	
-	@GetMapping("{user}/friendRequest/{friendRequest}/denial")
-	public String denialFriendRequest(@AuthenticationPrincipal User currentUser,
-									  @PathVariable FriendRequest friendRequest,
-									  @PathVariable User user,
-									  Model model) {
-		profileService.deleteRequest(friendRequest);
-		return "redirect:/friendRequest";
-	}
-	
-	@GetMapping("{user}/profile/friendlist")
-	public String getFriendlist(@AuthenticationPrincipal User currentUser,
-							    @PathVariable User user,
-							    Model model) {
-		Iterable<User> userFrends = user.getUserFriends();
-		model.addAttribute("user", user);
-		model.addAttribute("userFriendsCount", user.getUserFriends().size());
-		model.addAttribute("friends", userFrends);
-		return "friendList";
-	}
 	
 	@GetMapping("{user}/profile")
 	public String getUserProfile(@AuthenticationPrincipal User currentUser,
@@ -133,9 +77,9 @@ public class UserProfileController {
 							   	 RedirectAttributes redirectAttrs,
 								 Model model) {
 		try {
-			profileService.changePassword(currentUser, currentPassword, newPassword);
-		} catch (UserPasswordException e) {
-			model.addAttribute("currentPasswordError", e.getMessage());
+			userService.changePassword(currentUser, currentPassword, newPassword);
+		} catch (UserException userException) {
+			model.addAttribute("currentPasswordError", userException.getMessage());
 			return "profileSettings";
 		}
 		redirectAttrs.addFlashAttribute("redirectMessage", "password seccesfuli changed!");
@@ -144,17 +88,39 @@ public class UserProfileController {
 	
 	@PostMapping("/profile/settings/deleteAccount")
 	public String deleteAccount(@AuthenticationPrincipal User currentUser,
-								@RequestParam String currentPassword,
+								@RequestParam String accountDeletePassword,
 								HttpServletRequest request,
 								Model model) throws ServletException {
 		try {
-			userService.deleteUser(currentUser, currentPassword);
+			userService.deleteUser(currentUser, accountDeletePassword);
 			request.logout();
-		} catch (UserPasswordException e) {
-			model.addAttribute("currentPasswordError", e.getMessage());
+		} catch (UserException userException) {
+			model.addAttribute("accountDeleteError", userException.getMessage());
 			return "profileSettings";
 		}
 		return "redirect:/login";
+	}
+	
+	@GetMapping("{user}/subscribe")
+	public String subscribe(@AuthenticationPrincipal User currentUser,
+							@PathVariable User user) {
+		profileService.addSubscription(currentUser, user);
+		return "redirect:/" + user.getId() + "/profile";
+	}
+	
+	@GetMapping("{user}/unsubscribe")
+	public String unsubscribe(@AuthenticationPrincipal User currentUser,
+							  @PathVariable User user) {
+		profileService.removeSubscription(currentUser, user);
+		return "redirect:/" + user.getId() + "/profile";
+	}
+	
+	@GetMapping("/{user}/profile/sublist")
+	public String subList(@PathVariable User user,
+						  Model model) {
+		model.addAttribute("subscriptions", user.getSubscriptions());
+		model.addAttribute("subscribers", user.getSubscribers());
+		return "subList";
 	}
 	
 }

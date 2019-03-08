@@ -14,7 +14,7 @@ import com.web.data.User;
 import com.web.data.UserRoles;
 import com.web.data.dto.UserDto;
 import com.web.exceptions.UserException;
-import com.web.exceptions.UserPasswordException;
+import com.web.exceptions.UserExceptionType;
 import com.web.repository.UserRepo;
 import com.web.utils.DateUtil;
 
@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService{
 	public void addUser(User user, MultipartFile userPic) throws UserException, IllegalStateException, IOException {
 		User userFromDb = userRepo.findByUsername(user.getUsername());
 		if (userFromDb != null) {
-			throw new UserException("user with name " + user.getUsername() + " already exists!", user);
+			throw new UserException("user with name " + user.getUsername() + " already exists!", user, UserExceptionType.EXISTING_USERNAME);
 		} else {
 			user.setUserPicName(fileService.uploadFile(userPic, UploadType.USERPIC));
 			user.setRegistrationDate(DateUtil.getLocalDate());
@@ -48,12 +48,28 @@ public class UserService implements UserDetailsService{
 	public UserDto findOneUser(User currentUser, User user) {
 		return  userRepo.findOneUser(currentUser, currentUser.getId(), user.getId());
 	}
+	
+	public UserDto findOneUser(User user) {
+		return  userRepo.findOneUser(user.getId());
+	}
 
-	public void deleteUser(User currentUser, String currentPassword) throws UserPasswordException {
-		if(currentPassword.equals(currentUser.getPassword())) {
+	public void deleteUser(User currentUser, String accountDeletePassword) throws UserException {
+		if(accountDeletePassword.equals(currentUser.getPassword())) {
 			userRepo.delete(currentUser);
 		} else {
-			throw new UserPasswordException("Wrong " + currentUser.getUsername() + "'s password!", currentUser);
+			throw new UserException("Wrong " + currentUser.getUsername() + "'s password!", currentUser, UserExceptionType.DELETE_USER);
+		}
+	}
+	
+	public void changePassword(User currentUser, String currentPassword, String newPassword) throws UserException {
+		if(currentPassword.equals(newPassword)) {
+			throw new UserException("new password is " + currentUser.getUsername() + "'s current password!", currentUser, UserExceptionType.CHANGE_PASSWORD);
+		}
+		if(currentPassword.equals(currentUser.getPassword())) {
+			currentUser.setPassword(newPassword);
+			userRepo.save(currentUser);
+		} else {
+			throw new UserException("Wrong " + currentUser.getUsername() + "'s password!", currentUser, UserExceptionType.CHANGE_PASSWORD);
 		}
 	}
 }
