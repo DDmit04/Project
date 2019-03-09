@@ -118,6 +118,7 @@ public class UserProfileController {
 	@GetMapping("/{user}/profile/sublist")
 	public String subList(@PathVariable User user,
 						  Model model) {
+		model.addAttribute("user", user);
 		model.addAttribute("subscriptions", user.getSubscriptions());
 		model.addAttribute("subscribers", user.getSubscribers());
 		return "subList";
