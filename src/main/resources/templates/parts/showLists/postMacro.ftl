@@ -30,6 +30,11 @@
 				</div>
 			</div>
 		</#if>
+		
+		
+		
+		
+		
 	</div>
 	<div class="card-body border-secondary">
 		<#if post.tags != "">
@@ -41,14 +46,10 @@
 	       		<img src="/img/${post.filename}" width="89" class="card-img-top">
 	    	</#if>
     	</div>
-	
-	
-		<#list post.reposts as repost>
-			<@postMacro repost "repost" />
-		</#list>
-	
+    	<#if post.repost??>
+			<@postMacro post.repost "repost" />
+		</#if>
 	</div>
-	
 	<#if postType != "repost">
 		<div class="card-footer bg-transparent border-secondary">
 			<a class="mr-3" href="/posts/${post.id}/like">
@@ -93,8 +94,3 @@
 <script src="/customJs/formValidate.js"></script>
 
 </#macro>
-
-
-
-
-
