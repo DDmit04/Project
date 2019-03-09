@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.web.data.Comment;
 import com.web.data.Post;
 import com.web.data.User;
-import com.web.data.dto.CommentDto;
 import com.web.data.dto.PostDto;
 import com.web.service.CommentService;
 import com.web.service.PostService;
@@ -33,7 +32,7 @@ public class CommentController {
 	public String getComments(@AuthenticationPrincipal User currentUser,
 							  @PathVariable Post post,
 							  Model model) {
-		Iterable<CommentDto> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
+		Iterable<Comment> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
 		PostDto commentedPost = postService.findOnePost(currentUser, post);
 		model.addAttribute("comments", searchByCommentedPost);
 		model.addAttribute("post", commentedPost);
@@ -66,7 +65,7 @@ public class CommentController {
 								 @PathVariable Post post,
 							     @PathVariable Comment comment,
 							     Model model) {
-		Iterable<CommentDto> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
+		Iterable<Comment> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
 		PostDto commentedPost = postService.findOnePost(currentUser, post);
 		model.addAttribute("comments", searchByCommentedPost);
 		model.addAttribute("post", commentedPost);		model.addAttribute("editedComment", comment);

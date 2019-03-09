@@ -22,10 +22,20 @@ public class PostService {
 	private PostRepo postRepo;
 	
 	public void addPost(String postText, String tags, MultipartFile file, User user) throws IllegalStateException, IOException {
+		postRepo.save(createNewPost(postText, user, tags, file));
+	}
+	
+	public void addRepost(User currentUser, Post repost, String repostText, String repostTags) throws IllegalStateException, IOException {
+		Post post = createNewPost(repostText, currentUser, repostTags, null);	
+		post.getReposts().add(repost);
+		postRepo.save(post);
+	}
+	
+	public Post createNewPost(String postText, User user, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		Post post = new Post(postText, tags, DateUtil.getLocalDate("yyyy-MM-dd HH:mm:ss"));
 		post.setPostAuthor(user);
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
-		postRepo.save(post);
+		return post;
 	}
 	
 	public void updatePost(Post post, String text, String tags, MultipartFile file) throws IllegalStateException, IOException {
@@ -37,6 +47,7 @@ public class PostService {
 	}
 
 	public void deletePost(Post post) {
+		
 		postRepo.delete(post);
 	}
 

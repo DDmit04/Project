@@ -1,9 +1,11 @@
-<#import "parts/HTMLshell.ftl" as shell> <@shell.htmlPage> 
+<#import "parts/HTMLshell.ftl" as shell>
+<#import "parts/showLists/postMacro.ftl" as postMacro>
+ <@shell.htmlPage> 
 
 <#include "parts/security.ftl">
 
 <div class="col-8">
-	<#include "parts/showLists/showPost.ftl">
+	<@postMacro.postMacro post "post" />
 		<#list comments as comment>
 			<#include "parts/showLists/showComment.ftl">
 		<#else>

@@ -1,5 +1,8 @@
 package com.web.data.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.web.data.Post;
 import com.web.data.User;
 
@@ -14,6 +17,7 @@ public class PostDto {
 	private Long likes;
 	private Long commentsCount;
 	private boolean liked;
+	private Set<Post> reposts = new HashSet<Post>();
 	
 	public PostDto(Post post, Long likes, boolean liked) {
 		this.id = post.getId();
@@ -25,6 +29,7 @@ public class PostDto {
 		this.liked = liked;
 		this.commentsCount = (long) post.getPostComments().size();
 		this.likes = likes;
+		this.reposts = post.getReposts();
 	}
 	public Long getId() {
 		return id;
@@ -52,5 +57,8 @@ public class PostDto {
 	}
 	public Long getCommentsCount() {
 		return commentsCount;
+	}
+	public Set<Post> getReposts() {
+		return reposts;
 	}
 }

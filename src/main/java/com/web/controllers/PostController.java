@@ -33,11 +33,21 @@ public class PostController {
 		return "redirect:/posts";
 	}
 	
+	@PostMapping("{repostedPost}/repost")
+	public String addRepost(@AuthenticationPrincipal User currentUser,
+							@PathVariable Post repostedPost, 
+			 				@RequestParam(required = false) String repostText,
+			 				@RequestParam String repostTags) throws IllegalStateException, IOException {
+		postService.addRepost(currentUser, repostedPost, repostText, repostTags);
+		return "redirect:/posts";
+	}
+	
 	@GetMapping("/posts")
 	public String getPosts(@AuthenticationPrincipal User currentUser,
 						   @RequestParam(required = false) String search,
 						   Model model) {
 		Iterable<PostDto> searchByTag = postService.searchPostsByTag(search, currentUser);
+		model.addAttribute("user", currentUser);
 		model.addAttribute("posts", searchByTag);
 		model.addAttribute("search", search);
 		return "postList";
@@ -56,9 +66,11 @@ public class PostController {
 	}
 	
 	@GetMapping("{post}/edit")
-	public String getPost(@PathVariable Post post, 
+	public String getPost(@AuthenticationPrincipal User currentUser,
+						  @PathVariable Post post, 
 			  			  Model model) {
-		model.addAttribute("post", post);
+		PostDto editedPost = postService.findOnePost(currentUser, post);
+		model.addAttribute("post", editedPost);
 		return "postList";	
 	}
 	

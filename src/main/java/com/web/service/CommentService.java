@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.web.data.Comment;
 import com.web.data.Post;
 import com.web.data.User;
-import com.web.data.dto.CommentDto;
 import com.web.repository.CommentRepo;
 import com.web.utils.DateUtil;
 
@@ -32,7 +31,7 @@ public class CommentService {
 		commentRepo.save(comment);		
 	}
 
-	public Iterable<CommentDto> findCommentsByCommentedPost(Post post) {
+	public Iterable<Comment> findCommentsByCommentedPost(Post post) {
 		return commentRepo.findByCommentedPost(post);
 	}
 

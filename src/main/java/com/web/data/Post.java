@@ -31,8 +31,15 @@ public class Post {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	private User postAuthor;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "post_repost", 
+	    joinColumns = @JoinColumn(name = "repostedPost_id"), 
+	    inverseJoinColumns = @JoinColumn(name = "repost_id")
+	)
+	private Set<Post> reposts = new HashSet<Post>();
 
-	@OneToMany(mappedBy = "commentedPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "commentedPost")
 	private Set<Comment> postComments;
 
 	@ManyToMany
@@ -43,6 +50,12 @@ public class Post {
 	private Set<User> postLikes = new HashSet<User>();
 
 	public Post() {
+	}
+	public Set<Post> getReposts() {
+		return reposts;
+	}
+	public void setReposts(Set<Post> reposts) {
+		this.reposts = reposts;
 	}
 	public Post(String postText, String tags, String creationDate) {
 		this.postText = postText;
