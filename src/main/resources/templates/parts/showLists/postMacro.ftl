@@ -30,11 +30,6 @@
 				</div>
 			</div>
 		</#if>
-		
-		
-		
-		
-		
 	</div>
 	<div class="card-body border-secondary">
 		<#if post.tags != "">
@@ -46,8 +41,10 @@
 	       		<img src="/img/${post.filename}" width="89" class="card-img-top">
 	    	</#if>
     	</div>
-    	<#if post.repost??>
-			<@postMacro post.repost "repost" />
+    	<#if post.reposts??>
+    		<#list post.reposts as repost>
+				<@postMacro repost "repost" />
+			</#list>
 		</#if>
 	</div>
 	<#if postType != "repost">

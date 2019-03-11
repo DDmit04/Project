@@ -28,11 +28,11 @@ public class Post {
 	private String creationDate;
 	private String filename;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User postAuthor;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "post_repost", 
 	    joinColumns = @JoinColumn(name = "repostedPost_id"), 
 	    inverseJoinColumns = @JoinColumn(name = "repost_id")
