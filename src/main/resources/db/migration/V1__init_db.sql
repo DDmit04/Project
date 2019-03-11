@@ -14,10 +14,13 @@ create table post (
 	creation_date varchar(255), 
 	filename varchar(255), 
 	post_text varchar(255), 
+	reposts_count int8, 
 	tags varchar(255), 
-	user_id int8 , 
+	user_id int8, 
+	post_id int8, 
 	primary key (id)
 );
+
 create table app_groups (
 	id int8 not null, 
 	creation_date varchar(255), 
@@ -30,8 +33,8 @@ create table comment (
 	comment_pic_name varchar(255), 
 	comment_text varchar(255), 
 	creation_date varchar(255), 
-	user_id int8 , 
-	post_id int8 , 
+	user_id int8, 
+	post_id int8, 
 	primary key (id)
 );
 create table friend_request (
@@ -44,27 +47,22 @@ create table friend_request (
 	primary key (id)
 );
 create table post_likes (
-	post_id int8 not null , 
-	user_id int8 not null , 
+	post_id int8 not null, 
+	user_id int8 not null, 
 	primary key (post_id, user_id)
 );
-create table post_repost (
-	reposted_post_id int8 not null , 
-	repost_id int8 not null , 
-	primary key (reposted_post_id, repost_id)
-);
 create table user_friendship (
-	first_user_id int8 not null , 
-	second_user_id int8 not null , 
+	first_user_id int8 not null, 
+	second_user_id int8 not null, 
 	primary key (first_user_id, second_user_id)
 );
 create table user_role (
-	user_id int8 not null , 
+	user_id int8 not null, 
 	roles varchar(255)
 );
 create table user_subscriptions (
-	subscriber_id int8 not null , 
-	channel_id int8 not null , 
+	subscriber_id int8 not null, 
+	channel_id int8 not null, 
 	primary key (channel_id, subscriber_id)
 );
 alter table if exists comment add constraint FKgcgdcgly6u49hf4g8y2di3g4p foreign key (user_id) references usr ON DELETE CASCADE;

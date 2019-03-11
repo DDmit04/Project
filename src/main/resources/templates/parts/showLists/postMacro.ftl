@@ -17,7 +17,7 @@
 			</div>
 			<small class="ml-2">${post.creationDate}</small>
 		</div>
-		<#if currentUsername == post.postAuthor.username>
+		<#if currentUsername == post.postAuthor.username && postType != "repost">
 			<div class="col dropdown" align="right">
 				<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 					<i class="fas fa-ellipsis-v"></i>
@@ -28,6 +28,11 @@
 					</#if>
 						<a class="dropdown-item" href="/${post.id}/delete">delete</a>
 				</div>
+			</div>
+		</#if>
+		<#if postType == "repost">
+			<div align="right">
+				<a href="/${post.id}/comments"><i class="fas fa-external-link-square-alt"></i></a>
 			</div>
 		</#if>
 	</div>
@@ -41,10 +46,9 @@
 	       		<img src="/img/${post.filename}" width="89" class="card-img-top">
 	    	</#if>
     	</div>
-    	<#if post.reposts??>
-    		<#list post.reposts as repost>
-				<@postMacro repost "repost" />
-			</#list>
+<!--    starts recursion while post (or post in repost) have repost, build post three  -->
+    	<#if post.repost??>
+			<@postMacro post.repost "repost" />
 		</#if>
 	</div>
 	<#if postType != "repost">
@@ -62,27 +66,15 @@
 			</a>
 			<#if currentUsername != post.postAuthor.username>
 				<a class="ml-3" data-toggle="collapse" href="#repost${post.id}" role="button" aria-expanded="false" aria-controls="repost${post.id}">
-		    		<i class="fas fa-sign-in-alt mr-1"></i>1
+		    		<i class="fas fa-sign-in-alt mr-1"></i>${post.repostsCount}
 		  		</a>
-				<div class="collapse" id="repost${post.id}">
-		 		 	<div class="card card-body">
-		 		 		<form method="post" action="${post.id}/repost" onsubmit="return validateComment()">
-							<input id="repostText" name="repostText" class="form-control col-mt" type="text"  placeholder="repost text" 
-								onfocus="disposeAlert('repostText')"> 
-							<input id="repostTags" name="repostTags" class="form-control col-mt" type="text"  placeholder="repost tags" 
-								onfocus="disposeAlert('repostTags')"> 
-							<div id="commentTextError" class="invalid-feedback"></div>
-							<button class="btn btn-primary mt-2" type="submit">
-									repost
-		<!-- 							<#if editedComment??> -->
-		<!-- 								edit -->
-		<!-- 							<#else> -->
-		<!-- 								add -->
-		<!-- 							</#if> -->
-							</button>
-							<input type="hidden" name="_csrf" value="${_csrf.token}" />
-						</form>	
-		 			</div>
+				<div class="collapse mt-3" id="repost${post.id}">
+		 		 	<form method="post" action="/${post.id}/repost">
+						<input id="repostText" name="repostText" class="form-control col-mt" type="text"  placeholder="repost text"> 
+						<input id="repostTags" name="repostTags" class="form-control col-mt mt-2" type="text"  placeholder="repost tags"> 
+						<button class="btn btn-primary mt-2" type="submit">repost</button>
+						<input type="hidden" name="_csrf" value="${_csrf.token}" />
+					</form>	
 				</div>
 			</#if>
 		</div>

@@ -16,8 +16,9 @@ public class PostDto {
 	private User postAuthor;
 	private Long likes;
 	private Long commentsCount;
+	private Long repostsCount;
 	private boolean liked;
-	private Set<Post> reposts = new HashSet<Post>();
+	private Post repost;
 	
 	public PostDto(Post post, Long likes, boolean liked) {
 		this.id = post.getId();
@@ -29,7 +30,11 @@ public class PostDto {
 		this.liked = liked;
 		this.commentsCount = (long) post.getPostComments().size();
 		this.likes = likes;
-		this.reposts = post.getReposts();
+		this.repost = post.getRepost();
+		this.repostsCount = post.getRepostsCount();
+	}
+	public Long getRepostsCount() {
+		return repostsCount;
 	}
 	public Long getId() {
 		return id;
@@ -58,7 +63,7 @@ public class PostDto {
 	public Long getCommentsCount() {
 		return commentsCount;
 	}
-	public Set<Post> getReposts() {
-		return reposts;
+	public Post getRepost() {
+		return repost;
 	}
 }

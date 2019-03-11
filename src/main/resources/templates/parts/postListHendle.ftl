@@ -1,5 +1,5 @@
 <#import "showLists/postMacro.ftl" as postMacro> 
-
+<!-- is used in postList and userProfile -->
 <#if !isEdit>
 	<#list posts as post>
 		<@postMacro.postMacro post "post" />

@@ -1,6 +1,7 @@
 package com.web.service;
 
 import java.io.IOException;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,13 @@ public class PostService {
 		postRepo.save(createNewPost(postText, user, tags, file));
 	}
 	
-	public void addRepost(User currentUser, Post repost, String repostText, String repostTags) throws IllegalStateException, IOException {
-		Post post = createNewPost(repostText, currentUser, repostTags, null);	
-		post.getReposts().add(repost);
+	public void addRepost(User currentUser, Post post, String repostText, String repostTags) throws IllegalStateException, IOException {
+		Post newPost = createNewPost(repostText, currentUser, repostTags, null);	
+		newPost.setRepost(post);
+		Long incReposts = post.getRepostsCount() + 1; 
+		post.setRepostsCount(incReposts);
 		postRepo.save(post);
+		postRepo.save(newPost);
 	}
 	
 	public Post createNewPost(String postText, User user, String tags, MultipartFile file) throws IllegalStateException, IOException {
@@ -47,7 +51,6 @@ public class PostService {
 	}
 
 	public void deletePost(Post post) {
-		
 		postRepo.delete(post);
 	}
 

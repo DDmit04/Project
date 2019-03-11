@@ -3,7 +3,6 @@ package com.web.data;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Post {
@@ -27,22 +27,20 @@ public class Post {
 //	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private String creationDate;
 	private String filename;
+	private Long repostsCount = (long) 0;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User postAuthor;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "post_repost", 
-	    joinColumns = @JoinColumn(name = "repostedPost_id"), 
-	    inverseJoinColumns = @JoinColumn(name = "repost_id")
-	)
-	private Set<Post> reposts = new HashSet<Post>();
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "post_id")
+	private Post repost;
 
 	@OneToMany(mappedBy = "commentedPost")
 	private Set<Comment> postComments;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "post_likes", 
 				joinColumns = { @JoinColumn(name = "post_id") }, 
 				inverseJoinColumns = { @JoinColumn(name = "user_id") }
@@ -51,11 +49,11 @@ public class Post {
 
 	public Post() {
 	}
-	public Set<Post> getReposts() {
-		return reposts;
+	public Post getRepost() {
+		return repost;
 	}
-	public void setReposts(Set<Post> reposts) {
-		this.reposts = reposts;
+	public void setRepost(Post repost) {
+		this.repost = repost;
 	}
 	public Post(String postText, String tags, String creationDate) {
 		this.postText = postText;
@@ -115,5 +113,11 @@ public class Post {
 	}
 	public void setPostLikes(Set<User> postLikes) {
 		this.postLikes = postLikes;
+	}
+	public Long getRepostsCount() {
+		return repostsCount;
+	}
+	public void setRepostsCount(Long repostsCount) {
+		this.repostsCount = repostsCount;
 	}
 }
