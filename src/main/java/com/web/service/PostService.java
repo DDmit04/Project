@@ -1,7 +1,6 @@
 package com.web.service;
 
 import java.io.IOException;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,9 +28,7 @@ public class PostService {
 	public void addRepost(User currentUser, Post post, String repostText, String repostTags) throws IllegalStateException, IOException {
 		Post newPost = createNewPost(repostText, currentUser, repostTags, null);	
 		newPost.setRepost(post);
-		Long incReposts = post.getRepostsCount() + 1; 
-		post.setRepostsCount(incReposts);
-		postRepo.save(post);
+		incrementAndSaveRepostsCount(post);
 		postRepo.save(newPost);
 	}
 	
@@ -51,6 +48,9 @@ public class PostService {
 	}
 
 	public void deletePost(Post post) {
+		if(post.getRepost() != null) {
+			decrementAndSaveRepostsCount(post.getRepost());
+		}
 		postRepo.delete(post);
 	}
 
@@ -72,5 +72,19 @@ public class PostService {
 		Iterable<PostDto> findPost = postRepo.findOne(currentUser, post.getId());
 		PostDto commentedPost = findPost.iterator().next();
 		return 	commentedPost;
+	}
+	
+	public void incrementAndSaveRepostsCount(Post incrementedPost) {
+		incrementedPost.setRepostsCount(incrementedPost.getRepostsCount() + 1);
+		postRepo.save(incrementedPost);
+	}
+	
+	public void decrementAndSaveRepostsCount(Post decrimentedPost) {
+		decrimentedPost.setRepostsCount(decrimentedPost.getRepostsCount() - 1);
+		postRepo.save(decrimentedPost);
+	}
+
+	public Iterable<PostDto> searchFriendPosts(User currentUser) {
+		return postRepo.findSubscriptionsPosts(currentUser);
 	}
 }

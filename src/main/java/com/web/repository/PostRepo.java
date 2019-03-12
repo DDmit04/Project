@@ -49,4 +49,16 @@ public interface PostRepo extends CrudRepository<Post, Long> {
             "group by p")
     Iterable<PostDto> findOne(@Param("currentUser") User currentUser, @Param("postId") Long postId);
 	
+	  @Query("select new com.web.data.dto.PostDto(" +
+	            "   p, " +
+				"   count(pl), " +
+	            "   sum(case when pl = :currentUser then 1 else 0 end) > 0" +
+	            ") " +
+	            "from Post p left join p.postLikes pl " +
+	            "			 left join p.postAuthor.userFriends pa " +
+	            " 			 left join p.postAuthor.subscribers ps " +
+	            "where pa = :currentUser or ps = :currentUser " +
+	            "group by p")
+	  Iterable<PostDto> findSubscriptionsPosts(@Param("currentUser") User currentUser);
+	
 }

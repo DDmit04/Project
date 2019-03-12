@@ -33,15 +33,6 @@ public class PostController {
 		return "redirect:/posts";
 	}
 	
-	@PostMapping("{repostedPost}/repost")
-	public String addRepost(@AuthenticationPrincipal User currentUser,
-							@PathVariable Post repostedPost, 
-			 				@RequestParam(required = false) String repostText,
-			 				@RequestParam String repostTags) throws IllegalStateException, IOException {
-		postService.addRepost(currentUser, repostedPost, repostText, repostTags);
-		return "redirect:/posts";
-	}
-	
 	@GetMapping("/posts")
 	public String getPosts(@AuthenticationPrincipal User currentUser,
 						   @RequestParam(required = false) String search,
@@ -49,6 +40,17 @@ public class PostController {
 		Iterable<PostDto> searchByTag = postService.searchPostsByTag(search, currentUser);
 		model.addAttribute("user", currentUser);
 		model.addAttribute("posts", searchByTag);
+		model.addAttribute("search", search);
+		return "postList";
+	}
+	
+	@GetMapping("/subscriptionPosts")
+	public String getFriendPosts(@AuthenticationPrincipal User currentUser,
+							   @RequestParam(required = false) String search,
+							   Model model) {
+		Iterable<PostDto> searchFriendPosts = postService.searchFriendPosts(currentUser);
+		model.addAttribute("user", currentUser);
+		model.addAttribute("posts", searchFriendPosts);
 		model.addAttribute("search", search);
 		return "postList";
 	}
@@ -107,4 +109,14 @@ public class PostController {
 			.forEach(pair -> redirectAttributes.addAttribute(pair.getKey(), pair.getValue()));
 		return "redirect:" + components.getPath();	
 	}
+	
+	@PostMapping("{repostedPost}/repost")
+	public String addRepost(@AuthenticationPrincipal User currentUser,
+							@PathVariable Post repostedPost, 
+			 				@RequestParam(required = false) String repostText,
+			 				@RequestParam String repostTags) throws IllegalStateException, IOException {
+		postService.addRepost(currentUser, repostedPost, repostText, repostTags);
+		return "redirect:/posts";
+	}
+	
 }
