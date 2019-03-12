@@ -49,8 +49,8 @@ public class UserService implements UserDetailsService{
 		return  userRepo.findOneUser(currentUser, currentUser.getId(), user.getId());
 	}
 	
-	public UserDto findOneUser(User user) {
-		return  userRepo.findOneUser(user.getId());
+	public UserDto findOneUserForList(User user) {
+		return  userRepo.findOneUserForList(user.getId());
 	}
 
 	public void deleteUser(User currentUser, String accountDeletePassword) throws UserException {

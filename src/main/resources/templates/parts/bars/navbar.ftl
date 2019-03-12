@@ -9,7 +9,7 @@
 		    		<a class="nav-link waves-effect" href="/">greeting</a>
 		    	</li>
 		    	<li class="nav-item">
-		    		<a class="nav-link waves-effect" href="/posts">Posts</a>
+		    		<a class="nav-link waves-effect" href="/subscriptionPosts">Subscription posts</a>
 		    	</li>
 		    	<li class="nav-item">
 		    		<#if currentUser??>

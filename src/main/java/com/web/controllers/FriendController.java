@@ -68,7 +68,7 @@ public class FriendController {
 	@GetMapping("{user}/profile/friendlist")
 	public String getFriendlist(@PathVariable User user,
 							    Model model) {
-		UserDto userProfile = userService.findOneUser(user);
+		UserDto userProfile = userService.findOneUserForList(user);
 		Iterable<User> userFrends = user.getUserFriends();
 		model.addAttribute("user", userProfile);
 		model.addAttribute("friends", userFrends);

@@ -115,12 +115,14 @@ public class UserProfileController {
 		return "redirect:/" + user.getId() + "/profile";
 	}
 	
-	@GetMapping("/{user}/profile/sublist")
+	@GetMapping("/{user}/profile/sublist/{subListType}")
 	public String subList(@PathVariable User user,
+					      @PathVariable String subListType,
 						  Model model) {
 		model.addAttribute("user", user);
 		model.addAttribute("subscriptions", user.getSubscriptions());
 		model.addAttribute("subscribers", user.getSubscribers());
+		model.addAttribute("subListType", subListType);
 		return "subList";
 	}
 	

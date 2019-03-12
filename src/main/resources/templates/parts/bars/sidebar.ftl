@@ -7,7 +7,5 @@
 		<a class="list-group-item" href="/friendRequest"><i class="fas fa-tasks mr-2"></i>FrendReqests</a>
 		<a class="list-group-item" href="/${currentUserId}/profile/friendlist"><i class="fas fa-user-friends mr-2"></i>Frendlist</a>
 		<a class="list-group-item" href="/profile/settings"><i class="fas fa-cogs mr-2"></i>Settings</a>
-		<a class="list-group-item" href="/${currentUserId}/profile/sublist"><i class="fas fa-cogs mr-2"></i>My subscriptions</a>
-		<a class="list-group-item" href="/subscriptionPosts"><i class="fas fa-cogs mr-2"></i>Sub posts</a>
 	</div>
 </div>

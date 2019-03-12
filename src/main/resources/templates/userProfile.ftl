@@ -10,6 +10,7 @@
 		  		<div class="container">
 			  		<div class="row mt-3">
 				  		<#if currentUsername != user.username>
+				  		
 				  			<#if user.isFriend>
 								<a class="btn btn-primary" href="/${user.id}/deleteFriend" role="button">Unfrend</a>
 							<#elseif user.isRequested>
@@ -17,11 +18,13 @@
 				  			<#else>
 								<a class="btn btn-primary" href="/${user.id}/friendRequest" role="button">Frend reqest</a>
 				  			</#if>
+				  			
 				  			<#if user.isSub>
 				  				<a class="btn btn-primary ml-2" href="/${user.id}/unsubscribe">unsub</a>
 				  			<#else>
 				  				<a class="btn btn-primary ml-2" href="/${user.id}/subscribe">sub</a>				  				
 				  			</#if>
+				  			
 				  		<#else>
 				  			<a class="btn btn-primary btn-lg btn-block" href="/profile/redact" role="button">Redact</a>
 				  		</#if>
@@ -44,8 +47,11 @@
 				<a href="/${user.id}/profile/friendlist" role="button" class="btn btn-primary">
  					friends: <span class="badge badge-light">${user.friendCount}</span>
 				</a>
-				<a href="/${user.id}/profile/sublist" role="button" class="btn btn-primary">
- 					subscribesrs: <span class="badge badge-light">${user.subCount}</span>
+				<a href="/${user.id}/profile/sublist/subscribesrs" role="button" class="btn btn-primary">
+ 					subscribesrs: <span class="badge badge-light">${user.subscribersCount}</span>
+				</a>
+				<a href="/${user.id}/profile/sublist/subscriptions" role="button" class="btn btn-primary">
+ 					subscriptions: <span class="badge badge-light">${user.subscriptionsCount}</span>
 				</a>
 			</div>
 		</div>

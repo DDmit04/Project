@@ -33,7 +33,7 @@ public class Post {
 	@JoinColumn(name = "user_id")
 	private User postAuthor;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "post_id")
 	private Post repost;
 
