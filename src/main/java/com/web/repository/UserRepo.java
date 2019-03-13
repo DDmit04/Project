@@ -13,7 +13,7 @@ public interface UserRepo extends CrudRepository<User, Long> {
 	
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
-			"   count(uf), " +
+			"   (select count(*) from u.userFriends), " +
             "   (select count(*) from u.subscribers), " +
             "   (select count(*) from u.subscriptions), " +
             "   sum(case when uf = :currentUser then 1 else 0 end) > 0, " +

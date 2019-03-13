@@ -44,13 +44,13 @@
 				<h5>${user.username}</h5>
 			</div>
 			<div class="card-body">
-				<a href="/${user.id}/profile/friendlist" role="button" class="btn btn-primary">
+				<a href="/${user.id}/profile/socialList/friends" role="button" class="btn btn-primary">
  					friends: <span class="badge badge-light">${user.friendCount}</span>
 				</a>
-				<a href="/${user.id}/profile/sublist/subscribesrs" role="button" class="btn btn-primary">
+				<a href="/${user.id}/profile/socialList/subscribesrs" role="button" class="btn btn-primary">
  					subscribesrs: <span class="badge badge-light">${user.subscribersCount}</span>
 				</a>
-				<a href="/${user.id}/profile/sublist/subscriptions" role="button" class="btn btn-primary">
+				<a href="/${user.id}/profile/socialList/subscriptions" role="button" class="btn btn-primary">
  					subscriptions: <span class="badge badge-light">${user.subscriptionsCount}</span>
 				</a>
 			</div>

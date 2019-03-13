@@ -64,15 +64,4 @@ public class FriendController {
 		profileService.deleteFriendRequest(friendRequest);
 		return "redirect:/friendRequest";
 	}
-	
-	@GetMapping("{user}/profile/friendlist")
-	public String getFriendlist(@PathVariable User user,
-							    Model model) {
-		UserDto userProfile = userService.findOneUserForList(user);
-		Iterable<User> userFrends = user.getUserFriends();
-		model.addAttribute("user", userProfile);
-		model.addAttribute("friends", userFrends);
-		return "friendList";
-	}
-
 }

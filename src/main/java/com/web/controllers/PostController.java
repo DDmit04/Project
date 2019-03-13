@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
+import com.web.data.dto.UserDto;
 import com.web.service.PostService;
 
 @Controller
@@ -44,18 +45,7 @@ public class PostController {
 		return "postList";
 	}
 	
-	@GetMapping("/subscriptionPosts")
-	public String getFriendPosts(@AuthenticationPrincipal User currentUser,
-							   @RequestParam(required = false) String search,
-							   Model model) {
-		Iterable<PostDto> searchFriendPosts = postService.searchFriendPosts(currentUser);
-		model.addAttribute("user", currentUser);
-		model.addAttribute("posts", searchFriendPosts);
-		model.addAttribute("search", search);
-		return "postList";
-	}
-	
-	@PostMapping("/posts")
+	@PostMapping(value= {"/posts", "/subscriptionPosts"})
 	public String addPost(@AuthenticationPrincipal User currentUser,
 						  @RequestParam String postText, 
 						  @RequestParam String tags,
@@ -65,6 +55,17 @@ public class PostController {
 		postService.addPost(postText, tags, file, currentUser);
 		model.addAttribute("search", search);
 		return "redirect:/posts";
+	}
+	
+	@GetMapping("/subscriptionPosts")
+	public String getFriendPosts(@AuthenticationPrincipal User currentUser,
+							   @RequestParam(required = false) String search,
+							   Model model) {
+		Iterable<PostDto> searchFriendPosts = postService.searchFriendPosts(currentUser);
+		model.addAttribute("user", currentUser);
+		model.addAttribute("posts", searchFriendPosts);
+		model.addAttribute("search", search);
+		return "postList";
 	}
 	
 	@GetMapping("{post}/edit")

@@ -49,7 +49,7 @@ public class UserProfileController {
 	}
 	
 	@PostMapping("{user}/profile")
-	public String userProfile(@AuthenticationPrincipal User currentUser,
+	public String addPostUserProfile(@AuthenticationPrincipal User currentUser,
 							  @RequestParam String postText, 
 							  @RequestParam String tags,
 							  @RequestParam("file") MultipartFile file,
@@ -115,15 +115,15 @@ public class UserProfileController {
 		return "redirect:/" + user.getId() + "/profile";
 	}
 	
-	@GetMapping("/{user}/profile/sublist/{subListType}")
+	@GetMapping("/{user}/profile/socialList/{listType}")
 	public String subList(@PathVariable User user,
-					      @PathVariable String subListType,
+					      @PathVariable String listType,
 						  Model model) {
 		model.addAttribute("user", user);
+		model.addAttribute("friends", user.getUserFriends());
 		model.addAttribute("subscriptions", user.getSubscriptions());
 		model.addAttribute("subscribers", user.getSubscribers());
-		model.addAttribute("subListType", subListType);
-		return "subList";
+		model.addAttribute("listType", listType);
+		return "userConnections";
 	}
-	
 }
