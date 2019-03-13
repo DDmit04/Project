@@ -50,7 +50,7 @@
     	</div>
 <!--    starts recursion while post (or post in repost) have repost, build post three  -->
     	<#if post.repost??>
-			<@postMacro post.repost "repost" />
+			<@show post.repost "repost" />
 		</#if>
 	</div>
 	<#if postType != "repost">
@@ -89,11 +89,11 @@
 		if(icon.classList.contains('fa-rotate-90')) {
 			setTimeout(function() {
 				icon.classList.remove('fa-rotate-90');
-			}, 400);
+			}, 350);
 		} else {
 			setTimeout(function() {
 				icon.classList.add('fa-rotate-90');	
-			}, 400);
+			}, 350);
 		}
 	}
 </script>
