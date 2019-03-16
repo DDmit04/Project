@@ -19,6 +19,9 @@ public class FileService {
 	
 	 @Value("${upload.path.commentPics}")
 	 private String uploadPathCommentPics;
+	 
+	 @Value("${upload.path.groupPics}")
+	 private String uploadPathGroupPics;
 	
 	private String uploadPath;
 	
@@ -27,11 +30,14 @@ public class FileService {
 		if(type == UploadType.POST) {
 			uploadPath = uploadPathPosts;
 		}
-		else if(type == UploadType.USERPIC) {
+		else if(type == UploadType.USER_PIC) {
 			uploadPath = uploadPathUserPics;
 		}
 		else if(type == UploadType.COMMENT) {
 			uploadPath = uploadPathCommentPics;
+		}
+		else if(type == UploadType.GROUP_PIC) {
+			uploadPath = uploadPathGroupPics;
 		}
 		if (file != null && !file.getOriginalFilename().isEmpty()) {
 			File uploadDir = new File(uploadPath);

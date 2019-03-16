@@ -5,7 +5,7 @@
 <#include "parts/security.ftl">
 
 <div class="col-8">
-	<@showPost.show post "post" />
+	<@showPost.show post 0 "post" />
 		<#list comments as comment>
 			<#include "parts/showLists/showComment.ftl">
 		<#else>

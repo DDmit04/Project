@@ -46,19 +46,30 @@ public class Post {
 				inverseJoinColumns = { @JoinColumn(name = "user_id") }
 	)
 	private Set<User> postLikes = new HashSet<User>();
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_group_id")
+	private UserGroup postGroup;
 
 	public Post() {
+	}
+	public Post(String postText, String tags, String creationDate) {
+		this.postText = postText;
+		this.tags = tags;
+		this.creationDate = creationDate;
+	}
+	
+	public UserGroup getPostGroup() {
+		return postGroup;
+	}
+	public void setPostGroup(UserGroup postGroup) {
+		this.postGroup = postGroup;
 	}
 	public Post getRepost() {
 		return repost;
 	}
 	public void setRepost(Post repost) {
 		this.repost = repost;
-	}
-	public Post(String postText, String tags, String creationDate) {
-		this.postText = postText;
-		this.tags = tags;
-		this.creationDate = creationDate;
 	}
 	public int getCommentsCount() {
 		return postComments.size();

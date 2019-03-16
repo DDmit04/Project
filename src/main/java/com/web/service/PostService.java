@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.Post;
 import com.web.data.User;
+import com.web.data.UserGroup;
 import com.web.data.dto.PostDto;
 import com.web.repository.PostRepo;
 import com.web.utils.DateUtil;
@@ -25,6 +26,10 @@ public class PostService {
 		postRepo.save(createNewPost(postText, user, tags, file));
 	}
 	
+	public void addPost(String postText, String tags, MultipartFile file, UserGroup group) throws IllegalStateException, IOException {
+		postRepo.save(createNewPost(postText, group, tags, file));		
+	}
+	
 	public void addRepost(User currentUser, Post post, String repostText, String repostTags) throws IllegalStateException, IOException {
 		Post newPost = createNewPost(repostText, currentUser, repostTags, null);	
 		newPost.setRepost(post);
@@ -38,6 +43,14 @@ public class PostService {
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
 		return post;
 	}
+	
+	public Post createNewPost(String postText, UserGroup group, String tags, MultipartFile file) throws IllegalStateException, IOException {
+		Post post = new Post(postText, tags, DateUtil.getLocalDate("yyyy-MM-dd HH:mm:ss"));
+		post.setPostGroup(group);
+		post.setFilename(fileService.uploadFile(file,UploadType.POST));
+		return post;
+	}
+	
 	
 	public void updatePost(Post post, String text, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		post.setPostText(text);
@@ -53,25 +66,15 @@ public class PostService {
 		}
 		postRepo.delete(post);
 	}
-
-	public Iterable<PostDto> searchPostsByTag(String search, User currentUser) {
-		Iterable<PostDto> searchResult;
-		if(search != null && search != "") {
-			searchResult = postRepo.findByTag(currentUser, search);
-		} else {
-			searchResult = postRepo.findAll(currentUser);
-		}		
-		return searchResult;
-	}
-
-	public Iterable<PostDto> findPostsByUser(User currentUser, User user) {
-		return postRepo.findByPostAuthor(currentUser, user);
+	
+	public void removeRepost(Post post) {
+		decrementAndSaveRepostsCount(post.getRepost());
+		post.setRepost(null);
+		postRepo.save(post);
 	}
 	
 	public PostDto findOnePost(User currentUser, Post post) {
-		Iterable<PostDto> findPost = postRepo.findOne(currentUser, post.getId());
-		PostDto commentedPost = findPost.iterator().next();
-		return 	commentedPost;
+		return 	postRepo.findOne(currentUser, post.getId());
 	}
 	
 	public void incrementAndSaveRepostsCount(Post incrementedPost) {
@@ -82,6 +85,20 @@ public class PostService {
 	public void decrementAndSaveRepostsCount(Post decrimentedPost) {
 		decrimentedPost.setRepostsCount(decrimentedPost.getRepostsCount() - 1);
 		postRepo.save(decrimentedPost);
+	}
+	
+	public Iterable<PostDto> searchPostsByTag(String search, User currentUser) {
+		Iterable<PostDto> searchResult;
+		if(search != null && search != "") {
+			searchResult = postRepo.findByTag(currentUser, search);
+		} else {
+			searchResult = postRepo.findAll(currentUser);
+		}		
+		return searchResult;
+	}
+	
+	public Iterable<PostDto> findPostsByUser(User currentUser, User user) {
+		return postRepo.findByPostAuthor(currentUser, user);
 	}
 
 	public Iterable<PostDto> searchFriendPosts(User currentUser) {

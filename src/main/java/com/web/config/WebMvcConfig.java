@@ -18,6 +18,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Value("${upload.path.commentPics}")
     private String uploadPathCommentPics;
     
+    @Value("${upload.path.groupPics}")
+    private String uploadPathGroupPics;
+    
 //    @Bean
 //    public RestTemplate getRestTemplate() {
 //    	return new RestTemplate();
@@ -37,6 +40,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         
         registry.addResourceHandler("/imgCommentPic/**")
 				.addResourceLocations("file:/" + uploadPathCommentPics + "/");
+        
+        registry.addResourceHandler("/imgGroupPic/**")
+				.addResourceLocations("file:/" + uploadPathGroupPics + "/");
         
         registry.addResourceHandler("/static/**")
         		.addResourceLocations("classpath:/static/");

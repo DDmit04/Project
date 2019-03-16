@@ -93,6 +93,14 @@ public class PostController {
 		return "redirect:/posts";
 	}
 	
+	@GetMapping("{post}/removeRepost")
+	public String removeRepost(@PathVariable Post post,
+			 				   RedirectAttributes redirectAttributes,
+			 				   @RequestHeader(required = false) String referer) {
+		postService.removeRepost(post);
+		return "redirect:/" + post.getId() + "/edit" ;		
+	}
+	
 	@GetMapping("posts/{post}/like")
 	public String likePost(@AuthenticationPrincipal User currentUser,
 						   @PathVariable Post post,

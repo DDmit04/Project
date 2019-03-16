@@ -32,7 +32,7 @@ public class UserService implements UserDetailsService{
 		if (userFromDb != null) {
 			throw new UserException("user with name " + user.getUsername() + " already exists!", user, UserExceptionType.EXISTING_USERNAME);
 		} else {
-			user.setUserPicName(fileService.uploadFile(userPic, UploadType.USERPIC));
+			user.setUserPicName(fileService.uploadFile(userPic, UploadType.USER_PIC));
 			user.setRegistrationDate(DateUtil.getLocalDate());
 			user.setActive(true);
 			user.setRoles(Collections.singleton(UserRoles.USER));

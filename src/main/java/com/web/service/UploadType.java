@@ -2,6 +2,6 @@ package com.web.service;
 
 public enum UploadType {
 	
-	POST, USERPIC, COMMENT;
+	POST, USER_PIC, COMMENT, GROUP_PIC;
 
 }

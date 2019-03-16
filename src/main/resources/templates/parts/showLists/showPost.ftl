@@ -1,4 +1,4 @@
-<#macro show post postType>
+<#macro show post parentPost postType>
 
 <!-- template show users posts -->
 
@@ -34,7 +34,11 @@
 		</#if>
 		<#if postType == "repost">
 			<div align="right">
-				<a href="/${post.id}/comments"><i class="fas fa-external-link-square-alt"></i></a>
+				<#if !isEdit>
+					<a href="/${post.id}/comments"><i class="fas fa-external-link-square-alt"></i></a>
+				<#else>
+					<a href="/${parentPost.id}/removeRepost">delete</a>
+				</#if>
 			</div>
 		</#if>
 	</div>
@@ -50,7 +54,7 @@
     	</div>
 <!--    starts recursion while post (or post in repost) have repost, build post three  -->
     	<#if post.repost??>
-			<@show post.repost "repost" />
+			<@show post.repost post "repost" />
 		</#if>
 	</div>
 	<#if postType != "repost">

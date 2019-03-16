@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -70,8 +71,23 @@ public class User implements UserDetails {
             inverseJoinColumns = { @JoinColumn(name = "channel_id") }
     )
     private Set<User> subscriptions = new HashSet<>();
+    
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "groupOwner" ,cascade = CascadeType.ALL)
+    private UserGroup belongGroup;
+    
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "groupSubs")
+	private Set<UserGroup> subedGroups = new HashSet<>();
 	
-
+//    @ManyToMany(fetch = FetchType.EAGER)
+//   	@JoinTable(name = "admined_groups", 
+//   		joinColumns = { @JoinColumn(name = "user_id") },
+//   		inverseJoinColumns = { @JoinColumn(name = "group_id") } 
+//   	)
+//   	private Set<UserGroup> adminedGroups = new HashSet<>();
+//    
+//	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "banList")
+//	private Set<UserGroup> bannedInGroups = new HashSet<>();
+//    
 	public User() {
 	}
 	public User(String username, String password, String registrationDate) {
@@ -92,6 +108,30 @@ public class User implements UserDetails {
 	public int hashCode() {
 		return Objects.hashCode(id);
 	}
+	public UserGroup getBelongGroup() {
+		return belongGroup;
+	}
+	public void setBelongGroup(UserGroup belongGroup) {
+		this.belongGroup = belongGroup;
+	}
+	public Set<UserGroup> getSubedGroups() {
+		return subedGroups;
+	}
+	public void setSubedGroups(Set<UserGroup> subedGroups) {
+		this.subedGroups = subedGroups;
+	}
+//	public Set<UserGroup> getAdminedGroups() {
+//		return adminedGroups;
+//	}
+//	public void setAdminedGroups(Set<UserGroup> adminedGroups) {
+//		this.adminedGroups = adminedGroups;
+//	}
+//	public Set<UserGroup> getBannedInGroups() {
+//		return bannedInGroups;
+//	}
+//	public void setBannedInGroups(Set<UserGroup> bannedInGroups) {
+//		this.bannedInGroups = bannedInGroups;
+//	}
 	public Set<Comment> getUserComments() {
 		return userComments;
 	}
