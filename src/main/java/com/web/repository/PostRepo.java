@@ -6,32 +6,33 @@ import org.springframework.data.repository.query.Param;
 
 import com.web.data.Post;
 import com.web.data.User;
+import com.web.data.UserGroup;
 import com.web.data.dto.PostDto;
 
 public interface PostRepo extends CrudRepository<Post, Long> {
 	
 	@Query("select new com.web.data.dto.PostDto(" +
             "   p, " +
-			"   count(pl), " +
-            "   sum(case when pl = :user then 1 else 0 end) > 0" +
+			"   (select count(*) from p.postLikes), " +
+            "   sum(case when pl = :currentUser then 1 else 0 end) > 0" +
             ") " +
             "from Post p left join p.postLikes pl " +
             "group by p")
-    Iterable<PostDto> findAll(@Param("user") User user);
+    Iterable<PostDto> findAll(@Param("currentUser") User currentUser);
 	
 	@Query("select new com.web.data.dto.PostDto(" +
             "   p, " +
-			"   count(pl), " +
-            "   sum(case when pl = :user then 1 else 0 end) > 0" +
+			"   (select count(*) from p.postLikes), " +
+            "   sum(case when pl = :currentUser then 1 else 0 end) > 0" +
             ") " +
             "from Post p left join p.postLikes pl " +
             "where p.tags = :tags " +
             "group by p")
-    Iterable<PostDto> findByTag(@Param("user") User user, @Param("tags") String tags);
+    Iterable<PostDto> findByTag(@Param("currentUser") User currentUser, @Param("tags") String tags);
 	
 	@Query("select new com.web.data.dto.PostDto(" +
             "   p, " +
-			"   count(pl), " +
+			"   (select count(*) from p.postLikes), " +
             "   sum(case when pl = :currentUser then 1 else 0 end) > 0" +
             ") " +
             "from Post p left join p.postLikes pl " +
@@ -39,9 +40,14 @@ public interface PostRepo extends CrudRepository<Post, Long> {
             "group by p")
     Iterable<PostDto> findByPostAuthor(@Param("currentUser") User currentUser, @Param("user") User user);
 	
+	@Query("select count(*) " +
+		   "from Post p " +
+		   "where p.repost = :post and p.postAuthor = :currentUser")
+	Long findCountByRepostAndAuthor(@Param("currentUser") User currentUser, @Param("post") Post post);
+	
 	@Query("select new com.web.data.dto.PostDto(" +
             "   p, " +
-			"   count(pl), " +
+			"   (select count(*) from p.postLikes), " +
             "   sum(case when pl = :currentUser then 1 else 0 end) > 0" +
             ") " +
             "from Post p left join p.postLikes pl " +
@@ -51,7 +57,7 @@ public interface PostRepo extends CrudRepository<Post, Long> {
 	
 	  @Query("select new com.web.data.dto.PostDto(" +
 	            "   p, " +
-				"   count(pl), " +
+				"   (select count(*) from p.postLikes), " +
 	            "   sum(case when pl = :currentUser then 1 else 0 end) > 0" +
 	            ") " +
 	            "from Post p left join p.postLikes pl " +
@@ -60,5 +66,15 @@ public interface PostRepo extends CrudRepository<Post, Long> {
 	            "where pa = :currentUser or ps = :currentUser " +
 	            "group by p")
 	  Iterable<PostDto> findSubscriptionsPosts(@Param("currentUser") User currentUser);
+
+	@Query("select new com.web.data.dto.PostDto(" +
+            "   p, " +
+			"   (select count(*) from p.postLikes), " +
+            "   sum(case when pl = :currentUser then 1 else 0 end) > 0" +
+            ") " +
+            "from Post p left join p.postLikes pl " +
+            "where p.postGroup = :group " +
+            "group by p")  
+	Iterable<UserGroup> findGroupPosts(@Param("currentUser") User currentUser, @Param("group") UserGroup group);
 	
 }

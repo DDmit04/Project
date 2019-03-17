@@ -1,8 +1,5 @@
 package com.web.data.dto;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.web.data.Post;
 import com.web.data.User;
 

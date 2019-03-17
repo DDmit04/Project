@@ -25,7 +25,7 @@ public class UserGroup {
 	private String groupName;
 	private String groupInformation;
 	private String creationDate;
-//	private String groupPicName;
+	private String groupPicName;
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
@@ -142,4 +142,10 @@ public class UserGroup {
 //	public void setGroupPicName(String groupPicName) {
 //		this.groupPicName = groupPicName;
 //	}
+	public String getGroupPicName() {
+		return groupPicName;
+	}
+	public void setGroupPicName(String groupPicName) {
+		this.groupPicName = groupPicName;
+	}
 }

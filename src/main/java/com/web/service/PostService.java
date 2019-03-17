@@ -23,34 +23,26 @@ public class PostService {
 	private PostRepo postRepo;
 	
 	public void addPost(String postText, String tags, MultipartFile file, User user) throws IllegalStateException, IOException {
-		postRepo.save(createNewPost(postText, user, tags, file));
+		postRepo.save(createPost(postText, user, tags, file));
 	}
 	
 	public void addPost(String postText, String tags, MultipartFile file, UserGroup group) throws IllegalStateException, IOException {
-		postRepo.save(createNewPost(postText, group, tags, file));		
+		postRepo.save(createGroupPost(postText, group, tags, file));		
 	}
 	
-	public void addRepost(User currentUser, Post post, String repostText, String repostTags) throws IllegalStateException, IOException {
-		Post newPost = createNewPost(repostText, currentUser, repostTags, null);	
-		newPost.setRepost(post);
-		incrementAndSaveRepostsCount(post);
-		postRepo.save(newPost);
-	}
-	
-	public Post createNewPost(String postText, User user, String tags, MultipartFile file) throws IllegalStateException, IOException {
+	public Post createPost(String postText, User user, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		Post post = new Post(postText, tags, DateUtil.getLocalDate("yyyy-MM-dd HH:mm:ss"));
 		post.setPostAuthor(user);
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
 		return post;
 	}
 	
-	public Post createNewPost(String postText, UserGroup group, String tags, MultipartFile file) throws IllegalStateException, IOException {
+	public Post createGroupPost(String postText, UserGroup group, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		Post post = new Post(postText, tags, DateUtil.getLocalDate("yyyy-MM-dd HH:mm:ss"));
 		post.setPostGroup(group);
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
 		return post;
 	}
-	
 	
 	public void updatePost(Post post, String text, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		post.setPostText(text);
@@ -60,8 +52,8 @@ public class PostService {
 		postRepo.save(post);
 	}
 
-	public void deletePost(Post post) {
-		if(post.getRepost() != null) {
+	public void deletePost(Post post, User currentUser) {
+		if(postRepo.findCountByRepostAndAuthor(currentUser, post.getRepost()) == 1)  {
 			decrementAndSaveRepostsCount(post.getRepost());
 		}
 		postRepo.delete(post);
@@ -73,8 +65,13 @@ public class PostService {
 		postRepo.save(post);
 	}
 	
-	public PostDto findOnePost(User currentUser, Post post) {
-		return 	postRepo.findOne(currentUser, post.getId());
+	public void addRepost(User currentUser, Post post, String repostText, String repostTags) throws IllegalStateException, IOException {
+		Post newPost = createPost(repostText, currentUser, repostTags, null);	
+		newPost.setRepost(post);
+		if(postRepo.findCountByRepostAndAuthor(currentUser, post) == 0) {
+			incrementAndSaveRepostsCount(post);
+		}
+		postRepo.save(newPost);
 	}
 	
 	public void incrementAndSaveRepostsCount(Post incrementedPost) {
@@ -85,6 +82,10 @@ public class PostService {
 	public void decrementAndSaveRepostsCount(Post decrimentedPost) {
 		decrimentedPost.setRepostsCount(decrimentedPost.getRepostsCount() - 1);
 		postRepo.save(decrimentedPost);
+	}
+	
+	public PostDto findOnePost(User currentUser, Post post) {
+		return 	postRepo.findOne(currentUser, post.getId());
 	}
 	
 	public Iterable<PostDto> searchPostsByTag(String search, User currentUser) {

@@ -88,8 +88,9 @@ public class PostController {
 	}
 	
 	@GetMapping("{post}/delete")
-	public String deletePost(@PathVariable Post post) {
-		postService.deletePost(post);
+	public String deletePost(@AuthenticationPrincipal User currentUser,
+							 @PathVariable Post post) {
+		postService.deletePost(post, currentUser);
 		return "redirect:/posts";
 	}
 	
