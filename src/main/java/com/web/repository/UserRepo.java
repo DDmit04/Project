@@ -18,7 +18,8 @@ public interface UserRepo extends CrudRepository<User, Long> {
             "   (select count(*) from u.subscriptions), " +
             "   sum(case when uf = :currentUser then 1 else 0 end) > 0, " +
 			"   sum(select count(requestFrom) from FriendRequest where requestFromId = :currentUserId) > 0, " +
-            "   sum(case when us = :currentUser then 1 else 0 end) > 0" +
+            "   sum(case when us = :currentUser then 1 else 0 end) > 0, " +
+			"   (select count(*) from u.subedGroups) " + 
             ") " +
             "from User u left join u.userFriends uf left join u.subscribers us " +
             "where u.id = :id " +

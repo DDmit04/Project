@@ -17,6 +17,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
+@Table(name = "grup")
 public class UserGroup {
 	
 	@Id
@@ -33,7 +34,7 @@ public class UserGroup {
 	
 	@ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL) 
 	@JoinTable(name = "group_subs", 
-				joinColumns = { @JoinColumn(name = "user_group_id") },
+				joinColumns = { @JoinColumn(name = "grup_id") },
 				inverseJoinColumns = { @JoinColumn(name = "user_id") } 
 	)
 	private Set<User> groupSubs = new HashSet<>();

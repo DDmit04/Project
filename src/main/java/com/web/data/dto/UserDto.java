@@ -12,11 +12,14 @@ public class UserDto {
 	private Long friendCount;
 	private Long subscriptionsCount;
 	private Long subscribersCount;
+	private Long groupSubscriptionsCount;
 	private boolean isFriend;
 	private boolean isRequested;
 	private boolean isSub;
 	
-	public UserDto(User user, Long frendCount, Long subscribersCount, Long subscriptionsCount, boolean isFriend, boolean isRequested, boolean isSub) {
+	public UserDto(User user, Long frendCount, Long subscribersCount, 
+				   Long subscriptionsCount, boolean isFriend, boolean isRequested, 
+				   boolean isSub, Long groupSubscriptionsCount) {
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.active = user.isActive();
@@ -28,6 +31,7 @@ public class UserDto {
 		this.isSub = isSub;
 		this.subscriptionsCount = subscriptionsCount;
 		this.subscribersCount = subscribersCount;
+		this.groupSubscriptionsCount = groupSubscriptionsCount;
 	}
 	public UserDto(User user, Long frendCount, Long subCount) {
 		this.id = user.getId();
@@ -40,6 +44,9 @@ public class UserDto {
 		this.isRequested = false;
 		this.isSub = false;
 		this.subscriptionsCount = subCount;
+	}
+	public Long getGroupSubscriptionsCount() {
+		return groupSubscriptionsCount;
 	}
 	public Long getSubscriptionsCount() {
 		return subscriptionsCount;

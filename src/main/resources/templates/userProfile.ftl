@@ -53,6 +53,9 @@
 				<a href="/${user.id}/profile/socialList/subscriptions" role="button" class="btn btn-primary">
  					subscriptions: <span class="badge badge-light">${user.subscriptionsCount}</span>
 				</a>
+				<a href="/${user.id}/profile/socialList/groups" role="button" class="btn btn-primary">
+ 					groups: <span class="badge badge-light">${user.groupSubscriptionsCount}</span>
+				</a>
 			</div>
 		</div>
 		<#if currentUsername == user.username>

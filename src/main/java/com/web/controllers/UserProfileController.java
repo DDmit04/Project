@@ -123,6 +123,7 @@ public class UserProfileController {
 		model.addAttribute("friends", user.getUserFriends());
 		model.addAttribute("subscriptions", user.getSubscriptions());
 		model.addAttribute("subscribers", user.getSubscribers());
+		model.addAttribute("groups", user.getSubedGroups());
 		model.addAttribute("listType", listType);
 		return "userConnections";
 	}

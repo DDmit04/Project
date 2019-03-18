@@ -20,6 +20,7 @@ import com.web.repository.UserGroupRepo;
 import com.web.repository.UserRepo;
 import com.web.service.GroupService;
 import com.web.service.PostService;
+import com.web.service.UserService;
 import com.web.utils.DateUtil;
 
 @Controller
@@ -30,6 +31,9 @@ public class GroupController {
 	
 	@Autowired
 	private UserRepo userRepo;
+	
+	@Autowired
+	private UserService userServive;
 	
 	@Autowired
 	private PostRepo postRepo;
@@ -45,7 +49,7 @@ public class GroupController {
 							   Model model) {
 		Iterable<UserGroup> allGroups = userGroupRepo.findAll();
 		model.addAttribute("groups", allGroups);
-		return "groupList";
+		return "allGroupList";
 	}
 	
 	@GetMapping("/groups/{group}")
@@ -66,7 +70,7 @@ public class GroupController {
 							   @RequestParam("file") MultipartFile file,
 							   Model model) throws IllegalStateException, IOException {
 		postService.addPost(postText, tags, file, group);
-		return "redirect:/groups" + group.getId();
+		return "redirect:/groups/" + group.getId();
 	}
 	
 //	@GetMapping("/groups/{group}")
@@ -77,15 +81,6 @@ public class GroupController {
 //		model.addAttribute("groups", allGroups);
 //		return "groupList";
 //	}
-
-	@GetMapping("{user}/groups")
-	public String getUserGroups(@AuthenticationPrincipal User currentUser,
-								@PathVariable User user,
-								Model model) {
-		model.addAttribute("groups", user.getSubedGroups());
-		model.addAttribute("user", currentUser);
-		return "groupList";
-	}
 	
 	@GetMapping("{user}/groups/create")
 	public String createGroup() {
@@ -98,7 +93,7 @@ public class GroupController {
 							  @RequestParam (required = false)String groupInformation,
 							  Model model) {
 		groupService.createGroup(groupName, groupInformation, currentUser);
-		return "redirect:/" + currentUser.getId() + "/groups";
+		return "redirect:/" + currentUser.getId() + "/profile/socialList/groups";
 	}
 	
 	@GetMapping("/groups/{group}/sub")

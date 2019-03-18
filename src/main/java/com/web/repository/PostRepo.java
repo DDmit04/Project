@@ -75,6 +75,6 @@ public interface PostRepo extends CrudRepository<Post, Long> {
             "from Post p left join p.postLikes pl " +
             "where p.postGroup = :group " +
             "group by p")  
-	Iterable<UserGroup> findGroupPosts(@Param("currentUser") User currentUser, @Param("group") UserGroup group);
+	Iterable<PostDto> findGroupPosts(@Param("currentUser") User currentUser, @Param("group") UserGroup group);
 	
 }

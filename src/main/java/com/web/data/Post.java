@@ -48,7 +48,7 @@ public class Post {
 	private Set<User> postLikes = new HashSet<User>();
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_group_id")
+	@JoinColumn(name = "grup_id")
 	private UserGroup postGroup;
 
 	public Post() {

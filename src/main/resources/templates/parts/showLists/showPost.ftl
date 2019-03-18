@@ -6,31 +6,49 @@
 
 <div class="card mt-3 shadow border-secondary">
 	<div class="card-header border-secondary media">
-		<a href="/${post.postAuthor.id}/profile">
-			<#if post.postAuthor.userPicName??>
-				<img class="mr-2 rounded-circle border border-secondary" src="/imgUserPic/${post.postAuthor.userPicName}" width="55" height="55" class="mr-3">
-			<#else>
-				<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="55" height="55" class="mr-3">
-			</#if>
-		</a>
+		<#if post.postAuthor??>
+			<a href="/${post.postAuthor.id}/profile">
+				<#if post.postAuthor.userPicName??>
+					<img class="mr-2 rounded-circle border border-secondary" src="/imgUserPic/${post.postAuthor.userPicName}" width="55" height="55" class="mr-3">
+				<#else>
+					<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="55" height="55" class="mr-3">
+				</#if>
+			</a>
+		</#if>
+		<#if post.postGroup??>
+			<a href="/groups/${post.postGroup.id}">
+				<#if post.postGroup.groupPicName??>
+					<img class="mr-2 rounded-circle border border-secondary" src="/imgGroupPic/${post.postGroup.groupPicName}" width="55" height="55" class="mr-3">
+				<#else>
+					<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="55" height="55" class="mr-3">
+				</#if>
+			</a>
+		</#if>
 		<div class="media-body mt-0">
 			<div class="mb-2 ml-2">
-				<a href="${post.postAuthor.id}/profile" class="h5">${post.postAuthor.username}</a>
+				<#if post.postAuthor??>
+					<a href="${post.postAuthor.id}/profile" class="h5">${post.postAuthor.username}</a>
+				</#if>
+				<#if post.postGroup??>
+					<a href="/groups/${post.postGroup.id}" class="h5">${post.postGroup.groupName}</a>
+				</#if>
 			</div>
 			<small class="ml-2">${post.creationDate}</small>
 		</div>
-		<#if currentUsername == post.postAuthor.username && postType != "repost">
-			<div class="col dropdown" align="right">
-				<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
-					<i class="fas fa-ellipsis-v"></i>
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<#if !isEdit>
-						<a class="dropdown-item" href="/${post.id}/edit">edit</a> 
-					</#if>
-						<a class="dropdown-item" href="/${post.id}/delete">delete</a>
+		<#if post.postAuthor??>
+			<#if currentUsername == post.postAuthor.username && postType != "repost">
+				<div class="col dropdown" align="right">
+					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
+						<i class="fas fa-ellipsis-v"></i>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<#if !isEdit>
+							<a class="dropdown-item" href="/${post.id}/edit">edit</a> 
+						</#if>
+							<a class="dropdown-item" href="/${post.id}/delete">delete</a>
+					</div>
 				</div>
-			</div>
+			</#if>
 		</#if>
 		<#if postType == "repost">
 			<div align="right">
@@ -70,7 +88,7 @@
 			<a href="/${post.id}/comments">
 				<i class="far fa-comment mr-1"></i>${post.commentsCount}
 			</a>
-			<#if currentUsername != post.postAuthor.username>
+			<#if !post.postAuthor?? || currentUsername != post.postAuthor.username>
 				<a class="ml-3" data-toggle="collapse" href="#repost${post.id}" role="button" aria-expanded="false" aria-controls="repost${post.id}"
 					onclick="rotateIcon();">
 		    		<i id="repostIcon" class="fas fa-sign-in-alt mr-1 "></i>${post.repostsCount}
