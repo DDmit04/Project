@@ -78,12 +78,8 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "groupSubs")
 	private Set<UserGroup> subedGroups = new HashSet<>();
 	
-//    @ManyToMany(fetch = FetchType.EAGER)
-//   	@JoinTable(name = "admined_groups", 
-//   		joinColumns = { @JoinColumn(name = "user_id") },
-//   		inverseJoinColumns = { @JoinColumn(name = "group_id") } 
-//   	)
-//   	private Set<UserGroup> adminedGroups = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "groupAdmins")
+   	private Set<UserGroup> adminedGroups = new HashSet<>();
 //    
 //	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "banList")
 //	private Set<UserGroup> bannedInGroups = new HashSet<>();
@@ -96,17 +92,20 @@ public class User implements UserDetails {
 		this.registrationDate = registrationDate;
 	}
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null || getClass() != obj.getClass())
-			return false;
-		User user = (User) obj;
-		return Objects.equals(id, user.id);
+	public boolean equals(Object o) {
+	    if (this == o) {
+	        return true;
+	    }
+	    if (o == null || getClass() != o.getClass()) {
+	        return false;
+	    }
+	    User that = (User) o;
+	    return getId() == that.getId();
 	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id);
+	    return Long.valueOf(getId()).hashCode();
 	}
 	public UserGroup getBelongGroup() {
 		return belongGroup;
@@ -120,12 +119,12 @@ public class User implements UserDetails {
 	public void setSubedGroups(Set<UserGroup> subedGroups) {
 		this.subedGroups = subedGroups;
 	}
-//	public Set<UserGroup> getAdminedGroups() {
-//		return adminedGroups;
-//	}
-//	public void setAdminedGroups(Set<UserGroup> adminedGroups) {
-//		this.adminedGroups = adminedGroups;
-//	}
+	public Set<UserGroup> getAdminedGroups() {
+		return adminedGroups;
+	}
+	public void setAdminedGroups(Set<UserGroup> adminedGroups) {
+		this.adminedGroups = adminedGroups;
+	}
 //	public Set<UserGroup> getBannedInGroups() {
 //		return bannedInGroups;
 //	}

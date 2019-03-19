@@ -47,7 +47,7 @@ public class GroupController {
 	@GetMapping("/groups")
 	public String getAllGroups(@AuthenticationPrincipal User currentUser,
 							   Model model) {
-		Iterable<UserGroup> allGroups = userGroupRepo.findAll();
+		Iterable<UserGroupDto> allGroups = userGroupRepo.findAllDto();
 		model.addAttribute("groups", allGroups);
 		return "allGroupList";
 	}
@@ -56,9 +56,10 @@ public class GroupController {
 	public String getAllGroups(@AuthenticationPrincipal User currentUser,
 							   @PathVariable UserGroup group,
 							   Model model) {
-		UserGroupDto oneGroup = userGroupRepo.findOneGroup(currentUser, group.getId());
+		UserGroupDto oneGroup = userGroupRepo.findOneGroup(group.getId());
 		model.addAttribute("posts", postRepo.findGroupPosts(currentUser, group));
 		model.addAttribute("group", oneGroup);
+		model.addAttribute("user", userRepo.findOneUserToGroup(currentUser.getId(), group));
 		return "group";
 	}
 	
@@ -73,15 +74,6 @@ public class GroupController {
 		return "redirect:/groups/" + group.getId();
 	}
 	
-//	@GetMapping("/groups/{group}")
-//	public String getGroup(@AuthenticationPrincipal User currentUser,
-//						   @PathVariable UserGroup group,
-//						   Model model) {
-//		Iterable<UserGroup> allGroups = userGroupRepo.findAll();
-//		model.addAttribute("groups", allGroups);
-//		return "groupList";
-//	}
-	
 	@GetMapping("{user}/groups/create")
 	public String createGroup() {
 		return "createGroupForm";
@@ -90,9 +82,10 @@ public class GroupController {
 	@PostMapping("{user}/groups/create")
 	public String createGroup(@AuthenticationPrincipal User currentUser,
 							  @RequestParam String groupName,
+							  @RequestParam (required = false)String groupTitle,
 							  @RequestParam (required = false)String groupInformation,
 							  Model model) {
-		groupService.createGroup(groupName, groupInformation, currentUser);
+		groupService.createGroup(groupName, groupInformation, groupTitle, currentUser);
 		return "redirect:/" + currentUser.getId() + "/profile/socialList/groups";
 	}
 	
@@ -100,28 +93,26 @@ public class GroupController {
 	public String subGroup(@AuthenticationPrincipal User currentUser,
 						   @PathVariable UserGroup group) {
 		groupService.addGroupSub(group, currentUser);
-		return "redirect:/groupList";
+		return "redirect:/groups/" + group.getId();
 	}
 	
 	@GetMapping("/groups/{group}/unsub")
 	public String unsubGroup(@AuthenticationPrincipal User currentUser,
 							 @PathVariable UserGroup group) {
 		groupService.removeGroupSub(group, currentUser);
-		return "redirect:/groupList";
+		return "redirect:/groups/" + group.getId();
 	}
 	
-//	@GetMapping("/groups/{group}/sub")
-//	public String addAdminGroup(@AuthenticationPrincipal User currentUser,
-//						   @PathVariable UserGroup group) {
-//		groupService.addGroupAdmin(group, currentUser);
-//		return "redirect:/groupList";
-//	}
-//	
-//	@GetMapping("/groups/{group}/unsub")
-//	public String removeAdminGroup(@AuthenticationPrincipal User currentUser,
-//							 @PathVariable UserGroup group) {
-//		groupService.removeGroupAdmin(group, currentUser);
-//		return "redirect:/groupList";
-//	}
+	@GetMapping("/groups/{group}/socialList/{listType}")
+	public String groupConnections(@AuthenticationPrincipal User currentUser,
+								   @PathVariable String listType,
+							 	   @PathVariable UserGroup group,
+							 	   Model model) {
+		model.addAttribute("group", userGroupRepo.findOneGroup(group.getId()));
+		model.addAttribute("groupSubscrabers", group.getGroupSubs());
+		model.addAttribute("groupAdmins", group.getGroupAdmins());
+		model.addAttribute("listType", listType);
+		return "groupConnections";
+	}
 	
 }

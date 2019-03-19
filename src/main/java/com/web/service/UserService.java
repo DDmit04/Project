@@ -46,7 +46,7 @@ public class UserService implements UserDetailsService{
 	}
 
 	public UserDto findOneUser(User currentUser, User user) {
-		return  userRepo.findOneUser(currentUser, currentUser.getId(), user.getId());
+		return  userRepo.findOneUserToUser(currentUser, currentUser.getId(), user.getId());
 	}
 	
 	public UserDto findOneUserForList(User user) {

@@ -15,12 +15,14 @@
 </#if>
 
 <div class="col-9">
-	<div class="card">
-		<#list groups as group>
-			<@groupList.groupList group 64 64 />	
-		<#else>
-			<h2 class="display-4 mt-5" align="center">No groups here!</h2>
-		</#list>
+	<div class="tab-content shadow mt-2" id="nav-tabContent" style="background-color: white;">
+		<div class="tab-pane fade show active" role="tabpanel" style="padding: 15px 5px;">
+			<#list groups as group>
+				<@groupList.groupList group 64 64 />	
+			<#else>
+				<h2 class="display-4 mt-5" align="center">No groups here!</h2>
+			</#list>
+		</div>
 	</div>
 </div>
 </@shell.htmlPage>

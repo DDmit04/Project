@@ -53,10 +53,13 @@ public class CommentController {
 	}
 	
 	@GetMapping("{post}/comments/{comment}/delete")
-	public String deleteComment(@PathVariable Post post,
+	public String deleteComment(@AuthenticationPrincipal User currentUser,
+							    @PathVariable Post post,
 								@PathVariable Comment comment,
 								Model model) {
-		commentService.deleteComment(comment);
+		if(currentUser == comment.getCommentAuthor()) {
+			commentService.deleteComment(comment);
+		}
 		return "redirect:/" + post.getId() + "/comments";
 	}
 	
@@ -73,12 +76,15 @@ public class CommentController {
 	}
 	
 	@PostMapping("{post}/comments/{comment}/edit")
-	public String editComment(@PathVariable Post post,
+	public String editComment(@AuthenticationPrincipal User currentUser,
+							  @PathVariable Post post,
 							  @PathVariable Comment comment,
 							  @RequestParam("commentPic") MultipartFile commentPic,
 							  @RequestParam String commentText,
 							  Model model) throws IllegalStateException, IOException {
-		commentService.updateComment(comment, commentText, commentPic);
+		if(currentUser == comment.getCommentAuthor()) {
+			commentService.updateComment(comment, commentText, commentPic);
+		}
 		return "redirect:/" + post.getId() + "/comments";
 	}
 

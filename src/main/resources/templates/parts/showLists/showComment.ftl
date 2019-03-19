@@ -11,7 +11,7 @@
 				</#if>
 			</a>
 			<div class="media-body">
-				<a href="/${post.postAuthor.id}/profile" class="h6 ml-2">${comment.commentAuthor.username}</a>
+				<a href="/${comment.commentAuthor.id}/profile" class="h6 ml-2">${comment.commentAuthor.username}</a>
 				<div class="ml-2">
 					${comment.commentText}
 					<div class="my-2">

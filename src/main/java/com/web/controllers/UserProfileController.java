@@ -21,6 +21,7 @@ import com.web.data.User;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
 import com.web.exceptions.UserException;
+import com.web.repository.UserGroupRepo;
 import com.web.service.PostService;
 import com.web.service.ProfileService;
 import com.web.service.UserService;
@@ -36,6 +37,9 @@ public class UserProfileController {
 	
 	@Autowired
 	private ProfileService profileService;
+	
+	@Autowired
+	private UserGroupRepo userGroupRepo;
 	
 	@GetMapping("{user}/profile")
 	public String getUserProfile(@AuthenticationPrincipal User currentUser,
@@ -123,7 +127,7 @@ public class UserProfileController {
 		model.addAttribute("friends", user.getUserFriends());
 		model.addAttribute("subscriptions", user.getSubscriptions());
 		model.addAttribute("subscribers", user.getSubscribers());
-		model.addAttribute("groups", user.getSubedGroups());
+		model.addAttribute("groups", userGroupRepo.findAllDto());
 		model.addAttribute("listType", listType);
 		return "userConnections";
 	}

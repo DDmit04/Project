@@ -27,12 +27,13 @@ public class UserGroup {
 	private String groupInformation;
 	private String creationDate;
 	private String groupPicName;
+	private String groupTitle;
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	private User groupOwner;
 	
-	@ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL) 
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
 	@JoinTable(name = "group_subs", 
 				joinColumns = { @JoinColumn(name = "grup_id") },
 				inverseJoinColumns = { @JoinColumn(name = "user_id") } 
@@ -46,18 +47,23 @@ public class UserGroup {
 //   	)
 //	private Set<User> banList = new HashSet<>();
 	
-//	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "adminedGroups", cascade = CascadeType.ALL)
-//	private Set<User> groupAdmins = new HashSet<>();
-//	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "admined_groups", 
+		joinColumns = { @JoinColumn(name = "grup_id") },
+		inverseJoinColumns = { @JoinColumn(name = "user_id") } 
+	)
+	private Set<User> groupAdmins = new HashSet<>();
+	
 	@OneToMany(mappedBy = "postGroup", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<Post> groupPosts = new HashSet<>();
 
 	public UserGroup() {
 	}
-	public UserGroup(String groupName, String groupInformation, String creationDate) {
+	public UserGroup(String groupName, String groupInformation, String groupTitle,  String creationDate) {
 		this.creationDate = creationDate;
 		this.groupName = groupName;
 		this.groupInformation = groupInformation;
+		this.groupTitle = groupTitle;
 	}
 	public Set<User> getGroupSubs() {
 		return groupSubs;
@@ -71,12 +77,12 @@ public class UserGroup {
 //	public void setBanList(Set<User> banList) {
 //		this.banList = banList;
 //	}
-//	public Set<User> getGroupAdmins() {
-//		return groupAdmins;
-//	}
-//	public void setGroupAdmins(Set<User> groupAdmins) {
-//		this.groupAdmins = groupAdmins;
-//	}
+	public Set<User> getGroupAdmins() {
+		return groupAdmins;
+	}
+	public void setGroupAdmins(Set<User> groupAdmins) {
+		this.groupAdmins = groupAdmins;
+	}
 	public User getGroupOwner() {
 		return groupOwner;
 	}
@@ -148,5 +154,11 @@ public class UserGroup {
 	}
 	public void setGroupPicName(String groupPicName) {
 		this.groupPicName = groupPicName;
+	}
+	public String getGroupTitle() {
+		return groupTitle;
+	}
+	public void setGroupTitle(String groupTitle) {
+		this.groupTitle = groupTitle;
 	}
 }

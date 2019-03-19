@@ -10,28 +10,28 @@
 <div class="col-8">
 	<nav>
 		<div class="nav nav-pills mr-2" role="tablist">
-			<a class="nav-item nav-link <#if listType == 'groups'>active</#if>" data-toggle="tab" href="#nav-groups" role="tab">
+			<a class="nav-item nav-link mr-1 <#if listType == 'groups'>active</#if>" data-toggle="tab" href="#nav-groups" role="tab">
 				<#if isCurrentUserSubList>
 					My groups
 				<#else>
 					${user.username}'s groups
 				</#if>
 			</a>
-			<a class="nav-item nav-link <#if listType == 'friends'>active</#if>" data-toggle="tab" href="#nav-friends" role="tab">
+			<a class="nav-item nav-link mr-1 <#if listType == 'friends'>active</#if>" data-toggle="tab" href="#nav-friends" role="tab">
 				<#if isCurrentUserSubList>
 					My friends
 				<#else>
 					${user.username}'s friends
 				</#if>
 			</a>
-			<a class="nav-item nav-link <#if listType == 'subscriptions'>active</#if>" data-toggle="tab" href="#nav-subscriptions" role="tab">
+			<a class="nav-item nav-link mr-1 <#if listType == 'subscriptions'>active</#if>" data-toggle="tab" href="#nav-subscriptions" role="tab">
 				<#if isCurrentUserSubList>
 					My subscriptions
 				<#else>
 					${user.username}'s subscriptions
 				</#if>
 			</a>
-			<a class="nav-item nav-link <#if listType == 'subscribesrs'>active</#if>" data-toggle="tab" href="#nav-subscribers" role="tab">
+			<a class="nav-item nav-link mr-1 <#if listType == 'subscribesrs'>active</#if>" data-toggle="tab" href="#nav-subscribers" role="tab">
 				<#if isCurrentUserSubList>
 					My subscribers
 				<#else>
@@ -44,7 +44,7 @@
 		<div class="tab-pane fade <#if listType == 'groups'>show active</#if>" id="nav-groups" role="tabpanel" 
 			aria-labelledby="nav-subscriptions-tab" style="padding: 15px 5px;">
 			<#list groups as group>
-				<@groupList.groupList group 34 34 />
+				<@groupList.groupList group 64 64 />
 			<#else>
 				<h4 class="display-4 ml-2 " align="left">No groups :(</h4>
 			</#list>

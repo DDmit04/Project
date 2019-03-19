@@ -13,11 +13,20 @@ public interface UserGroupRepo extends CrudRepository<UserGroup, Long> {
 	@Query("   select new com.web.data.dto.UserGroupDto(" +
 		   "   ug, " +
 		   "   (select count(*) from ug.groupSubs), " +
-		   "   sum(case when ugs = :currentUser then 1 else 0 end) > 0" +
+		   "   (select count(*) from ug.groupAdmins) " +
 		   "   )" +
-		   "   from UserGroup ug left join ug.groupSubs ugs" +
+		   "   from UserGroup ug" +
 		   "   where ug.id = :groupId" +
 		   "   group by ug")
-	UserGroupDto findOneGroup(@Param("currentUser") User currentUser, @Param("groupId") Long groupId);
+	UserGroupDto findOneGroup(@Param("groupId") Long groupId);
+	
+	@Query("   select new com.web.data.dto.UserGroupDto(" +
+			   "   ug, " +
+			   "   (select count(*) from ug.groupSubs), " +
+			   "   (select count(*) from ug.groupAdmins) " +
+			   "   )" +
+			   "   from UserGroup ug" +
+			   "   group by ug")
+	Iterable<UserGroupDto> findAllDto();
 	
 }

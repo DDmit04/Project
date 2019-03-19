@@ -78,27 +78,35 @@ public class PostController {
 	}
 	
 	@PostMapping("{post}/edit")
-	public String editPost(@PathVariable Post post, 
+	public String editPost(@AuthenticationPrincipal User currentUser,
+						   @PathVariable Post post, 
 					       @RequestParam String postText,
 						   @RequestParam String tags, 
 						   @RequestParam("file") MultipartFile file,
 						   Model model) throws IllegalStateException, IOException {
-		postService.updatePost(post, postText, tags, file);
+		if(currentUser == post.getPostAuthor()) {
+			postService.updatePost(post, postText, tags, file);
+		}
 		return "redirect:/posts";
 	}
 	
 	@GetMapping("{post}/delete")
 	public String deletePost(@AuthenticationPrincipal User currentUser,
 							 @PathVariable Post post) {
-		postService.deletePost(post, currentUser);
+		if(currentUser == post.getPostAuthor()) {
+			postService.deletePost(post, currentUser);
+		}
 		return "redirect:/posts";
 	}
 	
 	@GetMapping("{post}/removeRepost")
-	public String removeRepost(@PathVariable Post post,
+	public String removeRepost(@AuthenticationPrincipal User currentUser,
+							   @PathVariable Post post,
 			 				   RedirectAttributes redirectAttributes,
 			 				   @RequestHeader(required = false) String referer) {
-		postService.removeRepost(post);
+		if(currentUser == post.getPostAuthor()) {
+			postService.removeRepost(post);
+		}
 		return "redirect:/" + post.getId() + "/edit" ;		
 	}
 	

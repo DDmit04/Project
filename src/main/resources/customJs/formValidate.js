@@ -69,6 +69,17 @@ function validateComment() {
 	return true;
 }
 
+function validateGroupCreate() {
+	var groupName = document.getElementById("groupName");
+	if(!groupName.value) {
+		groupName.classList.add('is-invalid');
+		var groupNameError = document.getElementById("groupNameError");
+		groupNameError.innerHTML = 'group name can not be empty!';
+		return false;
+	}
+	return true;
+}
+
 function disposeAlert(elementName) {
 	var element = document.getElementById(elementName);
 	var elementError = element.nextSibling;

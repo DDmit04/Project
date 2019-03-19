@@ -1,33 +1,24 @@
 <#macro showUsers usersList listType>
 
-	<#list usersList as user>
-		<ul class="list-group">
-		  	<li class="list-group-item d-flex justify-content-between align-items-center" style="border-left: none;
- 																								 border-right: none;
- 																								 border-top: none">
-		   		<div class="border-secondary media">
-					<a href="/${user.id}/profile"> 
-						<#if user.userPicName??>
-							<img class="mr-2 rounded-circle border border-secondary" src="/imgUserPic/${user.userPicName}" width="34" height="34" class="mr-3">
-						<#else>
-							<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="34" height="34" class="mr-3">
-						</#if>
-					</a>
-					<div class="media-body">
-						<a href="/${user.id}/profile" class="h6 ml-2">${user.username}</a>
-					</div>
-				</div>
-		  	</li>
-		</ul>
-		
+	<#if listType == "groupOwner">
+		<#assign user = usersList >
+		<#include "/parts/showLists/showUser.ftl" >
 	<#else>
-		<#if listType == "friends">
-			<h4 class="display-4 ml-2 " align="left">No friends :(</h4>			
-		<#elseif listType == "subscriptions">
-			<h4 class="display-4 ml-2 " align="left">No subscriptions :(</h4>
+		<#list usersList as user>
+			<#include "/parts/showLists/showUser.ftl" >
 		<#else>
-			<h4 class="display-4 ml-2 " align="left">No subscribers :(</h4>
-		</#if>
-	</#list>
+			<#if listType == "friends">
+				<h4 class="display-4 ml-2 " align="left">No friends :(</h4>			
+			<#elseif listType == "subscriptions">
+				<h4 class="display-4 ml-2 " align="left">No subscriptions :(</h4>
+			<#elseif listType == "groupSubscriptions" || listType == "subscribers">
+				<h4 class="display-4 ml-2 " align="left">No subscribers :(</h4>
+			<#elseif listType == "groupAdmins">
+				<h4 class="display-4 ml-2 " align="left">No admins :(</h4>
+			<#else>
+				<h4 class="display-4 ml-2 " align="left">Empty List</h4>
+			</#if>
+		</#list>
+	</#if>
 		
 </#macro>

@@ -7,29 +7,34 @@ public class UserGroupDto {
 	
 	private Long id;
 	private Long subCount;
+	private Long adminCount;
 	private String groupName;
 	private String groupInformation;
 	private String creationDate;
 	private String groupPicName;
 	private User groupOwner;
-	private boolean isSub;
+	private String groupTitle;
 	
-	public UserGroupDto(UserGroup userGroup, Long subCount, boolean isSub) {
+	public UserGroupDto(UserGroup userGroup, Long subCount, Long adminCount) {
 		this.id = userGroup.getId();
-		this.isSub = isSub;
 		this.subCount = subCount;
 		this.groupName = userGroup.getGroupName();
 		this.groupInformation = userGroup.getGroupInformation();
 		this.creationDate = userGroup.getCreationDate();
 		this.groupPicName = userGroup.getGroupPicName();
 		this.groupOwner = userGroup.getGroupOwner();
+		this.groupTitle = userGroup.getGroupTitle();
+		this.adminCount = adminCount;
 	}
 
+	public Long getAdminCount() {
+		return adminCount;
+	}
+	public String getGroupTitle() {
+		return groupTitle;
+	}
 	public Long getSubCount() {
 		return subCount;
-	}
-	public boolean isSub() {
-		return isSub;
 	}
 	public Long getId() {
 		return id;
