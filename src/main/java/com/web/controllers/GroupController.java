@@ -53,10 +53,10 @@ public class GroupController {
 	}
 	
 	@GetMapping("/groups/{group}")
-	public String getAllGroups(@AuthenticationPrincipal User currentUser,
+	public String getGroup(@AuthenticationPrincipal User currentUser,
 							   @PathVariable UserGroup group,
 							   Model model) {
-		UserGroupDto oneGroup = userGroupRepo.findOneGroup(group.getId());
+		UserGroupDto oneGroup = userGroupRepo.findOneGroup(group.getId(), currentUser);
 		model.addAttribute("posts", postRepo.findGroupPosts(currentUser, group));
 		model.addAttribute("group", oneGroup);
 		model.addAttribute("user", userRepo.findOneUserToGroup(currentUser.getId(), group));
@@ -84,8 +84,9 @@ public class GroupController {
 							  @RequestParam String groupName,
 							  @RequestParam (required = false)String groupTitle,
 							  @RequestParam (required = false)String groupInformation,
-							  Model model) {
-		groupService.createGroup(groupName, groupInformation, groupTitle, currentUser);
+							  @RequestParam("file") MultipartFile file,
+							  Model model) throws IllegalStateException, IOException {
+		groupService.createGroup(groupName, groupInformation, groupTitle, file, currentUser);
 		return "redirect:/" + currentUser.getId() + "/profile/socialList/groups";
 	}
 	
@@ -108,7 +109,7 @@ public class GroupController {
 								   @PathVariable String listType,
 							 	   @PathVariable UserGroup group,
 							 	   Model model) {
-		model.addAttribute("group", userGroupRepo.findOneGroup(group.getId()));
+		model.addAttribute("group", userGroupRepo.findOneGroup(group.getId(), currentUser));
 		model.addAttribute("groupSubscrabers", group.getGroupSubs());
 		model.addAttribute("groupAdmins", group.getGroupAdmins());
 		model.addAttribute("listType", listType);

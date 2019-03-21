@@ -59,9 +59,9 @@ public class PostController {
 	
 	@GetMapping("/subscriptionPosts")
 	public String getFriendPosts(@AuthenticationPrincipal User currentUser,
-							   @RequestParam(required = false) String search,
-							   Model model) {
-		Iterable<PostDto> searchFriendPosts = postService.searchFriendPosts(currentUser);
+							     @RequestParam(required = false) String search,
+							     Model model) {
+		Iterable<PostDto> searchFriendPosts = postService.searchSubscriptionsPosts(currentUser);
 		model.addAttribute("user", currentUser);
 		model.addAttribute("posts", searchFriendPosts);
 		model.addAttribute("search", search);

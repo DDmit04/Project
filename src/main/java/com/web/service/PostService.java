@@ -85,7 +85,7 @@ public class PostService {
 	}
 	
 	public PostDto findOnePost(User currentUser, Post post) {
-		return 	postRepo.findOne(currentUser, post.getId());
+		return postRepo.findOne(currentUser, post.getId());
 	}
 	
 	public Iterable<PostDto> searchPostsByTag(String search, User currentUser) {
@@ -102,7 +102,7 @@ public class PostService {
 		return postRepo.findByPostAuthor(currentUser, user);
 	}
 
-	public Iterable<PostDto> searchFriendPosts(User currentUser) {
+	public Iterable<PostDto> searchSubscriptionsPosts(User currentUser) {
 		return postRepo.findSubscriptionsPosts(currentUser);
 	}
 }

@@ -1,7 +1,5 @@
 <#macro show post parentPost postType>
 
-<!-- template show users posts -->
-
 <#include "/parts/security.ftl">
 
 <div class="card mt-3 shadow border-secondary">
@@ -36,7 +34,22 @@
 			<small class="ml-2">${post.creationDate}</small>
 		</div>
 		<#if post.postAuthor??>
-			<#if currentUsername == post.postAuthor.username && postType != "repost">
+			<#if currentUsername == post.postAuthor.username && postType != "repost"> 
+				<div class="col dropdown" align="right">
+					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
+						<i class="fas fa-ellipsis-v"></i>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<#if !isEdit>
+							<a class="dropdown-item" href="/${post.id}/edit">edit</a> 
+						</#if>
+							<a class="dropdown-item" href="/${post.id}/delete">delete</a>
+					</div>
+				</div>
+			</#if>
+		</#if>
+		<#if post.postGroup??>
+			<#if post.postGroup.groupAdmins?seq_contains(currentUser)?? && postType != "repost">
 				<div class="col dropdown" align="right">
 					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 						<i class="fas fa-ellipsis-v"></i>

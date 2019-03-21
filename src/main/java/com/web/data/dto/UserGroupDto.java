@@ -14,8 +14,9 @@ public class UserGroupDto {
 	private String groupPicName;
 	private User groupOwner;
 	private String groupTitle;
+	private boolean userCanPost;
 	
-	public UserGroupDto(UserGroup userGroup, Long subCount, Long adminCount) {
+	public UserGroupDto(UserGroup userGroup, Long subCount, Long adminCount, boolean userCanPost) {
 		this.id = userGroup.getId();
 		this.subCount = subCount;
 		this.groupName = userGroup.getGroupName();
@@ -25,8 +26,23 @@ public class UserGroupDto {
 		this.groupOwner = userGroup.getGroupOwner();
 		this.groupTitle = userGroup.getGroupTitle();
 		this.adminCount = adminCount;
+		this.userCanPost = userCanPost;
+	}
+	
+	public UserGroupDto(UserGroup userGroup, Long subCount) {
+		this.id = userGroup.getId();
+		this.subCount = subCount;
+		this.groupName = userGroup.getGroupName();
+		this.groupInformation = userGroup.getGroupInformation();
+		this.creationDate = userGroup.getCreationDate();
+		this.groupPicName = userGroup.getGroupPicName();
+		this.groupOwner = userGroup.getGroupOwner();
+		this.groupTitle = userGroup.getGroupTitle();
 	}
 
+	public boolean getUserCanPost() {
+		return userCanPost;
+	}
 	public Long getAdminCount() {
 		return adminCount;
 	}
@@ -54,7 +70,4 @@ public class UserGroupDto {
 	public User getGroupOwner() {
 		return groupOwner;
 	}
-	
-
-
 }

@@ -1,6 +1,7 @@
 package com.web.data;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -33,7 +34,7 @@ public class UserGroup {
 	@JoinColumn(name = "user_id")
 	private User groupOwner;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
 	@JoinTable(name = "group_subs", 
 				joinColumns = { @JoinColumn(name = "grup_id") },
 				inverseJoinColumns = { @JoinColumn(name = "user_id") } 
@@ -47,7 +48,7 @@ public class UserGroup {
 //   	)
 //	private Set<User> banList = new HashSet<>();
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "admined_groups", 
 		joinColumns = { @JoinColumn(name = "grup_id") },
 		inverseJoinColumns = { @JoinColumn(name = "user_id") } 
@@ -55,9 +56,22 @@ public class UserGroup {
 	private Set<User> groupAdmins = new HashSet<>();
 	
 	@OneToMany(mappedBy = "postGroup", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	private Set<Post> groupPosts = new HashSet<>();
+	private Set<Post> groupPosts;
 
 	public UserGroup() {
+	}
+	@Override
+	public boolean equals(Object obj) {
+    	if(this == obj) 
+    		return true;
+    	if(obj == null || getClass() != obj.getClass()) 
+    		return false;
+    	UserGroup userGroup = (UserGroup) obj;
+		return Objects.equals(id, userGroup.id);
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
 	}
 	public UserGroup(String groupName, String groupInformation, String groupTitle,  String creationDate) {
 		this.creationDate = creationDate;

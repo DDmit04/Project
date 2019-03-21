@@ -46,7 +46,7 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy = "postAuthor", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<Post> userPosts;
 
-	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<Comment> userComments;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -76,10 +76,10 @@ public class User implements UserDetails {
     private UserGroup belongGroup;
     
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "groupSubs")
-	private Set<UserGroup> subedGroups = new HashSet<>();
+	private Set<UserGroup> subedGroups;
 	
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "groupAdmins")
-   	private Set<UserGroup> adminedGroups = new HashSet<>();
+   	private Set<UserGroup> adminedGroups;
 //    
 //	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "banList")
 //	private Set<UserGroup> bannedInGroups = new HashSet<>();
@@ -91,21 +91,19 @@ public class User implements UserDetails {
 		this.password = password;
 		this.registrationDate = registrationDate;
 	}
+	
 	@Override
-	public boolean equals(Object o) {
-	    if (this == o) {
-	        return true;
-	    }
-	    if (o == null || getClass() != o.getClass()) {
-	        return false;
-	    }
-	    User that = (User) o;
-	    return getId() == that.getId();
+	public boolean equals(Object obj) {
+    	if(this == obj) 
+    		return true;
+    	if(obj == null || getClass() != obj.getClass()) 
+    		return false;
+    	User user = (User) obj;
+		return Objects.equals(id, user.id);
 	}
-
 	@Override
 	public int hashCode() {
-	    return Long.valueOf(getId()).hashCode();
+		return Objects.hashCode(id);
 	}
 	public UserGroup getBelongGroup() {
 		return belongGroup;

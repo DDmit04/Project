@@ -29,7 +29,7 @@ public class Post {
 	private String filename;
 	private Long repostsCount = (long) 0;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	private User postAuthor;
 	
@@ -47,7 +47,7 @@ public class Post {
 	)
 	private Set<User> postLikes = new HashSet<User>();
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "grup_id")
 	private UserGroup postGroup;
 
