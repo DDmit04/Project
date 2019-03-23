@@ -1,6 +1,9 @@
 package com.web.controllers;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,10 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.web.data.User;
+import com.web.data.UserGroup;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
+import com.web.data.dto.UserGroupDto;
 import com.web.exceptions.UserException;
-import com.web.repository.UserGroupRepo;
+import com.web.service.GroupService;
 import com.web.service.PostService;
 import com.web.service.ProfileService;
 import com.web.service.UserService;
@@ -39,7 +44,7 @@ public class UserProfileController {
 	private ProfileService profileService;
 	
 	@Autowired
-	private UserGroupRepo userGroupRepo;
+	private GroupService groupService;
 	
 	@GetMapping("{user}/profile")
 	public String getUserProfile(@AuthenticationPrincipal User currentUser,
@@ -47,8 +52,15 @@ public class UserProfileController {
 								 Model model) {
 		Iterable<PostDto> searchByPostAuthor = postService.findPostsByUser(currentUser, user);
 		UserDto userProfile = userService.findOneUser(currentUser, user);
+		Set<UserGroup> userFriends = new HashSet<UserGroup>();
+		int friendCount = 0;
+		Iterator<UserGroup> iterator = user.getSubedGroups().iterator(); 
+		      while (iterator.hasNext() && friendCount < 9){
+		         userFriends.add(iterator.next());
+		      }
 		model.addAttribute("user", userProfile);
-		model.addAttribute("posts", searchByPostAuthor);		
+		model.addAttribute("posts", searchByPostAuthor);
+		model.addAttribute("userGroups", userFriends);		
 		return "userProfile";
 	}
 	
@@ -123,11 +135,12 @@ public class UserProfileController {
 	public String subList(@PathVariable User user,
 					      @PathVariable String listType,
 						  Model model) {
+		Iterable<UserGroupDto> groups = groupService.findAllDto(user);
 		model.addAttribute("user", user);
 		model.addAttribute("friends", user.getUserFriends());
 		model.addAttribute("subscriptions", user.getSubscriptions());
 		model.addAttribute("subscribers", user.getSubscribers());
-		model.addAttribute("groups", userGroupRepo.findAllDto(user));
+		model.addAttribute("groups", groups);
 		model.addAttribute("listType", listType);
 		return "userConnections";
 	}

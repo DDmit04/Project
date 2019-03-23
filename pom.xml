@@ -39,6 +39,12 @@
 			<optional>true</optional>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>25.1-jre</version>
+		</dependency>
 
 		<!-- DataBase support -->
 		<dependency>
@@ -55,7 +61,7 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 
-<!-- 		security -->
+		<!-- security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>

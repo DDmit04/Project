@@ -9,15 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.web.data.FriendRequest;
 import com.web.data.User;
-import com.web.data.dto.UserDto;
 import com.web.service.ProfileService;
-import com.web.service.UserService;
 
 @Controller
 public class FriendController {
-	
-	@Autowired
-	private UserService userService;
 	
 	@Autowired
 	private ProfileService profileService;
@@ -45,12 +40,13 @@ public class FriendController {
 									  @PathVariable FriendRequest friendRequest,
 									  @PathVariable User user,
 									  Model model) {
-		profileService.addFriend(user, currentUser, friendRequest);
+		profileService.addFriend(friendRequest);
+		profileService.deleteFriendRequest(user, currentUser, friendRequest);
 		return "redirect:/friendRequest";
 	}
 	
-	@GetMapping("/{user}/deleteFriend")
-	public String deleteFriend(@AuthenticationPrincipal User currentUser,
+	@GetMapping("/{user}/{currentUser}/deleteFriend")
+	public String deleteFriend(@PathVariable User currentUser,
 							   @PathVariable User user) {
 		profileService.deleteFriend(user, currentUser);
 		return "redirect:/" + user.getId() + "/profile";

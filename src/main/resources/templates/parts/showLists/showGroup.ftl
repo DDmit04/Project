@@ -1,6 +1,7 @@
 <#macro groupList groups >
 
 
+
 <#list groups as group>
 	<ul class="list-group">
 	  <li class="list-group-item d-flex justify-content-between align-items-center" style="border-left: none;

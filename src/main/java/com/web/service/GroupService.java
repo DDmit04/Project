@@ -10,7 +10,6 @@ import com.web.data.User;
 import com.web.data.UserGroup;
 import com.web.data.dto.UserGroupDto;
 import com.web.repository.UserGroupRepo;
-import com.web.repository.UserRepo;
 import com.web.utils.DateUtil;
 
 @Service
@@ -54,6 +53,10 @@ public class GroupService {
 
 	public UserGroupDto findOneGroup(UserGroup group, User currentUser) {
 		return groupRepo.findOneGroup(group.getId(), currentUser);
+	}
+
+	public Iterable<UserGroupDto> findAllDto(User user) {
+		return groupRepo.findAllDto(user);
 	}
 
 }

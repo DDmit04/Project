@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.web.data.FriendRequest;
 
-public interface FriendReqestRepo extends CrudRepository<FriendRequest, Long> {
+public interface FriendRequestRepo extends CrudRepository<FriendRequest, Long> {
 	
 	Iterable<FriendRequest> findByRequestFromId(Long requestFromId);
 	

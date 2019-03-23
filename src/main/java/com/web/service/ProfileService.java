@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.web.data.FriendRequest;
 import com.web.data.User;
-import com.web.repository.FriendReqestRepo;
+import com.web.repository.FriendRequestRepo;
 import com.web.repository.UserRepo;
 import com.web.utils.DateUtil;
 
@@ -13,49 +13,50 @@ import com.web.utils.DateUtil;
 public class ProfileService {
 	
 	@Autowired
-	private FriendReqestRepo friendReqestRepo;
+	private FriendRequestRepo friendRequestRepo;
 	
 	@Autowired
 	private UserRepo userRepo;
 
 	public Iterable<FriendRequest> findRequestTo(User currentUser) {
-		return friendReqestRepo.findByRequestToId(currentUser.getId());
+		return friendRequestRepo.findByRequestToId(currentUser.getId());
 	}
 
 	public Iterable<FriendRequest> findRequestFrom(User currentUser) {
-		return friendReqestRepo.findByRequestFromId(currentUser.getId());
+		return friendRequestRepo.findByRequestFromId(currentUser.getId());
 	}
 	
 	public void addFriendRequest(User user, User currentUser) {
 		FriendRequest friendReqest = new FriendRequest(DateUtil.getLocalDate(), currentUser, user);
-		friendReqestRepo.save(friendReqest);		
+		friendRequestRepo.save(friendReqest);		
 	}
 	
 	public void deleteFriendRequest(FriendRequest frendReqest) {
-		friendReqestRepo.delete(frendReqest);		
+		friendRequestRepo.delete(frendReqest);		
 	}
 	
 	public void deleteFriendRequest(User user, User currentUser, FriendRequest frendReqest) {
-		Long counterRequest = friendReqestRepo.findOneRequestId(user.getId(), currentUser.getId());
+		Long counterRequest = friendRequestRepo.findOneRequestId(user.getId(), currentUser.getId());
 		if(counterRequest != null) {
-			friendReqestRepo.deleteById(counterRequest);
+			friendRequestRepo.deleteById(counterRequest);
 		}
-		friendReqestRepo.delete(frendReqest);	
+		friendRequestRepo.delete(frendReqest);	
 	}
 
-	public void addFriend(User user, User currentUser, FriendRequest frendReqest) {
-		currentUser.getUserFriends().add(user);
-		userRepo.save(currentUser);
-		user.getUserFriends().add(currentUser);
-		userRepo.save(user);
-		deleteFriendRequest(user, currentUser, frendReqest);
+	public void addFriend(FriendRequest frendRequest) {
+		User receivingUser = frendRequest.getRequestTo();
+		User senderUser = frendRequest.getRequestFrom();
+		receivingUser.getUserFriends().add(senderUser);
+		userRepo.save(receivingUser);
+		senderUser.getUserFriends().add(receivingUser);
+		userRepo.save(senderUser);
 	}
 
 	public void deleteFriend(User user, User currentUser) {
-		currentUser.getUserFriends().remove(user);
-		userRepo.save(currentUser);	
 		user.getUserFriends().remove(currentUser);
 		userRepo.save(user);	
+		currentUser.getUserFriends().remove(user);
+		userRepo.save(currentUser);	
 	}
 	
 	public void removeSubscription(User currentUser, User user) {

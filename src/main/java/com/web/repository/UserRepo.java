@@ -22,18 +22,18 @@ public interface UserRepo extends CrudRepository<User, Long> {
             "   sum(case when us = :currentUser then 1 else 0 end) > 0, " +
 			"   (select count(*) from u.subedGroups) " + 
             ") " +
-            "from User u left join u.userFriends uf left join u.subscribers us " +
-            "where u.id = :id " +
-            "group by u")
+            " from User u left join u.userFriends uf left join u.subscribers us " +
+            " where u.id = :id " +
+            " group by u")
     UserDto findOneUserToUser(@Param("currentUser") User currentUser, @Param("currentUserId") Long currentUserId, @Param("id") Long id);
 	
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
 			"   sum(case when sg = :group then 1 else 0 end) > 0" + 
             ") " +
-            "from User u left join u.subedGroups sg " +
-            "where u.id = :currentUserId " +
-            "group by u")
+            " from User u left join u.subedGroups sg " +
+            " where u.id = :currentUserId " +
+            " group by u")
     UserDto findOneUserToGroup(@Param("currentUserId") Long currentUserId, @Param("group") UserGroup group);	
 	
 	@Query("select new com.web.data.dto.UserDto(" +
@@ -41,8 +41,9 @@ public interface UserRepo extends CrudRepository<User, Long> {
 			"   count(uf), " +
             "   count(us) " +
             ") " +
-            "from User u left join u.userFriends uf left join u.subscribers us " +
-            "where u.id = :id " +
-            "group by u")
-    UserDto findOneUserForList(@Param("id") Long id);	
+            " from User u left join u.userFriends uf left join u.subscribers us " +
+            " where u.id = :id " +
+            " group by u")
+    UserDto findOneUserForList(@Param("id") Long id);		
+	
 }
