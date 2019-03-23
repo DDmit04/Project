@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.User;
+import com.web.data.UserGroup;
 import com.web.data.UserRoles;
 import com.web.data.dto.UserDto;
 import com.web.exceptions.UserException;
@@ -51,6 +52,10 @@ public class UserService implements UserDetailsService{
 	
 	public UserDto findOneUserForList(User user) {
 		return  userRepo.findOneUserForList(user.getId());
+	}
+	
+	public UserDto findOneUserToGroup(User currentUser, UserGroup group) {
+		return userRepo.findOneUserToGroup(currentUser.getId(), group);
 	}
 
 	public void deleteUser(User currentUser, String accountDeletePassword) throws UserException {

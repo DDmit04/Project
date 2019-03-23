@@ -6,7 +6,11 @@
 	<div class="col-3">
 		<div class="card border-secondary shadow" style="width: 240px;">
 			<div class="card-body">
-		  		<img src="http://localhost:8080/static/images/title1.png" width="200" height="200" class="card-img-top" alt="...">
+				<#if user.userPicName??>
+					<img src="/imgUserPic/${user.userPicName}" width="200" height="200" class="card-img-top" alt="...">
+				<#else>
+		  			<img src="http://localhost:8080/static/images/title1.png" width="200" height="200" class="card-img-top" alt="...">
+		  		</#if>
 		  		<div class="container">
 			  		<div class="row mt-3">
 				  		<#if currentUsername != user.username>

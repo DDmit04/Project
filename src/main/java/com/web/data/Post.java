@@ -29,25 +29,25 @@ public class Post {
 	private String filename;
 	private Long repostsCount = (long) 0;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User postAuthor;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
 	private Post repost;
 
 	@OneToMany(mappedBy = "commentedPost")
 	private Set<Comment> postComments;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "post_likes", 
 				joinColumns = { @JoinColumn(name = "post_id") }, 
 				inverseJoinColumns = { @JoinColumn(name = "user_id") }
 	)
 	private Set<User> postLikes = new HashSet<User>();
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "grup_id")
 	private UserGroup postGroup;
 

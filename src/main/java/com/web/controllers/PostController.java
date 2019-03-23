@@ -84,7 +84,8 @@ public class PostController {
 						   @RequestParam String tags, 
 						   @RequestParam("file") MultipartFile file,
 						   Model model) throws IllegalStateException, IOException {
-		if(currentUser == post.getPostAuthor()) {
+		if((post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser))
+		|| (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser))) {
 			postService.updatePost(post, postText, tags, file);
 		}
 		return "redirect:/posts";
@@ -93,7 +94,8 @@ public class PostController {
 	@GetMapping("{post}/delete")
 	public String deletePost(@AuthenticationPrincipal User currentUser,
 							 @PathVariable Post post) {
-		if(currentUser == post.getPostAuthor()) {
+		if((post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser))
+		|| (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser))) {
 			postService.deletePost(post, currentUser);
 		}
 		return "redirect:/posts";
@@ -104,7 +106,8 @@ public class PostController {
 							   @PathVariable Post post,
 			 				   RedirectAttributes redirectAttributes,
 			 				   @RequestHeader(required = false) String referer) {
-		if(currentUser == post.getPostAuthor()) {
+		if((post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser))
+		|| (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser))) {
 			postService.removeRepost(post);
 		}
 		return "redirect:/" + post.getId() + "/edit" ;		

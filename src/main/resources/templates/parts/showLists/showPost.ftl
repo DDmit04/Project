@@ -1,5 +1,6 @@
 <#macro show post parentPost postType>
 
+<#import "/parts/utils/showPics.ftl" as picture>
 <#include "/parts/security.ftl">
 
 <div class="card mt-3 shadow border-secondary">
@@ -7,13 +8,12 @@
 		<#if post.postAuthor??>
 			<a href="/${post.postAuthor.id}/profile">
 				<#if post.postAuthor.userPicName??>
-					<img class="mr-2 rounded-circle border border-secondary" src="/imgUserPic/${post.postAuthor.userPicName}" width="55" height="55" class="mr-3">
+					<img class="mr-3 rounded-circle border border-secondary" src="/imgUserPic/${post.postAuthor.userPicName}" width="55" height="55">
 				<#else>
-					<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="55" height="55" class="mr-3">
+					<img class="mr-3 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="55" height="55">
 				</#if>
 			</a>
-		</#if>
-		<#if post.postGroup??>
+		<#elseif post.postGroup??>
 			<a href="/groups/${post.postGroup.id}">
 				<#if post.postGroup.groupPicName??>
 					<img class="mr-2 rounded-circle border border-secondary" src="/imgGroupPic/${post.postGroup.groupPicName}" width="55" height="55" class="mr-3">
@@ -26,8 +26,7 @@
 			<div class="mb-2 ml-2">
 				<#if post.postAuthor??>
 					<a href="${post.postAuthor.id}/profile" class="h5">${post.postAuthor.username}</a>
-				</#if>
-				<#if post.postGroup??>
+				<#elseif post.postGroup??>
 					<a href="/groups/${post.postGroup.id}" class="h5">${post.postGroup.groupName}</a>
 				</#if>
 			</div>
@@ -49,7 +48,7 @@
 			</#if>
 		</#if>
 		<#if post.postGroup??>
-			<#if post.postGroup.groupAdmins?seq_contains(currentUser)?? && postType != "repost">
+			<#if post.postGroup.groupAdmins?seq_contains(currentUser) && postType != "repost">
 				<div class="col dropdown" align="right">
 					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 						<i class="fas fa-ellipsis-v"></i>

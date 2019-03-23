@@ -11,21 +11,14 @@ create table usr (
 );
 create table post (
 	id int8 not null, 
-	creation_date varchar(255), 
+	creation_date varchar(255),
 	filename varchar(255), 
 	post_text varchar(255), 
 	reposts_count int8, 
 	tags varchar(255), 
 	user_id int8, 
+	grup_id int8, 
 	post_id int8, 
-	primary key (id)
-);
-
-create table app_groups (
-	id int8 not null, 
-	creation_date varchar(255), 
-	group_information varchar(255), 
-	group_name varchar(255), 
 	primary key (id)
 );
 create table comment (
@@ -65,6 +58,26 @@ create table user_subscriptions (
 	channel_id int8 not null, 
 	primary key (channel_id, subscriber_id)
 );
+create table admined_groups (
+	group_id int8 not null, 
+	user_id int8 not null, 
+	primary key (group_id, user_id)
+);
+create table grup (
+	id int8 not null, 
+	creation_date varchar(255), 
+	group_information varchar(255), 
+	group_name varchar(255), 
+	group_pic_name varchar(255), 
+	group_title varchar(255), 
+	user_id int8, 
+	primary key (id)
+);
+create table group_subs (
+	group_id int8 not null, 
+	user_id int8 not null, 
+	primary key (group_id, user_id)
+);
 alter table if exists comment add constraint FKgcgdcgly6u49hf4g8y2di3g4p foreign key (user_id) references usr ON DELETE CASCADE;
 alter table if exists comment add constraint FKs1slvnkuemjsq2kj4h3vhx7i1 foreign key (post_id) references post ON DELETE CASCADE;
 alter table if exists post add constraint FKrm2u0ujvvi9euawhsm1km29m4 foreign key (user_id) references usr ON DELETE CASCADE;
@@ -77,3 +90,8 @@ alter table if exists user_friendship add constraint FKnqpadtuuxeltknx3ggf2i26hq
 alter table if exists user_role add constraint FKfpm8swft53ulq2hl11yplpr5 foreign key (user_id) references usr ON DELETE CASCADE; 
 alter table if exists user_subscriptions add constraint FK74b7d4i0rhhj8jljvidimewie foreign key (channel_id) references usr ON DELETE CASCADE;
 alter table if exists user_subscriptions add constraint FKm69uaasbua17sgdnhsq10yxd5 foreign key (subscriber_id) references usr ON DELETE CASCADE;
+alter table if exists admined_groups add constraint FKjatjm0gc8i7yg4n5t9fikrtry foreign key (user_id) references usr ON DELETE CASCADE;
+alter table if exists admined_groups add constraint FK4l91pqpg8nmxldu93tu6y0kml foreign key (group_id) references grup ON DELETE CASCADE;
+alter table if exists group_subs add constraint FK7h2lvxcqotqeqnvgjhghou2wo foreign key (user_id) references usr ON DELETE CASCADE;
+alter table if exists group_subs add constraint FK95ren9mwh6no3fh7kk7kuvhfc foreign key (group_id) references grup ON DELETE CASCADE;
+alter table if exists grup add constraint FKsa66k0ilohpmxs4t3w3g9ee25 foreign key (user_id) references usr ON DELETE CASCADE;

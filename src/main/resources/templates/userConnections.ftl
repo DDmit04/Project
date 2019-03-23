@@ -43,11 +43,7 @@
 	<div class="tab-content shadow mt-2" id="nav-tabContent" style="background-color: white;">
 		<div class="tab-pane fade <#if listType == 'groups'>show active</#if>" id="nav-groups" role="tabpanel" 
 			aria-labelledby="nav-subscriptions-tab" style="padding: 15px 5px;">
-			<#list groups as group>
-				<@groupList.groupList group 64 64 />
-			<#else>
-				<h4 class="display-4 ml-2 " align="left">No groups :(</h4>
-			</#list>
+			<@groupList.groupList groups />
 		</div>
 		<div class="tab-pane fade <#if listType == 'friends'>show active</#if>" id="nav-friends" role="tabpanel" 
 			aria-labelledby="nav-subscriptions-tab" style="padding: 15px 5px;">

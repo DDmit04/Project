@@ -105,4 +105,8 @@ public class PostService {
 	public Iterable<PostDto> searchSubscriptionsPosts(User currentUser) {
 		return postRepo.findSubscriptionsPosts(currentUser);
 	}
+
+	public Iterable<PostDto> findGroupPosts(User currentUser, UserGroup group) {
+		return postRepo.findGroupPosts(currentUser, group);
+	}
 }

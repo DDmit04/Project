@@ -43,10 +43,10 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Set<UserRoles> roles;
 
-	@OneToMany(mappedBy = "postAuthor", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "postAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Post> userPosts;
 
-	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Comment> userComments;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -72,13 +72,13 @@ public class User implements UserDetails {
     )
     private Set<User> subscriptions = new HashSet<>();
     
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "groupOwner" ,cascade = CascadeType.ALL)
-    private UserGroup belongGroup;
+    @OneToMany(mappedBy = "groupOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<UserGroup> belongGroup;
     
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "groupSubs")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupSubs")
 	private Set<UserGroup> subedGroups;
 	
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "groupAdmins")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupAdmins")
    	private Set<UserGroup> adminedGroups;
 //    
 //	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "banList")
@@ -105,10 +105,10 @@ public class User implements UserDetails {
 	public int hashCode() {
 		return Objects.hashCode(id);
 	}
-	public UserGroup getBelongGroup() {
+	public Set<UserGroup> getBelongGroup() {
 		return belongGroup;
 	}
-	public void setBelongGroup(UserGroup belongGroup) {
+	public void setBelongGroup(Set<UserGroup> belongGroup) {
 		this.belongGroup = belongGroup;
 	}
 	public Set<UserGroup> getSubedGroups() {

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -30,13 +31,13 @@ public class UserGroup {
 	private String groupPicName;
 	private String groupTitle;
 	
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
 	private User groupOwner;
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
 	@JoinTable(name = "group_subs", 
-				joinColumns = { @JoinColumn(name = "grup_id") },
+				joinColumns = { @JoinColumn(name = "group_id") },
 				inverseJoinColumns = { @JoinColumn(name = "user_id") } 
 	)
 	private Set<User> groupSubs = new HashSet<>();
@@ -48,30 +49,17 @@ public class UserGroup {
 //   	)
 //	private Set<User> banList = new HashSet<>();
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "admined_groups", 
-		joinColumns = { @JoinColumn(name = "grup_id") },
+		joinColumns = { @JoinColumn(name = "group_id") },
 		inverseJoinColumns = { @JoinColumn(name = "user_id") } 
 	)
 	private Set<User> groupAdmins = new HashSet<>();
 	
-	@OneToMany(mappedBy = "postGroup", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "postGroup", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Post> groupPosts;
 
 	public UserGroup() {
-	}
-	@Override
-	public boolean equals(Object obj) {
-    	if(this == obj) 
-    		return true;
-    	if(obj == null || getClass() != obj.getClass()) 
-    		return false;
-    	UserGroup userGroup = (UserGroup) obj;
-		return Objects.equals(id, userGroup.id);
-	}
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(id);
 	}
 	public UserGroup(String groupName, String groupInformation, String groupTitle,  String creationDate) {
 		this.creationDate = creationDate;
@@ -79,6 +67,7 @@ public class UserGroup {
 		this.groupInformation = groupInformation;
 		this.groupTitle = groupTitle;
 	}
+	
 	public Set<User> getGroupSubs() {
 		return groupSubs;
 	}
