@@ -2,7 +2,7 @@ package com.web.data.dto;
 
 import com.web.data.Post;
 import com.web.data.User;
-import com.web.data.UserGroup;
+import com.web.data.Group;
 
 public class PostDto {
 	
@@ -12,7 +12,7 @@ public class PostDto {
 	private String creationDate;
 	private String filename;
 	private User postAuthor;
-	private UserGroup postGroup;
+	private Group postGroup;
 	private Long likes;
 	private Long commentsCount;
 	private Long repostsCount;
@@ -33,7 +33,7 @@ public class PostDto {
 		this.repostsCount = post.getRepostsCount();
 		this.postGroup = post.getPostGroup();
 	}
-	public UserGroup getPostGroup() {
+	public Group getPostGroup() {
 		return postGroup;
 	}
 	public Long getRepostsCount() {

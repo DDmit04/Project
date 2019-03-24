@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.web.data.User;
-import com.web.data.UserGroup;
+import com.web.data.Group;
 import com.web.data.dto.UserDto;
 
 public interface UserRepo extends CrudRepository<User, Long> {
@@ -34,14 +34,16 @@ public interface UserRepo extends CrudRepository<User, Long> {
             " from User u left join u.subedGroups sg " +
             " where u.id = :currentUserId " +
             " group by u")
-    UserDto findOneUserToGroup(@Param("currentUserId") Long currentUserId, @Param("group") UserGroup group);	
+    UserDto findOneUserToGroup(@Param("currentUserId") Long currentUserId, @Param("group") Group group);	
 	
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
-			"   count(uf), " +
-            "   count(us) " +
+			"   (select count(*) from u.userFriends), " +
+            "   (select count(*) from u.subscriptions), " +
+			"   (select count(*) from u.subscribers), " + 
+            "   (select count(*) from u.subedGroups) " + 
             ") " +
-            " from User u left join u.userFriends uf left join u.subscribers us " +
+            " from User u " +
             " where u.id = :id " +
             " group by u")
     UserDto findOneUserForList(@Param("id") Long id);		

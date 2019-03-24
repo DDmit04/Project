@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.Post;
 import com.web.data.User;
-import com.web.data.UserGroup;
+import com.web.data.Group;
 import com.web.data.dto.PostDto;
 import com.web.repository.PostRepo;
 import com.web.utils.DateUtil;
@@ -26,7 +26,7 @@ public class PostService {
 		postRepo.save(createPost(postText, user, tags, file));
 	}
 	
-	public void addPost(String postText, String tags, MultipartFile file, UserGroup group) throws IllegalStateException, IOException {
+	public void addPost(String postText, String tags, MultipartFile file, Group group) throws IllegalStateException, IOException {
 		postRepo.save(createGroupPost(postText, group, tags, file));		
 	}
 	
@@ -37,7 +37,7 @@ public class PostService {
 		return post;
 	}
 	
-	public Post createGroupPost(String postText, UserGroup group, String tags, MultipartFile file) throws IllegalStateException, IOException {
+	public Post createGroupPost(String postText, Group group, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		Post post = new Post(postText, tags, DateUtil.getLocalDate("yyyy-MM-dd HH:mm:ss"));
 		post.setPostGroup(group);
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
@@ -106,7 +106,7 @@ public class PostService {
 		return postRepo.findSubscriptionsPosts(currentUser);
 	}
 
-	public Iterable<PostDto> findGroupPosts(User currentUser, UserGroup group) {
+	public Iterable<PostDto> findGroupPosts(User currentUser, Group group) {
 		return postRepo.findGroupPosts(currentUser, group);
 	}
 }

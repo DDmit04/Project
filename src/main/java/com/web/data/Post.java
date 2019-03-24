@@ -49,7 +49,7 @@ public class Post {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "grup_id")
-	private UserGroup postGroup;
+	private Group postGroup;
 
 	public Post() {
 	}
@@ -59,10 +59,10 @@ public class Post {
 		this.creationDate = creationDate;
 	}
 	
-	public UserGroup getPostGroup() {
+	public Group getPostGroup() {
 		return postGroup;
 	}
-	public void setPostGroup(UserGroup postGroup) {
+	public void setPostGroup(Group postGroup) {
 		this.postGroup = postGroup;
 	}
 	public Post getRepost() {

@@ -47,7 +47,7 @@ public class UserDto {
 	}
 
 //	user to list
-	public UserDto(User user, Long frendCount, Long subCount) {
+	public UserDto(User user, Long frendCount, Long subscriptionsCount, Long subscribersCount, Long groupSubscriptionsCount) {
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.active = user.isActive();
@@ -57,7 +57,11 @@ public class UserDto {
 		this.isFriend = false;
 		this.isRequested = false;
 		this.isSub = false;
-		this.subscriptionsCount = subCount;
+		this.subscriptionsCount = subscriptionsCount;
+		this.subscribersCount = subscribersCount;
+		this.groupSubscriptionsCount = groupSubscriptionsCount;
+
+
 	}
 	public boolean getIsGroupSub() {
 		return isGroupSub;

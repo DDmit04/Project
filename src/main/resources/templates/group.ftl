@@ -1,5 +1,5 @@
 <#import "parts/HTMLshell.ftl" as shell>
-
+<#import "parts/utils/showPics.ftl" as picture>
 <@shell.htmlPage>
 
 <#include "parts/security.ftl">
@@ -34,11 +34,7 @@
 	<div class="col-3">
 		<div class="card border-secondary shadow" style="width: 240px;">
 			<div class="card-body">
-		  		<#if group.groupPicName??>
-					<img class="mr-2 border border-secondary" src="/imgGroupPic/${group.groupPicName}" width="200" height="200" class="mr-3">
-				<#else>
-					<img class="mr-2 border border-secondary" src="http://localhost:8080/static/images/title1.png" width="200" height="200" class="mr-3">
-				</#if>
+		  		<@picture.pic group "bigPic" "groupAvatar" />
 		  		<div class="container">
 			  		<div class="row mt-3">
 			  			<#if !user.isGroupSub>
@@ -50,9 +46,23 @@
 		  		</div>
 			</div>
 		</div>
-		<div class="card border-secondary shadow mt-3" style="height: 240px; width: 240px;">
+		<div class="card border-secondary shadow mt-3" style="height: 300px; width: 240px;">
 			<div class="card-body">
 				<a href="/groups/${group.id}/socialList/groupSubscriptions">group subs: ${group.subCount}</a>
+				<div class="ml-2 mt-2">
+					<#assign i = 0>
+					<#list groupSubs as sub>
+						<#assign i += 1>
+						<a href="/${sub.id}/profile">
+							<#if sub.userPicName??>
+								<img class="mx-1 mt-4 rounded-circle border border-secondary" src="/imgUserPic/${sub.userPicName}" width="50" height="50" alt="...">
+							<#else>
+				  				<img class="mx-1 mt-4 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="50" height="50" alt="...">
+				  			</#if>	
+			  			</a>
+			  			<#if i == 9> <#break> </#if>
+					</#list>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -21,10 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.web.data.User;
-import com.web.data.UserGroup;
+import com.web.data.Group;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
-import com.web.data.dto.UserGroupDto;
+import com.web.data.dto.GroupDto;
 import com.web.exceptions.UserException;
 import com.web.service.GroupService;
 import com.web.service.PostService;
@@ -51,16 +51,10 @@ public class UserProfileController {
 								 @PathVariable User user,
 								 Model model) {
 		Iterable<PostDto> searchByPostAuthor = postService.findPostsByUser(currentUser, user);
-		UserDto userProfile = userService.findOneUser(currentUser, user);
-		Set<UserGroup> userFriends = new HashSet<UserGroup>();
-		int friendCount = 0;
-		Iterator<UserGroup> iterator = user.getSubedGroups().iterator(); 
-		      while (iterator.hasNext() && friendCount < 9){
-		         userFriends.add(iterator.next());
-		      }
+		UserDto userProfile = userService.findOneToUser(currentUser, user);
 		model.addAttribute("user", userProfile);
 		model.addAttribute("posts", searchByPostAuthor);
-		model.addAttribute("userGroups", userFriends);		
+		model.addAttribute("userGroups", user.getUserFriends());		
 		return "userProfile";
 	}
 	
@@ -73,7 +67,7 @@ public class UserProfileController {
 			 				  Model model) throws IllegalStateException, IOException {
 		Iterable<PostDto> searchByPostAuthor = postService.findPostsByUser(currentUser, user);
 		postService.addPost(postText, tags, file, currentUser);
-		UserDto userProfile = userService.findOneUser(currentUser, user);
+		UserDto userProfile = userService.findOneToUser(currentUser, user);
 		model.addAttribute("user", userProfile);
 		model.addAttribute("posts", searchByPostAuthor);		
 		return "redirect:/" + user.getId() + "/profile";
@@ -135,8 +129,9 @@ public class UserProfileController {
 	public String subList(@PathVariable User user,
 					      @PathVariable String listType,
 						  Model model) {
-		Iterable<UserGroupDto> groups = groupService.findAllDto(user);
-		model.addAttribute("user", user);
+		Iterable<GroupDto> groups = groupService.findAllGroupsDto(user);
+		UserDto usr = userService.findOneUserToList(user);
+		model.addAttribute("user", usr);
 		model.addAttribute("friends", user.getUserFriends());
 		model.addAttribute("subscriptions", user.getSubscriptions());
 		model.addAttribute("subscribers", user.getSubscribers());

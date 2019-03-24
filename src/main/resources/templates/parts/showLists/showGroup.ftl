@@ -1,20 +1,14 @@
 <#macro groupList groups >
 
-
-
+<#import "/parts/utils/showPics.ftl" as picture>
+				
 <#list groups as group>
 	<ul class="list-group">
 	  <li class="list-group-item d-flex justify-content-between align-items-center" style="border-left: none;
 	 																					   border-right: none;
 	 																					   border-top: none">
 		   <div class="border-secondary media">
-				<a class="mt-2" href="/groups/${group.id}"> 
-					<#if group.groupPicName??>
-						<img class="mr-3 rounded-circle border border-secondary" src="/imgGroupPic/${group.groupPicName}" width="64" height="64">
-					<#else>
-						<img class="mr-3 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="64" height="64">
-					</#if>
-				</a>
+		  		<@picture.pic group "mediumPic" "groupList" />
 				<div class="media-body">
 					<a href="/groups/${group.id}" class="h4 ml-2">${group.groupName}</a>
 					<div class="ml-2">

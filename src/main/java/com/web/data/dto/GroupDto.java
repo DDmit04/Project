@@ -1,9 +1,9 @@
 package com.web.data.dto;
 
 import com.web.data.User;
-import com.web.data.UserGroup;
+import com.web.data.Group;
 
-public class UserGroupDto {
+public class GroupDto {
 	
 	private Long id;
 	private Long subCount;
@@ -16,7 +16,7 @@ public class UserGroupDto {
 	private String groupTitle;
 	private boolean userCanPost;
 	
-	public UserGroupDto(UserGroup userGroup, Long subCount, Long adminCount, boolean userCanPost) {
+	public GroupDto(Group userGroup, Long subCount, Long adminCount, boolean userCanPost) {
 		this.id = userGroup.getId();
 		this.subCount = subCount;
 		this.groupName = userGroup.getGroupName();
@@ -29,7 +29,7 @@ public class UserGroupDto {
 		this.userCanPost = userCanPost;
 	}
 	
-	public UserGroupDto(UserGroup userGroup, Long subCount) {
+	public GroupDto(Group userGroup, Long subCount) {
 		this.id = userGroup.getId();
 		this.subCount = subCount;
 		this.groupName = userGroup.getGroupName();

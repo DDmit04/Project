@@ -73,13 +73,13 @@ public class User implements UserDetails {
     private Set<User> subscriptions = new HashSet<>();
     
     @OneToMany(mappedBy = "groupOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private Set<UserGroup> belongGroup;
+    private Set<Group> belongGroup;
     
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupSubs")
-	private Set<UserGroup> subedGroups;
+	private Set<Group> subedGroups;
 	
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupAdmins")
-   	private Set<UserGroup> adminedGroups;
+   	private Set<Group> adminedGroups;
 //    
 //	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "banList")
 //	private Set<UserGroup> bannedInGroups = new HashSet<>();
@@ -105,22 +105,22 @@ public class User implements UserDetails {
 	public int hashCode() {
 		return Objects.hashCode(id);
 	}
-	public Set<UserGroup> getBelongGroup() {
+	public Set<Group> getBelongGroup() {
 		return belongGroup;
 	}
-	public void setBelongGroup(Set<UserGroup> belongGroup) {
+	public void setBelongGroup(Set<Group> belongGroup) {
 		this.belongGroup = belongGroup;
 	}
-	public Set<UserGroup> getSubedGroups() {
+	public Set<Group> getSubedGroups() {
 		return subedGroups;
 	}
-	public void setSubedGroups(Set<UserGroup> subedGroups) {
+	public void setSubedGroups(Set<Group> subedGroups) {
 		this.subedGroups = subedGroups;
 	}
-	public Set<UserGroup> getAdminedGroups() {
+	public Set<Group> getAdminedGroups() {
 		return adminedGroups;
 	}
-	public void setAdminedGroups(Set<UserGroup> adminedGroups) {
+	public void setAdminedGroups(Set<Group> adminedGroups) {
 		this.adminedGroups = adminedGroups;
 	}
 //	public Set<UserGroup> getBannedInGroups() {

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.User;
-import com.web.data.UserGroup;
+import com.web.data.Group;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
-import com.web.data.dto.UserGroupDto;
-import com.web.repository.UserGroupRepo;
+import com.web.data.dto.GroupDto;
+import com.web.repository.GroupRepo;
 import com.web.service.GroupService;
 import com.web.service.PostService;
 import com.web.service.UserService;
@@ -35,32 +35,33 @@ public class GroupController {
 	private PostService postService;
 	
 	@Autowired
-	private UserGroupRepo userGroupRepo;
+	private GroupRepo userGroupRepo;
 	
 	@GetMapping("/groups")
 	public String getAllGroups(@AuthenticationPrincipal User currentUser,
 							   Model model) {
-		Iterable<UserGroupDto> allGroups = userGroupRepo.findAllDto();
+		Iterable<GroupDto> allGroups = userGroupRepo.findAllDto();
 		model.addAttribute("groups", allGroups);
 		return "allGroupList";
 	}
 	
 	@GetMapping("/groups/{group}")
 	public String getGroup(@AuthenticationPrincipal User currentUser,
-						   @PathVariable UserGroup group,
+						   @PathVariable Group group,
 						   Model model) {
-		UserGroupDto oneGroup = groupService.findOneGroup(group, currentUser);
+		GroupDto oneGroup = groupService.findOneGroup(group, currentUser);
 		UserDto oneUser = userServive.findOneUserToGroup(currentUser, group);
 		Iterable<PostDto> groupPosts = postService.findGroupPosts(currentUser, group);
 		model.addAttribute("posts", groupPosts);
 		model.addAttribute("group", oneGroup);
+		model.addAttribute("groupSubs", group.getGroupSubs());
 		model.addAttribute("user", oneUser);
 		return "group";
 	}
 	
 	@PostMapping("/groups/{group}")
 	public String addGroupPost(@AuthenticationPrincipal User currentUser,
-							   @PathVariable UserGroup group,
+							   @PathVariable Group group,
 							   @RequestParam String postText,
 							   @RequestParam String tags,
 							   @RequestParam("file") MultipartFile file,
@@ -81,20 +82,20 @@ public class GroupController {
 							  @RequestParam (required = false)String groupInformation,
 							  @RequestParam("file") MultipartFile file,
 							  Model model) throws IllegalStateException, IOException {
-		UserGroup group = groupService.createGroup(groupName, groupInformation, groupTitle, file, currentUser);
+		Group group = groupService.createGroup(groupName, groupInformation, groupTitle, file, currentUser);
 		return "redirect:/groups/" + group.getId();
 	}
 	
 	@GetMapping("/groups/{group}/sub")
 	public String subGroup(@AuthenticationPrincipal User currentUser,
-						   @PathVariable UserGroup group) {
+						   @PathVariable Group group) {
 		groupService.addGroupSub(group, currentUser);
 		return "redirect:/groups/" + group.getId();
 	}
 	
 	@GetMapping("/groups/{group}/unsub")
 	public String unsubGroup(@AuthenticationPrincipal User currentUser,
-							 @PathVariable UserGroup group) {
+							 @PathVariable Group group) {
 		groupService.removeGroupSub(group, currentUser);
 		return "redirect:/groups/" + group.getId();
 	}
@@ -102,9 +103,9 @@ public class GroupController {
 	@GetMapping("/groups/{group}/socialList/{listType}")
 	public String groupConnections(@AuthenticationPrincipal User currentUser,
 								   @PathVariable String listType,
-							 	   @PathVariable UserGroup group,
+							 	   @PathVariable Group group,
 							 	   Model model) {
-		UserGroupDto currentGroup = groupService.findOneGroup(group, currentUser);
+		GroupDto currentGroup = groupService.findOneGroup(group, currentUser);
 		model.addAttribute("group", currentGroup);
 		model.addAttribute("groupSubscrabers", group.getGroupSubs());
 		model.addAttribute("groupAdmins", group.getGroupAdmins());

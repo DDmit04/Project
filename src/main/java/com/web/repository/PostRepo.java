@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.web.data.Post;
 import com.web.data.User;
-import com.web.data.UserGroup;
+import com.web.data.Group;
 import com.web.data.dto.PostDto;
 
 public interface PostRepo extends CrudRepository<Post, Long> {
@@ -76,6 +76,6 @@ public interface PostRepo extends CrudRepository<Post, Long> {
             "from Post p left join p.postLikes pl " +
             "where p.postGroup = :group " +
             "group by p")  
-	Iterable<PostDto> findGroupPosts(@Param("currentUser") User currentUser, @Param("group") UserGroup group);
+	Iterable<PostDto> findGroupPosts(@Param("currentUser") User currentUser, @Param("group") Group group);
 	
 }

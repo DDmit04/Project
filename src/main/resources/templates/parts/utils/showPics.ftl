@@ -1,22 +1,50 @@
-<#macro pic basePath mainPath picOwner picType picWidth=55 picHeight=55>
+<#macro pic picAuthor picType picTarget>
 
+<#assign  isPicExist = (picAuthor.groupPicName?? || picAuthor.userPicName??)>
 
-<!-- <img src="/  imgUserPic  /  ${post.postAuthor.  userPicName}" width="55"          height="55" > -->
-<!-- <img src="/  basePath    /  ${picOwner.           mainPath}"  width="${picWidth}" height="${picHeight}" > -->
-
-
-<#if picType == "group">
-	<#assign link = "/groups/${picOwner.id}" >
-<#elseif picType == "user">
-	<#assign link = "/${picOwner.id}/profile" >
+<#if picTarget?contains("group")>
+		<#assign linkToAuthor = "/groups/${picAuthor.id}">
+			<#if isPicExist>
+				 <#assign picPath = "/imgGroupPic/${picAuthor.groupPicName}">
+			</#if>
+<#elseif picTarget?contains("user")>
+		<#assign linkToAuthor = "/${picAuthor.id}/profile">
+		<#if isPicExist>
+			<#assign picPath = "/imgUserPic/${picAuthor.userPicName}">
+		</#if>
 </#if>
 
-<a href=link>
-	<#if picOwner.mainPath??>
-		<img class="mr-2 rounded-circle border border-secondary" src="/basePath/${picOwner.mainPath}" width="${picWidth}" height="${picHeight}" class="mr-3">
+<#if picType == "bigPic">
+		<#assign picWidth = "200" picHeight = "200">
+<#elseif picType == "mediumPic">
+		<#assign picWidth = "55" picHeight = "55">
+<#elseif picType == "smallPic">
+		<#assign picWidth = "34" picHeight = "34">
+</#if>
+
+<#if picType == "bigPic">
+
+	<#if isPicExist>
+		<img class="mr-2 border border-secondary" src=${picPath} width=${picWidth} height=${picHeight} >
 	<#else>
-		<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="${picWidth}" height="${picHeight}" class="mr-3">
+		<img class="mr-2 border border-secondary" src="http://localhost:8080/static/images/title1.png" width=${picWidth} height=${picHeight} >
 	</#if>
-</a>
+<#elseif picType == "mediumPic">
+	<a href=${linkToAuthor}>
+		<#if isPicExist>
+			<img class="mr-2 rounded-circle border border-secondary" src=${picPath} width=${picWidth} height=${picHeight}>
+		<#else>
+			<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width=${picWidth} height=${picHeight}>
+		</#if>
+	</a>
+<#elseif picType == "smallPic">
+	<a href=${linkToAuthor}> 
+		<#if isPicExist>
+			<img class="mr-2 rounded-circle border border-secondary" src=${picPath} width=${picWidth} height=${picHeight}>
+		<#else>
+			<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width=${picWidth} height=${picHeight}>
+		</#if>
+	</a>
+</#if>
 
 </#macro>

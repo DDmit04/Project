@@ -14,28 +14,28 @@
 				<#if isCurrentUserSubList>
 					My groups
 				<#else>
-					${user.username}'s groups
+					${user.username}'s groups(${user.groupSubscriptionsCount})
 				</#if>
 			</a>
 			<a class="nav-item nav-link mr-1 <#if listType == 'friends'>active</#if>" data-toggle="tab" href="#nav-friends" role="tab">
 				<#if isCurrentUserSubList>
 					My friends
 				<#else>
-					${user.username}'s friends
+					${user.username}'s friends(${user.friendCount})
 				</#if>
 			</a>
 			<a class="nav-item nav-link mr-1 <#if listType == 'subscriptions'>active</#if>" data-toggle="tab" href="#nav-subscriptions" role="tab">
 				<#if isCurrentUserSubList>
 					My subscriptions
 				<#else>
-					${user.username}'s subscriptions
+					${user.username}'s subscriptions(${user.subscriptionsCount})
 				</#if>
 			</a>
 			<a class="nav-item nav-link mr-1 <#if listType == 'subscribesrs'>active</#if>" data-toggle="tab" href="#nav-subscribers" role="tab">
 				<#if isCurrentUserSubList>
 					My subscribers
 				<#else>
-					${user.username}'s subscribers
+					${user.username}'s subscribers(${user.subscribersCount})
 				</#if>
 			</a> 
 		</div>

@@ -6,21 +6,9 @@
 <div class="card mt-3 shadow border-secondary">
 	<div class="card-header border-secondary media">
 		<#if post.postAuthor??>
-			<a href="/${post.postAuthor.id}/profile">
-				<#if post.postAuthor.userPicName??>
-					<img class="mr-3 rounded-circle border border-secondary" src="/imgUserPic/${post.postAuthor.userPicName}" width="55" height="55">
-				<#else>
-					<img class="mr-3 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="55" height="55">
-				</#if>
-			</a>
+			<@picture.pic post.postAuthor "mediumPic" "userPost" />
 		<#elseif post.postGroup??>
-			<a href="/groups/${post.postGroup.id}">
-				<#if post.postGroup.groupPicName??>
-					<img class="mr-2 rounded-circle border border-secondary" src="/imgGroupPic/${post.postGroup.groupPicName}" width="55" height="55" class="mr-3">
-				<#else>
-					<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="55" height="55" class="mr-3">
-				</#if>
-			</a>
+			<@picture.pic post.postGroup "mediumPic" "groupPost" />
 		</#if>
 		<div class="media-body mt-0">
 			<div class="mb-2 ml-2">

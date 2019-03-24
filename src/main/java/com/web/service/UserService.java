@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.User;
-import com.web.data.UserGroup;
+import com.web.data.Group;
 import com.web.data.UserRoles;
 import com.web.data.dto.UserDto;
 import com.web.exceptions.UserException;
@@ -46,15 +46,15 @@ public class UserService implements UserDetailsService{
 		return userRepo.findByUsername(username);
 	}
 
-	public UserDto findOneUser(User currentUser, User user) {
+	public UserDto findOneToUser(User currentUser, User user) {
 		return  userRepo.findOneUserToUser(currentUser, currentUser.getId(), user.getId());
 	}
 	
-	public UserDto findOneUserForList(User user) {
+	public UserDto findOneUserToList(User user) {
 		return  userRepo.findOneUserForList(user.getId());
 	}
 	
-	public UserDto findOneUserToGroup(User currentUser, UserGroup group) {
+	public UserDto findOneUserToGroup(User currentUser, Group group) {
 		return userRepo.findOneUserToGroup(currentUser.getId(), group);
 	}
 

@@ -20,7 +20,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "grup")
-public class UserGroup {
+public class Group {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -59,9 +59,9 @@ public class UserGroup {
 	@OneToMany(mappedBy = "postGroup", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Post> groupPosts;
 
-	public UserGroup() {
+	public Group() {
 	}
-	public UserGroup(String groupName, String groupInformation, String groupTitle,  String creationDate) {
+	public Group(String groupName, String groupInformation, String groupTitle,  String creationDate) {
 		this.creationDate = creationDate;
 		this.groupName = groupName;
 		this.groupInformation = groupInformation;

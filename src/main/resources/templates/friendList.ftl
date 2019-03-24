@@ -3,16 +3,14 @@
 <#include "parts/security.ftl">
 
 <div class="col-9">
-	<div>
-		<h3>
-			<#if currentUsername != user.username>
-				${user.username}'s
-			<#else>
-				Your
-			</#if> 
+	<h3>
+		<#if currentUsername != user.username>
+			${user.username}'s
+		<#else>
+			Your
+		</#if> 
 		friendlist: (${user.friendCount})
-		</h3>
-	</div>
+	</h3>
 	<#list friends as friend>
 		<#include "parts/showLists/showFriend.ftl">
 	<#else>
