@@ -10,7 +10,9 @@ import com.web.data.dto.GroupDto;
 
 public interface GroupRepo extends CrudRepository<Group, Long> {
 	
-	@Query("   select new com.web.data.dto.GroupDto(" +
+	Group findByGroupName(String groupName);
+	
+	@Query("select new com.web.data.dto.GroupDto(" +
 		   "   ug, " +
 		   "   (select count(*) from ug.groupSubs), " +
 		   "   (select count(*) from ug.groupAdmins), " +
@@ -21,21 +23,21 @@ public interface GroupRepo extends CrudRepository<Group, Long> {
 		   "   group by ug")
 	GroupDto findOneGroup(@Param("groupId") Long groupId, @Param("currentUser") User currentUser);
 	
-	@Query("   select new com.web.data.dto.GroupDto(" +
-			   "   ug, " +
-			   "   (select count(*) from ug.groupSubs) " +
-			   "   )" +
-			   "   from Group ug left join ug.groupSubs us" +
-			   "   where us = :currentUser " + 
-			   "   group by ug")
+	@Query("select new com.web.data.dto.GroupDto(" +
+		   "   ug, " +
+		   "   (select count(*) from ug.groupSubs) " +
+		   "   )" +
+		   "   from Group ug left join ug.groupSubs us" +
+		   "   where us = :currentUser " + 
+		   "   group by ug")
 	Iterable<GroupDto> findAllGroupsDto(@Param("currentUser") User currentUser);
 	
-	@Query("   select new com.web.data.dto.GroupDto(" +
-			   "   ug, " +
-			   "   (select count(*) from ug.groupSubs) " +
-			   "   )" +
-			   "   from Group ug " +
-			   "   group by ug")
+	@Query("select new com.web.data.dto.GroupDto(" +
+		   "   ug, " +
+		   "   (select count(*) from ug.groupSubs) " +
+		   "   )" +
+		   "   from Group ug " +
+		   "   group by ug")
 	Iterable<GroupDto> findAllDto();
 	
 }

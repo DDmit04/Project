@@ -80,11 +80,11 @@ public class User implements UserDetails {
 	
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupAdmins")
    	private Set<Group> adminedGroups;
-//    
-//	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "banList")
-//	private Set<UserGroup> bannedInGroups = new HashSet<>();
-//    
-	public User() {
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "banList")
+	private Set<Group> bannedInGroups = new HashSet<>();
+
+    public User() {
 	}
 	public User(String username, String password, String registrationDate) {
 		this.username = username;

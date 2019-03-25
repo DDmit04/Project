@@ -7,9 +7,9 @@
 		<div class="text-center card-text">
 			<form method="post" enctype="multipart/form-data" onsubmit="return validateGroupCreate()">
 				<div class="form-group mt-3">
-					<input id="groupName" class="form-control col-mt" type="text" name="groupName" placeholder="group name"
-						onfocus="disposeAlert('groupName')"> 
-					<div id="groupNameError" class="invalid-feedback"></div>
+					<input id="groupName" class="form-control col-mt ${(groupNameError??)?string('is-invalid', '')}" type="text" name="groupName" 
+						   placeholder="group name" value="${registrationName?ifExists}" onfocus="disposeAlert('groupName')"> 
+					<div id="groupNameError" class="invalid-feedback"><#if groupNameError??>${groupNameError}</#if></div>
 					<input class="form-control mt-2" type="text" name="groupTitle" id="tags" placeholder="title (optional)">
 					<input class="form-control mt-2" type="text" name="groupInformation" id="tags" placeholder="infirmation (optional)">
 					<div class="input-group mt-2">

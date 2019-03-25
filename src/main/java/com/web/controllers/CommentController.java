@@ -55,7 +55,9 @@ public class CommentController {
 							    @PathVariable Post post,
 								@PathVariable Comment comment,
 								Model model) {
-		if(comment.getCommentAuthor().equals(currentUser)) {
+		if(((comment.getCommentAuthor().equals(currentUser)))
+			|| (post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser))
+			|| (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser))) {
 			commentService.deleteComment(comment);
 		}
 		return "redirect:/" + post.getId() + "/comments";

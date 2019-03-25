@@ -29,16 +29,8 @@
 	<#else>
 		<img class="mr-2 border border-secondary" src="http://localhost:8080/static/images/title1.png" width=${picWidth} height=${picHeight} >
 	</#if>
-<#elseif picType == "mediumPic">
+<#elseif picType == "mediumPic" || picType == "smallPic">
 	<a href=${linkToAuthor}>
-		<#if isPicExist>
-			<img class="mr-2 rounded-circle border border-secondary" src=${picPath} width=${picWidth} height=${picHeight}>
-		<#else>
-			<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width=${picWidth} height=${picHeight}>
-		</#if>
-	</a>
-<#elseif picType == "smallPic">
-	<a href=${linkToAuthor}> 
 		<#if isPicExist>
 			<img class="mr-2 rounded-circle border border-secondary" src=${picPath} width=${picWidth} height=${picHeight}>
 		<#else>

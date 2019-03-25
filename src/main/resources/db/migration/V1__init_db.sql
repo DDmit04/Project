@@ -95,3 +95,8 @@ alter table if exists admined_groups add constraint FK4l91pqpg8nmxldu93tu6y0kml 
 alter table if exists group_subs add constraint FK7h2lvxcqotqeqnvgjhghou2wo foreign key (user_id) references usr ON DELETE CASCADE;
 alter table if exists group_subs add constraint FK95ren9mwh6no3fh7kk7kuvhfc foreign key (group_id) references grup ON DELETE CASCADE;
 alter table if exists grup add constraint FKsa66k0ilohpmxs4t3w3g9ee25 foreign key (user_id) references usr ON DELETE CASCADE;
+
+insert into usr (id, username, password, registration_date, active) VALUES
+  (1, '1', '1', 'test1', true),
+  (2, '2', '1', 'test2', true),
+  (3, '3', '1', 'test3', true);

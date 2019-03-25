@@ -42,14 +42,14 @@ public class Group {
 	)
 	private Set<User> groupSubs = new HashSet<>();
 	
-//	@ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-//   	@JoinTable(name = "banned_users", 
-//   		joinColumns = { @JoinColumn(name = "group_id") },
-//   		inverseJoinColumns = { @JoinColumn(name = "user_id") } 
-//   	)
-//	private Set<User> banList = new HashSet<>();
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+   	@JoinTable(name = "banned_users", 
+   		joinColumns = { @JoinColumn(name = "group_id") },
+   		inverseJoinColumns = { @JoinColumn(name = "user_id") } 
+   	)
+	private Set<User> banList = new HashSet<>();
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "admined_groups", 
 		joinColumns = { @JoinColumn(name = "group_id") },
 		inverseJoinColumns = { @JoinColumn(name = "user_id") } 
@@ -67,19 +67,18 @@ public class Group {
 		this.groupInformation = groupInformation;
 		this.groupTitle = groupTitle;
 	}
-	
 	public Set<User> getGroupSubs() {
 		return groupSubs;
 	}
 	public void setGroupSubs(Set<User> groupSubs) {
 		this.groupSubs = groupSubs;
 	}
-//	public Set<User> getBanList() {
-//		return banList;
-//	}
-//	public void setBanList(Set<User> banList) {
-//		this.banList = banList;
-//	}
+	public Set<User> getBanList() {
+		return banList;
+	}
+	public void setBanList(Set<User> banList) {
+		this.banList = banList;
+	}
 	public Set<User> getGroupAdmins() {
 		return groupAdmins;
 	}
@@ -122,36 +121,6 @@ public class Group {
 	public void setCreationDate(String creationDate) {
 		this.creationDate = creationDate;
 	}
-//	public Set<User> getGroupSubs() {
-//		return groupSubs;
-//	}
-//	public void setGroupSubs(Set<User> groupSubs) {
-//		this.groupSubs = groupSubs;
-//	}
-//	public Set<User> getBanList() {
-//		return banList;
-//	}
-//	public void setBanList(Set<User> banList) {
-//		this.banList = banList;
-//	}
-//	public Set<User> getGroupAdmins() {
-//		return groupAdmins;
-//	}
-//	public void setGroupAdmins(Set<User> groupAdmins) {
-//		this.groupAdmins = groupAdmins;
-//	}
-//	public Set<Post> getGroupPosts() {
-//		return groupPosts;
-//	}
-//	public void setGroupPosts(Set<Post> groupPosts) {
-//		this.groupPosts = groupPosts;
-//	}
-//	public String getGroupPicName() {
-//		return groupPicName;
-//	}
-//	public void setGroupPicName(String groupPicName) {
-//		this.groupPicName = groupPicName;
-//	}
 	public String getGroupPicName() {
 		return groupPicName;
 	}

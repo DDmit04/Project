@@ -16,6 +16,7 @@ import com.web.data.User;
 import com.web.data.Group;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
+import com.web.exceptions.GroupException;
 import com.web.data.dto.GroupDto;
 import com.web.repository.GroupRepo;
 import com.web.service.GroupService;
@@ -82,7 +83,14 @@ public class GroupController {
 							  @RequestParam (required = false)String groupInformation,
 							  @RequestParam("file") MultipartFile file,
 							  Model model) throws IllegalStateException, IOException {
-		Group group = groupService.createGroup(groupName, groupInformation, groupTitle, file, currentUser);
+		Group group;
+		try {
+			group = groupService.createGroup(groupName, groupInformation, groupTitle, file, currentUser);
+		} catch (GroupException e) {
+			model.addAttribute("groupNameError", e.getMessage());
+			model.addAttribute("registrationName", e.getGroup().getGroupName());
+			return "createGroupForm";
+		}
 		return "redirect:/groups/" + group.getId();
 	}
 	
@@ -97,6 +105,22 @@ public class GroupController {
 	public String unsubGroup(@AuthenticationPrincipal User currentUser,
 							 @PathVariable Group group) {
 		groupService.removeGroupSub(group, currentUser);
+		return "redirect:/groups/" + group.getId();
+	}
+	
+	@GetMapping("/groups/{group}/{user}/addAdmin")
+	public String addAdmin(@AuthenticationPrincipal User currentUser,
+						   @PathVariable Group group,
+						   @PathVariable User user) {
+		groupService.addGroupAdmin(group, user);
+		return "redirect:/groups/" + group.getId();
+	}
+	
+	@GetMapping("/groups/{group}/{user}/removeAdmin")
+	public String removeAdmin(@AuthenticationPrincipal User currentUser,
+							  @PathVariable Group group,
+							  @PathVariable User user) {
+		groupService.removeGroupAdmin(group, user);
 		return "redirect:/groups/" + group.getId();
 	}
 	

@@ -40,7 +40,7 @@
 			  			<#if !user.isGroupSub>
 			  				<a class="btn btn-primary btn-lg btn-block" role="button" href="/groups/${group.id}/sub">sub</a>
 			  			<#else>
-							<a class="btn btn-primary btn-lg btn-block" role="button" href="/groups/${group.id}/unsub">unsub</a>
+							<a class="<#if user.isGroupAdmin>disabled </#if>btn btn-primary btn-lg btn-block" role="button" href="/groups/${group.id}/unsub">unsub</a>
 						</#if>
 			  		</div>
 		  		</div>

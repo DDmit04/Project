@@ -37,13 +37,13 @@ public class UserDto {
 	}
 
 //	user to group
-	public UserDto(User user, boolean isGroupSub) {
+	public UserDto(User user, boolean isGroupSub, boolean isGroupAdmin) {
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.active = user.isActive();
 		this.userPicName = user.getUserPicName();
 		this.isGroupSub = isGroupSub;
-//		this.isGroupAdmin = isGroupAdmin;
+		this.isGroupAdmin = isGroupAdmin;
 	}
 
 //	user to list
@@ -101,5 +101,8 @@ public class UserDto {
 	}
 	public boolean getIsSub() {
 		return isSub;
+	}
+	public boolean getIsGroupAdmin() {
+		return isGroupAdmin;
 	}
 }
