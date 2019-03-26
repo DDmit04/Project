@@ -32,7 +32,7 @@
 			</#if>
 			<#include "parts/postListHendle.ftl">
 		<#else>
-			<h4 class="display-4 ml-2 " align="left">you were banned in this group</h4>
+			<h4 class="display-4 ml-2 text-center">you were banned in this group</h4>
 		</#if>
 	</div>
 	<div class="col-3">
@@ -43,8 +43,10 @@
 			  		<div class="row mt-3">
 			  			<#if !user.isGroupSub>
 			  				<a class="<#if user.isBannedInGroup>disabled</#if> btn btn-primary btn-lg btn-block " role="button" href="/groups/${group.id}/sub">sub</a>
-			  			<#else>
-							<a class="<#if user.isGroupAdmin>disabled</#if> btn btn-primary btn-lg btn-block" role="button" href="/groups/${group.id}/unsub">unsub</a>
+			  			<#elseif user.isGroupAdmin>
+							<a class="btn btn-primary btn-lg btn-block" role="button" href="#">redact</a>
+						<#else>
+			  				<a class="btn btn-primary btn-lg btn-block " role="button" href="/groups/${group.id}/unsub">unsub</a>
 						</#if>
 			  		</div>
 		  		</div>

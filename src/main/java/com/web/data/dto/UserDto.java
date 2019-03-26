@@ -56,9 +56,6 @@ public class UserDto {
 		this.registrationDate = user.getRegistrationDate();
 		this.userPicName = user.getUserPicName();
 		this.friendCount = frendCount;
-		this.isFriend = false;
-		this.isRequested = false;
-		this.isSub = false;
 		this.subscriptionsCount = subscriptionsCount;
 		this.subscribersCount = subscribersCount;
 		this.groupSubscriptionsCount = groupSubscriptionsCount;

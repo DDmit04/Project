@@ -62,9 +62,9 @@
 	</div>
 	<div class="card-body border-secondary">
 		<#if post.tags != "">
-			<strong class="row ml-1 mb-1"><a href="/posts?search=${post.tags}">#${post.tags}</a></strong>
+			<strong class="ml-1 mb-1"><a href="/posts?search=${post.tags}">#${post.tags}</a></strong>
 		</#if>
-		<div class="row my-2 ml-1">${post.postText}</div>
+		<div class="my-2 ml-1 card-text">${post.postText}</div>
 		<div class="shadow">
 			<#if post.filename??>
 	       		<img src="/img/${post.filename}" width="89" class="card-img-top">

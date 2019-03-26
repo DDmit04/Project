@@ -41,9 +41,12 @@ public class GroupController {
 	@GetMapping("/groups")
 	public String getAllGroups(@AuthenticationPrincipal User currentUser,
 							   Model model) {
-		Iterable<GroupDto> allGroups = userGroupRepo.findAllDto();
-		model.addAttribute("groups", allGroups);
-		return "allGroupList";
+		Iterable<GroupDto> allGroups = groupService.findAllGroupsDto();
+		Iterable<GroupDto> userGroups = groupService.findUserGroupsDto(currentUser);
+		model.addAttribute("allGroups", allGroups);
+		model.addAttribute("userGroups", userGroups);
+		model.addAttribute("userGroupsCount", userGroups.spliterator().getExactSizeIfKnown());
+		return "groupList";
 	}
 	
 	@GetMapping("/groups/{group}")

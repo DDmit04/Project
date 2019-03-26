@@ -79,7 +79,11 @@ public class GroupService {
 		return groupRepo.findOneGroup(group.getId(), currentUser);
 	}
 
-	public Iterable<GroupDto> findAllGroupsDto(User user) {
-		return groupRepo.findAllGroupsDto(user);
+	public Iterable<GroupDto> findUserGroupsDto(User user) {
+		return groupRepo.findUserGroupsDto(user);
+	}
+	
+	public Iterable<GroupDto> findAllGroupsDto() {
+		return groupRepo.findAllGroupsDto();
 	}
 }

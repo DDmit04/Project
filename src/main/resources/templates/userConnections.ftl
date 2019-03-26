@@ -7,36 +7,31 @@
 
 <#assign isCurrentUserSubList = (currentUsername == user.username)>
 
-<div class="col-8">
+<div class="col-9">
+	<h5 class="display-5 mt-2 mb-3" align="left">
+		<#if isCurrentUserSubList>
+			My connections list
+		<#else>
+			${user.username}'s connections list
+		</#if>
+	</h5>
 	<nav>
 		<div class="nav nav-pills mr-2" role="tablist">
-			<a class="nav-item nav-link mr-1 <#if listType == 'groups'>active</#if>" data-toggle="tab" href="#nav-groups" role="tab">
-				<#if isCurrentUserSubList>
-					My groups
-				<#else>
-					${user.username}'s groups(${user.groupSubscriptionsCount})
-				</#if>
+			<a class="nav-item nav-link mr-1 btn-outline-primary <#if listType == 'groups'>active</#if>" data-toggle="tab" 
+				href="#nav-groups" role="tab">
+					groups (${user.groupSubscriptionsCount})
 			</a>
-			<a class="nav-item nav-link mr-1 <#if listType == 'friends'>active</#if>" data-toggle="tab" href="#nav-friends" role="tab">
-				<#if isCurrentUserSubList>
-					My friends
-				<#else>
-					${user.username}'s friends(${user.friendCount})
-				</#if>
+			<a class="nav-item nav-link mr-1 btn-outline-primary <#if listType == 'friends'>active</#if>" data-toggle="tab" 
+				href="#nav-friends" role="tab">
+					friends (${user.friendCount})
 			</a>
-			<a class="nav-item nav-link mr-1 <#if listType == 'subscriptions'>active</#if>" data-toggle="tab" href="#nav-subscriptions" role="tab">
-				<#if isCurrentUserSubList>
-					My subscriptions
-				<#else>
-					${user.username}'s subscriptions(${user.subscriptionsCount})
-				</#if>
+			<a class="nav-item nav-link mr-1 btn-outline-primary <#if listType == 'subscriptions'>active</#if>" data-toggle="tab" 
+				href="#nav-subscriptions" role="tab">
+					subscriptions (${user.subscriptionsCount})
 			</a>
-			<a class="nav-item nav-link mr-1 <#if listType == 'subscribesrs'>active</#if>" data-toggle="tab" href="#nav-subscribers" role="tab">
-				<#if isCurrentUserSubList>
-					My subscribers
-				<#else>
-					${user.username}'s subscribers(${user.subscribersCount})
-				</#if>
+			<a class="nav-item nav-link mr-1 btn-outline-primary <#if listType == 'subscribesrs'>active</#if>" data-toggle="tab" 
+				href="#nav-subscribers" role="tab">
+					subscribers (${user.subscribersCount})
 			</a> 
 		</div>
 	</nav>

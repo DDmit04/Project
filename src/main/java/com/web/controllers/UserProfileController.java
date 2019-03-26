@@ -129,7 +129,7 @@ public class UserProfileController {
 	public String subList(@PathVariable User user,
 					      @PathVariable String listType,
 						  Model model) {
-		Iterable<GroupDto> groups = groupService.findAllGroupsDto(user);
+		Iterable<GroupDto> groups = groupService.findUserGroupsDto(user);
 		UserDto usr = userService.findOneUserToList(user);
 		model.addAttribute("user", usr);
 		model.addAttribute("friends", user.getUserFriends());

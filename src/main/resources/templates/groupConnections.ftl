@@ -6,17 +6,23 @@
 <#include "parts/security.ftl">
 
 <div class="col-8">
+	<h5 class="display-5 mt-2 mb-3" align="left">
+		${group.groupName}'s  connections list
+	</h5>
 	<nav>
 		<div class="nav nav-pills mr-2" role="tablist">
-			<a class="nav-item nav-link mr-1 <#if listType == 'groupSubscrabers'>active</#if>" data-toggle="tab" href="#nav-groupSubs" role="tab">
-				${group.groupName}'s subs(${group.subCount})
+			<a class="nav-item nav-link mr-1 btn-outline-primary <#if listType == 'groupSubscrabers'>active</#if>" data-toggle="tab" 
+				href="#nav-groupSubs" role="tab">
+				subs (${group.subCount})
 			</a>
-			<a class="nav-item nav-link mr-1 <#if listType == 'groupAdmins'>active</#if>" data-toggle="tab" href="#nav-groupAdmins" role="tab">
-				${group.groupName}'s admins(${group.adminCount})
+			<a class="nav-item nav-link mr-1 btn-outline-primary <#if listType == 'groupAdmins'>active</#if>" data-toggle="tab" 
+				href="#nav-groupAdmins" role="tab">
+				admins (${group.adminCount})
 			</a>
 			<#if groupAdmins?seq_contains(currentUser)>
-				<a class="nav-item nav-link mr-1 <#if listType == 'groupBanList'>active</#if>" data-toggle="tab" href="#nav-groupBanList" role="tab">
-					${group.groupName}'s ban List(${group.banCount})
+				<a class="nav-item nav-link mr-1 btn-outline-primary <#if listType == 'groupBanList'>active</#if>" data-toggle="tab" 
+					href="#nav-groupBanList" role="tab">
+					ban List (${group.banCount})
 				</a>
 			</#if>
 		</div>		

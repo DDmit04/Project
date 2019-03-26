@@ -4,22 +4,24 @@
 			 <img src="http://localhost:8080/static/images/title1.png" width="30" height="30" class="d-inline-block align-top">
 		 </a>
 		 <div class="collapse navbar-collapse" id="navbarContent">
-		    <ul class="navbar-nav mr-auto">
-		    	<li class="nav-item">
-		    		<a class="nav-link waves-effect" href="/">greeting</a>
-		    	</li>
-		    	<li class="nav-item">
-		    		<a class="nav-link waves-effect" href="/subscriptionPosts">Subscription posts</a>
-		    	</li>
-		    	<li class="nav-item">
-		    		<#if currentUser??>
-			    		<form class="form-inline my-2 my-lg-0" action="/posts?search=${search?ifExists}">
-			 				<input class="form-control mr-sm-2" type="text" name="search" placeholder="Search" value="${search?ifExists}">
-			 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-			 			</form>
-		 			</#if>
-		    	</li>
-		    </ul>
+			 <#if currentUser??>
+			    <ul class="navbar-nav mr-auto">
+			    	<li class="nav-item">
+			    		<a class="nav-link waves-effect" href="/">greeting</a>
+			    	</li>
+			    	<li class="nav-item">
+			    		<a class="nav-link waves-effect" href="/subscriptionPosts">Subscription posts</a>
+			    	</li>
+			    	<li class="nav-item">
+			    		<#if currentUser??>
+				    		<form class="form-inline my-2 my-lg-0" action="/posts?search=${search?ifExists}">
+				 				<input class="form-control mr-sm-2" type="text" name="search" placeholder="Search" value="${search?ifExists}">
+				 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+				 			</form>
+			 			</#if>
+			    	</li>
+			    </ul>
+			 </#if>
 		 </div>
 		 <#if currentUser??>
 		 	<div class="mr-3">${currentUsername}</div>

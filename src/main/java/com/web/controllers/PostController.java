@@ -45,6 +45,17 @@ public class PostController {
 		return "postList";
 	}
 	
+	@GetMapping("/subscriptionPosts")
+	public String getFriendPosts(@AuthenticationPrincipal User currentUser,
+							     @RequestParam(required = false) String search,
+							     Model model) {
+		Iterable<PostDto> searchFriendPosts = postService.searchSubscriptionsPosts(currentUser);
+		model.addAttribute("user", currentUser);
+		model.addAttribute("posts", searchFriendPosts);
+		model.addAttribute("search", search);
+		return "postList";
+	}
+	
 	@PostMapping(value= {"/posts", "/subscriptionPosts"})
 	public String addPost(@AuthenticationPrincipal User currentUser,
 						  @RequestParam String postText, 
@@ -55,17 +66,6 @@ public class PostController {
 		postService.addPost(postText, tags, file, currentUser);
 		model.addAttribute("search", search);
 		return "redirect:/posts";
-	}
-	
-	@GetMapping("/subscriptionPosts")
-	public String getFriendPosts(@AuthenticationPrincipal User currentUser,
-							     @RequestParam(required = false) String search,
-							     Model model) {
-		Iterable<PostDto> searchFriendPosts = postService.searchSubscriptionsPosts(currentUser);
-		model.addAttribute("user", currentUser);
-		model.addAttribute("posts", searchFriendPosts);
-		model.addAttribute("search", search);
-		return "postList";
 	}
 	
 	@GetMapping("{post}/edit")

@@ -31,7 +31,7 @@ public interface GroupRepo extends CrudRepository<Group, Long> {
 		   "   from Group ug left join ug.groupSubs us" +
 		   "   where us = :currentUser " + 
 		   "   group by ug")
-	Iterable<GroupDto> findAllGroupsDto(@Param("currentUser") User currentUser);
+	Iterable<GroupDto> findUserGroupsDto(@Param("currentUser") User currentUser);
 	
 	@Query("select new com.web.data.dto.GroupDto(" +
 		   "   ug, " +
@@ -39,6 +39,6 @@ public interface GroupRepo extends CrudRepository<Group, Long> {
 		   "   )" +
 		   "   from Group ug " +
 		   "   group by ug")
-	Iterable<GroupDto> findAllDto();
+	Iterable<GroupDto> findAllGroupsDto();
 	
 }

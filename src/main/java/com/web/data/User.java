@@ -72,6 +72,22 @@ public class User implements UserDetails {
     )
     private Set<User> subscriptions = new HashSet<>();
     
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_black_list",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "banned_user_id") }
+    )
+    private Set<User> blackList = new HashSet<User>();
+
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "user_bans",
+//            joinColumns = { @JoinColumn(name = "banned_user_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+//    )
+//    private Set<User> inBlackList = new HashSet<>();
+    
     @OneToMany(mappedBy = "groupOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Group> belongGroup;
     
@@ -104,6 +120,18 @@ public class User implements UserDetails {
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(id);
+	}
+	public Set<User> getBlackList() {
+		return blackList;
+	}
+	public void setBlackList(Set<User> blackList) {
+		this.blackList = blackList;
+	}
+	public Set<Group> getBannedInGroups() {
+		return bannedInGroups;
+	}
+	public void setBannedInGroups(Set<Group> bannedInGroups) {
+		this.bannedInGroups = bannedInGroups;
 	}
 	public Set<Group> getBelongGroup() {
 		return belongGroup;
