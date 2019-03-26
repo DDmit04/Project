@@ -112,16 +112,60 @@ public class GroupController {
 	public String addAdmin(@AuthenticationPrincipal User currentUser,
 						   @PathVariable Group group,
 						   @PathVariable User user) {
-		groupService.addGroupAdmin(group, user);
-		return "redirect:/groups/" + group.getId();
+		if(group.getGroupOwner().equals(currentUser)) {
+			groupService.addGroupAdmin(group, user);
+		}
+		return "redirect:/groups/" + group.getId() + "/socialList/groupAdmins";
 	}
 	
 	@GetMapping("/groups/{group}/{user}/removeAdmin")
 	public String removeAdmin(@AuthenticationPrincipal User currentUser,
 							  @PathVariable Group group,
 							  @PathVariable User user) {
-		groupService.removeGroupAdmin(group, user);
-		return "redirect:/groups/" + group.getId();
+		if(group.getGroupOwner().equals(currentUser) || user.equals(currentUser)) {
+			groupService.removeGroupAdmin(group, user);
+		}
+		return "redirect:/groups/" + group.getId() + "/socialList/groupAdmins";
+	}
+	
+	@GetMapping("/groups/{group}/{user}/ban")
+	public String banUser(@AuthenticationPrincipal User currentUser,
+						  @PathVariable Group group,
+						  @PathVariable User user) {
+		if(group.getGroupOwner().equals(currentUser)) {
+			groupService.banUser(group, user);
+		}
+		return "redirect:/groups/" + group.getId() + "/socialList/groupBanList";
+	}
+	
+	@GetMapping("/groups/{group}/{user}/unban")
+	public String unban(@AuthenticationPrincipal User currentUser,
+					 	@PathVariable Group group,
+					    @PathVariable User user) {
+		if(group.getGroupOwner().equals(currentUser)) {
+			groupService.unbanUser(group, user);
+		}
+		return "redirect:/groups/" + group.getId() + "/socialList/groupBanList";
+	}
+	
+	@GetMapping("/groups/{group}/{user}/makeOwner")
+	public String makeOwner(Model model) {
+		model.addAttribute("loginAttention", "confirm the action on the group with login and password");
+		return "login";
+	}
+	
+	@PostMapping("/groups/{group}/{user}/makeOwner")
+	public String makeOwner1(@AuthenticationPrincipal User currentUser,
+							 @RequestParam String username,
+							 @RequestParam String password,
+							 @PathVariable Group group,
+							 @PathVariable User user) {
+		if(group.getGroupOwner().equals(currentUser) 
+				&& username.equals(group.getGroupOwner().getUsername()) 
+				&& password.equals(group.getGroupOwner().getPassword())) {
+			groupService.makeOwner(group, user);
+		}
+		return "redirect:/groups/" + group.getId() + "/socialList/groupAdmins";
 	}
 	
 	@GetMapping("/groups/{group}/socialList/{listType}")
@@ -133,6 +177,7 @@ public class GroupController {
 		model.addAttribute("group", currentGroup);
 		model.addAttribute("groupSubscrabers", group.getGroupSubs());
 		model.addAttribute("groupAdmins", group.getGroupAdmins());
+		model.addAttribute("banList", group.getBanList());
 		model.addAttribute("listType", listType);
 		return "groupConnections";
 	}

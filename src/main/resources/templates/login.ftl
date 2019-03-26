@@ -2,6 +2,11 @@
 
 <@shell.htmlPage>
 
+<#if loginAttention??>
+	<div class="alert alert-warning col-8" role="alert">
+		${loginAttention}
+	</div>
+</#if>
 
 <div class="container-fluid">
 	<div class="row">
@@ -9,7 +14,7 @@
 			<div class="col-md-5 text-center">
 				<div class="card shadow">
 					<div class="card-body">
-						<form class="form-signin" method="post" action="/login">
+						<form class="form-signin" method="post" action="">
 						      <img class="mb-4" src="http://localhost:8080/static/images/title1.png" alt="" width="72" height="72">
 						      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 						      

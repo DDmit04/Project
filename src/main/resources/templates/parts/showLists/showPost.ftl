@@ -10,7 +10,7 @@
 		<#elseif post.postGroup??>
 			<@picture.pic post.postGroup "mediumPic" "groupPost" />
 		</#if>
-		<div class="media-body mt-0">
+		<div class="media-body">
 			<div class="mb-2 ml-2">
 				<#if post.postAuthor??>
 					<a href="${post.postAuthor.id}/profile" class="h5">${post.postAuthor.username}</a>

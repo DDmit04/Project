@@ -30,9 +30,12 @@ public interface UserRepo extends CrudRepository<User, Long> {
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
 			"   sum(case when sg = :group then 1 else 0 end) > 0, " +
-            "   sum(case when ag = :group then 1 else 0 end) > 0 " + 
+            "   sum(case when ag = :group then 1 else 0 end) > 0, " +
+            "   sum(case when bg = :group then 1 else 0 end) > 0 " +
             ") " +
-            " from User u left join u.subedGroups sg left join u.adminedGroups ag " +
+            " from User u left join u.subedGroups sg " +
+            "			  left join u.adminedGroups ag " +
+            "             left join u.bannedInGroups bg " +
             " where u.id = :currentUserId " +
             " group by u")
     UserDto findOneUserToGroup(@Param("currentUserId") Long currentUserId, @Param("group") Group group);	

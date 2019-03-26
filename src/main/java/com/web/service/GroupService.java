@@ -40,6 +40,21 @@ public class GroupService {
 		return group;
 	}
 	
+	public void makeOwner(Group group, User user) {
+		group.setGroupOwner(user);
+		groupRepo.save(group);
+	}
+	
+	public void banUser(Group group, User user) {
+		group.getBanList().add(user);
+		groupRepo.save(group);
+	}
+
+	public void unbanUser(Group group, User user) {
+		group.getBanList().remove(user);
+		groupRepo.save(group);		
+	}
+	
 	public void addGroupSub(Group group, User user) {
 		group.getGroupSubs().add(user);
 		groupRepo.save(group);

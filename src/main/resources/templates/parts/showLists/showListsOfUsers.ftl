@@ -11,10 +11,12 @@
 			<h4 class="display-4 ml-2 " align="left">No friends :(</h4>			
 		<#elseif listType == "subscriptions">
 			<h4 class="display-4 ml-2 " align="left">No subscriptions :(</h4>
-		<#elseif listType == "groupSubscriptions" || listType == "subscribers">
+		<#elseif listType == "groupSubscrabers" || listType == "subscribers">
 			<h4 class="display-4 ml-2 " align="left">No subscribers :(</h4>
 		<#elseif listType == "groupAdmins">
 			<h4 class="display-4 ml-2 " align="left">No admins :(</h4>
+		<#elseif listType == "groupBanList">
+			<h4 class="display-4 ml-2 " align="left">No bans :(</h4>
 		<#else>
 			<h4 class="display-4 ml-2 " align="left">Empty List</h4>
 		</#if>

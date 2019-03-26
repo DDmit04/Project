@@ -16,6 +16,7 @@ public interface GroupRepo extends CrudRepository<Group, Long> {
 		   "   ug, " +
 		   "   (select count(*) from ug.groupSubs), " +
 		   "   (select count(*) from ug.groupAdmins), " +
+		   "   (select count(*) from ug.banList), " + 
 		   "   sum(case when ga = :currentUser then 1 else 0 end) > 0" +
 		   "   )" +
 		   "   from Group ug left join ug.groupAdmins ga" +

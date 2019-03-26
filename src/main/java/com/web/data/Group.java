@@ -31,7 +31,7 @@ public class Group {
 	private String groupPicName;
 	private String groupTitle;
 	
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
 	private User groupOwner;
 	

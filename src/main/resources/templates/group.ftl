@@ -15,7 +15,7 @@
 				<div class="mb-2">
 					${group.groupInformation!"no title"}
 				</div>
-				<a href="/groups/${group.id}/socialList/groupSubscriptions" role="button" class="btn btn-primary">
+				<a href="/groups/${group.id}/socialList/groupSubscrabers" role="button" class="btn btn-primary">
  					subs: <span class="badge badge-light">${group.subCount}</span>
 				</a>
 				<a href="/groups/${group.id}/socialList/groupAdmins" role="button" class="btn btn-primary">
@@ -26,10 +26,14 @@
 				</a>
 			</div>
 		</div>
-		<#if group.userCanPost>
-			<#include "parts/forms/addPostForm.ftl">
+		<#if !user.isBannedInGroup>
+			<#if group.userCanPost>
+				<#include "parts/forms/addPostForm.ftl">
+			</#if>
+			<#include "parts/postListHendle.ftl">
+		<#else>
+			<h4 class="display-4 ml-2 " align="left">you were banned in this group</h4>
 		</#if>
-		<#include "parts/postListHendle.ftl">
 	</div>
 	<div class="col-3">
 		<div class="card border-secondary shadow" style="width: 240px;">
@@ -38,9 +42,9 @@
 		  		<div class="container">
 			  		<div class="row mt-3">
 			  			<#if !user.isGroupSub>
-			  				<a class="btn btn-primary btn-lg btn-block" role="button" href="/groups/${group.id}/sub">sub</a>
+			  				<a class="<#if user.isBannedInGroup>disabled</#if> btn btn-primary btn-lg btn-block " role="button" href="/groups/${group.id}/sub">sub</a>
 			  			<#else>
-							<a class="<#if user.isGroupAdmin>disabled </#if>btn btn-primary btn-lg btn-block" role="button" href="/groups/${group.id}/unsub">unsub</a>
+							<a class="<#if user.isGroupAdmin>disabled</#if> btn btn-primary btn-lg btn-block" role="button" href="/groups/${group.id}/unsub">unsub</a>
 						</#if>
 			  		</div>
 		  		</div>

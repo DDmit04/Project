@@ -12,7 +12,13 @@
 			<h2 class="display-4 mt-3" align="center">No comments...</h2>
 		</#list>
 	<div class="mt-3">
+	<#if post.postGroup??>
+		<#if !post.postGroup.banList?seq_contains(currentUser)>
+			<#include "parts/forms/addCommentForm.ftl">
+		</#if>
+	<#else>
 		<#include "parts/forms/addCommentForm.ftl">
+	</#if>
 	</div>
 </div>
 

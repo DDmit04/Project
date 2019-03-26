@@ -71,7 +71,8 @@ public class CommentController {
 		Iterable<Comment> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
 		PostDto commentedPost = postService.findOnePost(currentUser, post);
 		model.addAttribute("comments", searchByCommentedPost);
-		model.addAttribute("post", commentedPost);		model.addAttribute("editedComment", comment);
+		model.addAttribute("post", commentedPost);		
+		model.addAttribute("editedComment", comment);
 		return "commentList";
 	}
 	

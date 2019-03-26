@@ -18,6 +18,7 @@ public class UserDto {
 	private boolean isSub;
 	private boolean isGroupSub;
 	private boolean isGroupAdmin;
+	private boolean isBannedInGroup;
 
 //	user to user
 	public UserDto(User user, Long frendCount, Long subscribersCount, Long subscriptionsCount, 
@@ -37,13 +38,14 @@ public class UserDto {
 	}
 
 //	user to group
-	public UserDto(User user, boolean isGroupSub, boolean isGroupAdmin) {
+	public UserDto(User user, boolean isGroupSub, boolean isGroupAdmin, boolean isBannedInGroup) {
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.active = user.isActive();
 		this.userPicName = user.getUserPicName();
 		this.isGroupSub = isGroupSub;
 		this.isGroupAdmin = isGroupAdmin;
+		this.isBannedInGroup = isBannedInGroup;
 	}
 
 //	user to list
@@ -60,8 +62,10 @@ public class UserDto {
 		this.subscriptionsCount = subscriptionsCount;
 		this.subscribersCount = subscribersCount;
 		this.groupSubscriptionsCount = groupSubscriptionsCount;
-
-
+	}
+	
+	public boolean getIsBannedInGroup() {
+		return isBannedInGroup;
 	}
 	public boolean getIsGroupSub() {
 		return isGroupSub;
