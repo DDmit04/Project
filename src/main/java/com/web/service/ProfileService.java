@@ -17,14 +17,6 @@ public class ProfileService {
 	
 	@Autowired
 	private UserRepo userRepo;
-
-	public Iterable<FriendRequest> findRequestTo(User currentUser) {
-		return friendRequestRepo.findByRequestToId(currentUser.getId());
-	}
-
-	public Iterable<FriendRequest> findRequestFrom(User currentUser) {
-		return friendRequestRepo.findByRequestFromId(currentUser.getId());
-	}
 	
 	public void addFriendRequest(User user, User currentUser) {
 		FriendRequest friendReqest = new FriendRequest(DateUtil.getLocalDate(), currentUser, user);
@@ -36,7 +28,7 @@ public class ProfileService {
 	}
 	
 	public void deleteFriendRequest(User user, User currentUser, FriendRequest frendReqest) {
-		Long counterRequest = friendRequestRepo.findOneRequestId(user.getId(), currentUser.getId());
+		Long counterRequest = friendRequestRepo.findOneRequestById(user.getId(), currentUser.getId());
 		if(counterRequest != null) {
 			friendRequestRepo.deleteById(counterRequest);
 		}
@@ -59,13 +51,37 @@ public class ProfileService {
 		userRepo.save(currentUser);	
 	}
 	
-	public void removeSubscription(User currentUser, User user) {
+	public void removeSubscription(User user, User currentUser) {
 		user.getSubscribers().remove(currentUser);
 		userRepo.save(user);
 	}
 
-	public void addSubscription(User currentUser, User user) {
+	public void addSubscription(User user, User currentUser) {
 		user.getSubscribers().add(currentUser);
 		userRepo.save(user);
+	}
+
+	public void addInBlackList(User user, User currentUser) {
+		currentUser.getBlackList().add(user);		
+		if(currentUser.getSubscribers().contains(user)) {
+			removeSubscription(user, currentUser);
+			removeSubscription(currentUser, user);
+		}
+		if(currentUser.getUserFriends().contains(user)) {
+			deleteFriend(user, currentUser);
+		}
+		userRepo.save(currentUser);
+	}
+	public void removeFromBlackList(User user, User currentUser) {
+		currentUser.getBlackList().remove(user);
+		userRepo.save(currentUser);
+	}
+	
+	public Iterable<FriendRequest> findRequestTo(User currentUser) {
+		return friendRequestRepo.findByRequestToId(currentUser.getId());
+	}
+
+	public Iterable<FriendRequest> findRequestFrom(User currentUser) {
+		return friendRequestRepo.findByRequestFromId(currentUser.getId());
 	}
 }

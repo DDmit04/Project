@@ -18,7 +18,9 @@
 					</div>
 				</div>
 		</div>
-		<#if currentUsername == comment.commentAuthor.username || comment.commentedPost.postGroup.groupAdmins?seq_contains(currentUser)>
+		<#if currentUsername == comment.commentAuthor.username 
+		    || (comment.commentedPost.postGroup?? && comment.commentedPost.postGroup.groupAdmins?seq_contains(currentUser))
+		    || (comment.commentedPost.postAuthor?? && currentUser == comment.commentedPost.postAuthor) >
 			<div class="col dropdown" align="right">
 				<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 					<i class="fas fa-ellipsis-v"></i>

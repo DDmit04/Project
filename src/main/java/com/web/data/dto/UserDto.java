@@ -13,7 +13,10 @@ public class UserDto {
 	private Long subscriptionsCount;
 	private Long subscribersCount;
 	private Long groupSubscriptionsCount;
+	private Long blackListCount;
 	private boolean isFriend;
+	private boolean isBloking;
+	private boolean isBloked;
 	private boolean isRequested;
 	private boolean isSub;
 	private boolean isGroupSub;
@@ -21,8 +24,9 @@ public class UserDto {
 	private boolean isBannedInGroup;
 
 //	user to user
-	public UserDto(User user, Long frendCount, Long subscribersCount, Long subscriptionsCount, 
-				   boolean isFriend, boolean isRequested, boolean isSub, Long groupSubscriptionsCount) {
+	public UserDto(User user, 
+				   Long frendCount, Long subscribersCount, Long subscriptionsCount, Long groupSubscriptionsCount,
+				   boolean isFriend, boolean isRequested, boolean isSub, boolean isBloking, boolean isBloked) {
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.active = user.isActive();
@@ -35,6 +39,8 @@ public class UserDto {
 		this.subscriptionsCount = subscriptionsCount;
 		this.subscribersCount = subscribersCount;
 		this.groupSubscriptionsCount = groupSubscriptionsCount;
+		this.isBloking = isBloking;
+		this.isBloked = isBloked;
 	}
 
 //	user to group
@@ -49,7 +55,8 @@ public class UserDto {
 	}
 
 //	user to list
-	public UserDto(User user, Long frendCount, Long subscriptionsCount, Long subscribersCount, Long groupSubscriptionsCount) {
+	public UserDto(User user, Long frendCount, Long subscriptionsCount, Long subscribersCount, Long groupSubscriptionsCount,
+					Long blackListCount) {
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.active = user.isActive();
@@ -59,8 +66,18 @@ public class UserDto {
 		this.subscriptionsCount = subscriptionsCount;
 		this.subscribersCount = subscribersCount;
 		this.groupSubscriptionsCount = groupSubscriptionsCount;
+		this.blackListCount = blackListCount;
+
 	}
-	
+	public boolean getIsBloked() {
+		return isBloked;
+	}
+	public Long getBlackListCount() {
+		return blackListCount;
+	}
+	public boolean getIsBloking() {
+		return isBloking;
+	}
 	public boolean getIsBannedInGroup() {
 		return isBannedInGroup;
 	}

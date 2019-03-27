@@ -17,6 +17,6 @@ public interface FriendRequestRepo extends CrudRepository<FriendRequest, Long> {
 		   "where fr.requestToId = :requestToId and fr.requestFromId = :requestFromId " +
 		   "group by fr"
 		)
-	Long findOneRequestId(@Param("requestToId") Long requestToId, @Param("requestFromId") Long requestFromId);
+	Long findOneRequestById(@Param("requestToId") Long requestToId, @Param("requestFromId") Long requestFromId);
 	
 }

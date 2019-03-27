@@ -17,12 +17,17 @@ public interface UserRepo extends CrudRepository<User, Long> {
 			"   (select count(*) from u.userFriends), " +
             "   (select count(*) from u.subscribers), " +
             "   (select count(*) from u.subscriptions), " +
+			"   (select count(*) from u.subedGroups), " + 
             "   sum(case when uf = :currentUser then 1 else 0 end) > 0, " +
 			"   sum(select count(requestFrom) from FriendRequest where requestFromId = :currentUserId) > 0, " +
             "   sum(case when us = :currentUser then 1 else 0 end) > 0, " +
-			"   (select count(*) from u.subedGroups) " + 
+            "   sum(case when bloking = :currentUser then 1 else 0 end) > 0, " +
+            "   sum(case when bloked = :currentUser then 1 else 0 end) > 0 " +
             ") " +
-            " from User u left join u.userFriends uf left join u.subscribers us " +
+            " from User u left join u.userFriends uf " +
+            " 			  left join u.subscribers us " +
+            "             left join u.inBlackList bloking " +
+            "             left join u.blackList bloked " +
             " where u.id = :id " +
             " group by u")
     UserDto findOneUserToUser(@Param("currentUser") User currentUser, @Param("currentUserId") Long currentUserId, @Param("id") Long id);
@@ -45,7 +50,8 @@ public interface UserRepo extends CrudRepository<User, Long> {
 			"   (select count(*) from u.userFriends), " +
             "   (select count(*) from u.subscriptions), " +
 			"   (select count(*) from u.subscribers), " + 
-            "   (select count(*) from u.subedGroups) " + 
+            "   (select count(*) from u.subedGroups), " + 
+			"   (select count(*) from u.blackList) " + 
             ") " +
             " from User u " +
             " where u.id = :id " +

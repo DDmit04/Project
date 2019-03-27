@@ -1,9 +1,6 @@
 package com.web.controllers;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,10 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.web.data.User;
-import com.web.data.Group;
+import com.web.data.dto.GroupDto;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
-import com.web.data.dto.GroupDto;
 import com.web.exceptions.UserException;
 import com.web.service.GroupService;
 import com.web.service.PostService;
@@ -114,15 +110,29 @@ public class UserProfileController {
 	@GetMapping("{user}/subscribe")
 	public String subscribe(@AuthenticationPrincipal User currentUser,
 							@PathVariable User user) {
-		profileService.addSubscription(currentUser, user);
+		profileService.addSubscription(user, currentUser);
 		return "redirect:/" + user.getId() + "/profile";
 	}
 	
 	@GetMapping("{user}/unsubscribe")
 	public String unsubscribe(@AuthenticationPrincipal User currentUser,
 							  @PathVariable User user) {
-		profileService.removeSubscription(currentUser, user);
+		profileService.removeSubscription(user, currentUser);
 		return "redirect:/" + user.getId() + "/profile";
+	}
+	
+	@GetMapping("{user}/{currentUser}/inBlackList")
+	public String addInBlackList(@PathVariable User currentUser,
+								 @PathVariable User user) {
+		profileService.addInBlackList(user, currentUser);
+		return "redirect:/" + currentUser.getId() + "/profile/socialList/blackList";
+	}
+	
+	@GetMapping("{user}/{currentUser}/fromBlackList")
+	public String removeFromBlackList(@PathVariable User currentUser,
+							  		  @PathVariable User user) {
+		profileService.removeFromBlackList(user, currentUser);
+		return "redirect:/" + currentUser.getId() + "/profile/socialList/blackList";
 	}
 	
 	@GetMapping("/{user}/profile/socialList/{listType}")
@@ -135,6 +145,7 @@ public class UserProfileController {
 		model.addAttribute("friends", user.getUserFriends());
 		model.addAttribute("subscriptions", user.getSubscriptions());
 		model.addAttribute("subscribers", user.getSubscribers());
+		model.addAttribute("userBlackList", user.getBlackList());
 		model.addAttribute("groups", groups);
 		model.addAttribute("listType", listType);
 		return "userConnections";

@@ -70,23 +70,23 @@ public class User implements UserDetails {
             joinColumns = { @JoinColumn(name = "subscriber_id") },
             inverseJoinColumns = { @JoinColumn(name = "channel_id") }
     )
-    private Set<User> subscriptions = new HashSet<>();
+    private Set<User> subscriptions = new HashSet<User>();
     
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "user_black_list",
+            name = "user_blackList",
             joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "banned_user_id") }
+            inverseJoinColumns = { @JoinColumn(name = "bannedUser_id") }
     )
     private Set<User> blackList = new HashSet<User>();
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "user_bans",
-//            joinColumns = { @JoinColumn(name = "banned_user_id") },
-//            inverseJoinColumns = { @JoinColumn(name = "user_id") }
-//    )
-//    private Set<User> inBlackList = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_blackList",
+            joinColumns = { @JoinColumn(name = "bannedUser_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
+    private Set<User> inBlackList = new HashSet<>();
     
     @OneToMany(mappedBy = "groupOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Group> belongGroup;
@@ -120,6 +120,12 @@ public class User implements UserDetails {
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(id);
+	}
+	public Set<User> getInBlackList() {
+		return inBlackList;
+	}
+	public void setInBlackList(Set<User> inBlackList) {
+		this.inBlackList = inBlackList;
 	}
 	public Set<User> getBlackList() {
 		return blackList;
