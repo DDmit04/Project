@@ -30,7 +30,7 @@ public interface UserRepo extends CrudRepository<User, Long> {
             "             left join u.blackList bloked " +
             " where u.id = :id " +
             " group by u")
-    UserDto findOneUserToUser(@Param("currentUser") User currentUser, @Param("currentUserId") Long currentUserId, @Param("id") Long id);
+    UserDto findOneUserToUserDto(@Param("currentUser") User currentUser, @Param("currentUserId") Long currentUserId, @Param("id") Long id);
 	
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
@@ -43,7 +43,7 @@ public interface UserRepo extends CrudRepository<User, Long> {
             "             left join u.bannedInGroups bg " +
             " where u.id = :currentUserId " +
             " group by u")
-    UserDto findOneUserToGroup(@Param("currentUserId") Long currentUserId, @Param("group") Group group);	
+    UserDto findOneUserToGroupDto(@Param("currentUserId") Long currentUserId, @Param("group") Group group);	
 	
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
@@ -56,6 +56,18 @@ public interface UserRepo extends CrudRepository<User, Long> {
             " from User u " +
             " where u.id = :id " +
             " group by u")
-    UserDto findOneUserForList(@Param("id") Long id);		
+    UserDto findOneUserForListDto(@Param("id") Long id);
+
+	@Query("select new com.web.data.dto.UserDto(" +
+            "   u, " +
+			"   (select count(*) from u.userFriends), " +
+            "   (select count(*) from u.subscribers), " +
+            "   (select count(*) from u.subscriptions), " +
+			"   (select count(*) from u.subedGroups) " + 
+            ") " +
+            " from User u " + 
+            " where u.id = :id " +
+            " group by u")
+	UserDto findOneToStatistic(Long id);		
 	
 }

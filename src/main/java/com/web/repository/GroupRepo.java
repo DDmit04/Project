@@ -16,13 +16,12 @@ public interface GroupRepo extends CrudRepository<Group, Long> {
 		   "   ug, " +
 		   "   (select count(*) from ug.groupSubs), " +
 		   "   (select count(*) from ug.groupAdmins), " +
-		   "   (select count(*) from ug.banList), " + 
-		   "   sum(case when ga = :currentUser then 1 else 0 end) > 0" +
+		   "   (select count(*) from ug.banList) " + 
 		   "   )" +
-		   "   from Group ug left join ug.groupAdmins ga" +
+		   "   from Group ug " +
 		   "   where ug.id = :groupId" +
 		   "   group by ug")
-	GroupDto findOneGroup(@Param("groupId") Long groupId, @Param("currentUser") User currentUser);
+	GroupDto findOneGroupDto(@Param("groupId") Long groupId);
 	
 	@Query("select new com.web.data.dto.GroupDto(" +
 		   "   ug, " +

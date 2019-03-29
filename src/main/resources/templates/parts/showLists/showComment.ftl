@@ -1,5 +1,8 @@
 <#import "/parts/utils/showPics.ftl" as picture>
 
+<#assign commentAuthor = comment.commentAuthor
+		 commentedPost = comment.commentedPost>
+
 <ul class="list-group list-group-flush shadow border border-secondary mt-1">
 	<li class="list-group-item">
 		<div class="border-secondary media">
@@ -18,16 +21,23 @@
 					</div>
 				</div>
 		</div>
-		<#if currentUsername == comment.commentAuthor.username 
-		    || (comment.commentedPost.postGroup?? && comment.commentedPost.postGroup.groupAdmins?seq_contains(currentUser))
-		    || (comment.commentedPost.postAuthor?? && currentUser == comment.commentedPost.postAuthor) >
+		<#if currentUser == commentAuthor
+		    || (commentedPost.postGroup?? && commentedPost.postGroup.groupAdmins?seq_contains(currentUser))
+		    || (commentedPost.postAuthor?? && currentUser == commentedPost.postAuthor) >
 			<div class="col dropdown" align="right">
 				<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 					<i class="fas fa-ellipsis-v"></i>
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<#if !isEdit && currentUsername == comment.commentAuthor.username> 
+					<#if !isEdit && currentUser == commentAuthor> 
 						<a class="dropdown-item" href="/${post.id}/comments/${comment.id}/edit">edit</a> 
+					</#if>
+					<#if currentUser != commentAuthor >
+						<#if commentedPost.postGroup??>
+							<a class="dropdown-item" href="/groups/${commentedPost.postGroup.id}/${commentAuthor.id}/ban">ban</a> 
+						<#else>
+							<a class="dropdown-item" href="/${commentAuthor.id}/${currentUser.id}/inBlackList">block</a> 
+						</#if>
 					</#if>
 					<a class="dropdown-item" href="/${post.id}/comments/${comment.id}/delete">delete</a>
 				</div>

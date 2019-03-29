@@ -35,9 +35,6 @@ public class GroupController {
 	@Autowired
 	private PostService postService;
 	
-	@Autowired
-	private GroupRepo userGroupRepo;
-	
 	@GetMapping("/groups")
 	public String getAllGroups(@AuthenticationPrincipal User currentUser,
 							   Model model) {

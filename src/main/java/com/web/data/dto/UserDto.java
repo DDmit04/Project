@@ -5,15 +5,15 @@ import com.web.data.User;
 public class UserDto {
 
 	private Long id;
-	private String username;
-	private boolean active;
-	private String registrationDate;
-	private String userPicName;
 	private Long friendCount;
 	private Long subscriptionsCount;
 	private Long subscribersCount;
 	private Long groupSubscriptionsCount;
 	private Long blackListCount;
+    private String username;
+	private String registrationDate;
+	private String userPicName;
+	private boolean active;
 	private boolean isFriend;
 	private boolean isBloking;
 	private boolean isBloked;
@@ -55,8 +55,9 @@ public class UserDto {
 	}
 
 //	user to list
-	public UserDto(User user, Long frendCount, Long subscriptionsCount, Long subscribersCount, Long groupSubscriptionsCount,
-					Long blackListCount) {
+	public UserDto(User user, 
+				   Long frendCount, Long subscriptionsCount, Long subscribersCount, 
+				   Long groupSubscriptionsCount, Long blackListCount) {
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.active = user.isActive();
@@ -68,6 +69,19 @@ public class UserDto {
 		this.groupSubscriptionsCount = groupSubscriptionsCount;
 		this.blackListCount = blackListCount;
 
+	}
+	
+//	user to statistic
+	public UserDto(User user, Long frendCount, Long subscribersCount, Long subscriptionsCount, Long groupSubscriptionsCount) {
+	this.id = user.getId();
+	this.username = user.getUsername();
+	this.active = user.isActive();
+	this.registrationDate = user.getRegistrationDate();
+	this.userPicName = user.getUserPicName();
+	this.friendCount = frendCount;
+	this.subscriptionsCount = subscriptionsCount;
+	this.subscribersCount = subscribersCount;
+	this.groupSubscriptionsCount = groupSubscriptionsCount;
 	}
 	public boolean getIsBloked() {
 		return isBloked;

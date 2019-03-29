@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<#if !user.isBannedInGroup>
-			<#if group.userCanPost>
+			<#if user.isGroupAdmin>
 				<#include "parts/forms/addPostForm.ftl">
 			</#if>
 			<#include "parts/postListHendle.ftl">

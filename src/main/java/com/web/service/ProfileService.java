@@ -3,11 +3,15 @@ package com.web.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.web.data.Comment;
 import com.web.data.FriendRequest;
+import com.web.data.Post;
 import com.web.data.User;
+import com.web.repository.CommentRepo;
 import com.web.repository.FriendRequestRepo;
 import com.web.repository.UserRepo;
 import com.web.utils.DateUtil;
+import com.web.utils.ServiceUtils;
 
 @Service
 public class ProfileService {
@@ -17,6 +21,9 @@ public class ProfileService {
 	
 	@Autowired
 	private UserRepo userRepo;
+	
+	@Autowired
+	private CommentRepo commentRepo;
 	
 	public void addFriendRequest(User user, User currentUser) {
 		FriendRequest friendReqest = new FriendRequest(DateUtil.getLocalDate(), currentUser, user);
@@ -32,9 +39,9 @@ public class ProfileService {
 		if(counterRequest != null) {
 			friendRequestRepo.deleteById(counterRequest);
 		}
-		friendRequestRepo.delete(frendReqest);	
+		deleteFriendRequest(frendReqest);	
 	}
-
+	
 	public void addFriend(FriendRequest frendRequest) {
 		User receivingUser = frendRequest.getRequestTo();
 		User senderUser = frendRequest.getRequestFrom();
@@ -71,7 +78,17 @@ public class ProfileService {
 			deleteFriend(user, currentUser);
 		}
 		userRepo.save(currentUser);
+		Long counterRequest = friendRequestRepo.findOneRequestById(user.getId(), currentUser.getId());
+		Long counterRequest1 = friendRequestRepo.findOneRequestById(currentUser.getId(), user.getId());
+		if(counterRequest1 != null) {
+			friendRequestRepo.deleteById(counterRequest1);
+		}
+		if(counterRequest != null) {
+			friendRequestRepo.deleteById(counterRequest);
+		}
+		commentRepo.deleteAll(ServiceUtils.findBannedComments(currentUser, user));	
 	}
+	
 	public void removeFromBlackList(User user, User currentUser) {
 		currentUser.getBlackList().remove(user);
 		userRepo.save(currentUser);

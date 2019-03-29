@@ -8,5 +8,5 @@ import com.web.data.Post;
 public interface CommentRepo extends CrudRepository<Comment, Long> {
 		
     Iterable<Comment> findByCommentedPost(Post commentedPost);
-
+    
 }

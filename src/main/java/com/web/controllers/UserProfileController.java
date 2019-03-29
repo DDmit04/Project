@@ -56,17 +56,25 @@ public class UserProfileController {
 	
 	@PostMapping("{user}/profile")
 	public String addPostUserProfile(@AuthenticationPrincipal User currentUser,
-							  @RequestParam String postText, 
-							  @RequestParam String tags,
-							  @RequestParam("file") MultipartFile file,
-							  @PathVariable User user,
-			 				  Model model) throws IllegalStateException, IOException {
+							  		 @RequestParam String postText, 
+							  		 @RequestParam String tags,
+							  		 @RequestParam("file") MultipartFile file,
+							  		 @PathVariable User user,
+							  		 Model model) throws IllegalStateException, IOException {
 		Iterable<PostDto> searchByPostAuthor = postService.findPostsByUser(currentUser, user);
 		postService.addPost(postText, tags, file, currentUser);
 		UserDto userProfile = userService.findOneToUser(currentUser, user);
 		model.addAttribute("user", userProfile);
 		model.addAttribute("posts", searchByPostAuthor);		
 		return "redirect:/" + user.getId() + "/profile";
+	}
+	
+	@GetMapping("/profile/redact")
+	public String redactProfile(@AuthenticationPrincipal User currentUser,
+								Model model) {
+		UserDto user = userService.findOneToStatistic(currentUser);
+		model.addAttribute("blackList", currentUser.getBlackList());
+		return "userRedaction";
 	}
 
 	@GetMapping("profile/settings")
@@ -122,16 +130,22 @@ public class UserProfileController {
 	}
 	
 	@GetMapping("{user}/{currentUser}/inBlackList")
-	public String addInBlackList(@PathVariable User currentUser,
-								 @PathVariable User user) {
-		profileService.addInBlackList(user, currentUser);
+	public String addInBlackList(@AuthenticationPrincipal User usr,
+								 @PathVariable User currentUser,
+								 @PathVariable("user") User bannedUser) {
+		if(usr.equals(currentUser)) {
+			profileService.addInBlackList(bannedUser, currentUser);
+		}
 		return "redirect:/" + currentUser.getId() + "/profile/socialList/blackList";
 	}
 	
 	@GetMapping("{user}/{currentUser}/fromBlackList")
-	public String removeFromBlackList(@PathVariable User currentUser,
-							  		  @PathVariable User user) {
-		profileService.removeFromBlackList(user, currentUser);
+	public String removeFromBlackList(@AuthenticationPrincipal User usr,
+									  @PathVariable User currentUser,
+							  		  @PathVariable("user") User bannedUser) {
+		if(currentUser.equals(usr)) {
+			profileService.removeFromBlackList(bannedUser, currentUser);
+		}
 		return "redirect:/" + currentUser.getId() + "/profile/socialList/blackList";
 	}
 	

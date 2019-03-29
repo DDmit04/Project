@@ -15,10 +15,9 @@ public class GroupDto {
 	private String groupPicName;
 	private User groupOwner;
 	private String groupTitle;
-	private boolean userCanPost;
 	
 //	group to user
-	public GroupDto(Group userGroup, Long subCount, Long adminCount, Long banCount, boolean userCanPost) {
+	public GroupDto(Group userGroup, Long subCount, Long adminCount, Long banCount) {
 		this.id = userGroup.getId();
 		this.subCount = subCount;
 		this.groupName = userGroup.getGroupName();
@@ -28,7 +27,6 @@ public class GroupDto {
 		this.groupOwner = userGroup.getGroupOwner();
 		this.groupTitle = userGroup.getGroupTitle();
 		this.adminCount = adminCount;
-		this.userCanPost = userCanPost;
 		this.banCount = banCount;
 	}
 //	group to list
@@ -44,9 +42,6 @@ public class GroupDto {
 	}
 	public Long getBanCount() {
 		return banCount;
-	}
-	public boolean getUserCanPost() {
-		return userCanPost;
 	}
 	public Long getAdminCount() {
 		return adminCount;

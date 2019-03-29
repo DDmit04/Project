@@ -5,11 +5,11 @@
 
 <#include "parts/security.ftl">
 
-<#assign isCurrentUserSubList = (currentUsername == user.username)>
+<#assign isCurrentUserList = (currentUsername == user.username)>
 
 <div class="col-9">
 	<h5 class="display-5 mt-2 mb-3" align="left">
-		<#if isCurrentUserSubList>
+		<#if isCurrentUserList>
 			My connections list
 		<#else>
 			${user.username}'s connections list
@@ -33,10 +33,12 @@
 				href="#nav-subscribers" role="tab">
 					subscribers (${user.subscribersCount})
 			</a> 
-			<a class="nav-item nav-link mr-1 btn-outline-primary <#if listType == 'blackList'>active</#if>" data-toggle="tab" 
-				href="#nav-blackList" role="tab">
-					black list (${user.blackListCount})
-			</a> 
+			<#if isCurrentUserList>
+				<a class="nav-item nav-link mr-1 btn-outline-primary <#if listType == 'blackList'>active</#if>" data-toggle="tab" 
+					href="#nav-blackList" role="tab">
+						black list (${user.blackListCount})
+				</a> 
+			</#if>
 		</div>
 	</nav>
 	<div class="tab-content shadow mt-2" id="nav-tabContent" style="background-color: white;">
@@ -56,10 +58,12 @@
 			aria-labelledby="nav-subscribers-tab" style="padding: 15px 5px;">
 			<@userLists.showUsers subscribers "subscribers" />
 		</div>
-		<div class="tab-pane fade <#if listType == 'blackList'>show active</#if>" id="nav-blackList" role="tabpanel" 
-			aria-labelledby="nav-subscribers-tab" style="padding: 15px 5px;">
-			<@userLists.showUsers userBlackList "userBlackList" />
-		</div>
+		<#if isCurrentUserList>
+			<div class="tab-pane fade <#if listType == 'blackList'>show active</#if>" id="nav-blackList" role="tabpanel" 
+				aria-labelledby="nav-subscribers-tab" style="padding: 15px 5px;">
+				<@userLists.showUsers userBlackList "userBlackList" />
+			</div>
+		</#if>
 	</div>
 </div>
 

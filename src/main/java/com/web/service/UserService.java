@@ -47,15 +47,15 @@ public class UserService implements UserDetailsService{
 	}
 
 	public UserDto findOneToUser(User currentUser, User user) {
-		return  userRepo.findOneUserToUser(currentUser, currentUser.getId(), user.getId());
+		return  userRepo.findOneUserToUserDto(currentUser, currentUser.getId(), user.getId());
 	}
 	
 	public UserDto findOneUserToList(User user) {
-		return  userRepo.findOneUserForList(user.getId());
+		return  userRepo.findOneUserForListDto(user.getId());
 	}
 	
 	public UserDto findOneUserToGroup(User currentUser, Group group) {
-		return userRepo.findOneUserToGroup(currentUser.getId(), group);
+		return userRepo.findOneUserToGroupDto(currentUser.getId(), group);
 	}
 
 	public void deleteUser(User currentUser, String accountDeletePassword) throws UserException {
@@ -76,5 +76,9 @@ public class UserService implements UserDetailsService{
 		} else {
 			throw new UserException("Wrong " + currentUser.getUsername() + "'s password!", currentUser, UserExceptionType.CHANGE_PASSWORD);
 		}
+	}
+
+	public UserDto findOneToStatistic(User currentUser) {
+		return userRepo.findOneToStatistic(currentUser.getId());
 	}
 }
