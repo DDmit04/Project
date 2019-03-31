@@ -1,7 +1,10 @@
 package com.web.service;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.Comment;
 import com.web.data.FriendRequest;
@@ -24,6 +27,9 @@ public class ProfileService {
 	
 	@Autowired
 	private CommentRepo commentRepo;
+	
+	@Autowired
+	private FileService fileService;
 	
 	public void addFriendRequest(User user, User currentUser) {
 		FriendRequest friendReqest = new FriendRequest(DateUtil.getLocalDate(), currentUser, user);
@@ -89,6 +95,17 @@ public class ProfileService {
 		commentRepo.deleteAll(ServiceUtils.findBannedComments(currentUser, user));	
 	}
 	
+	public void updateUserProfile(User currentUser, MultipartFile file, String userInformation, String userTitle) throws IllegalStateException, IOException {
+		if(userInformation != null) {
+			//
+		}
+		if(userTitle != null) {
+			//
+		}
+		currentUser.setUserPicName(fileService.uploadFile(file, UploadType.USER_PIC));
+		userRepo.save(currentUser);		
+	}
+		
 	public void removeFromBlackList(User user, User currentUser) {
 		currentUser.getBlackList().remove(user);
 		userRepo.save(currentUser);
@@ -101,4 +118,5 @@ public class ProfileService {
 	public Iterable<FriendRequest> findRequestFrom(User currentUser) {
 		return friendRequestRepo.findByRequestFromId(currentUser.getId());
 	}
+
 }

@@ -69,12 +69,25 @@ public class UserProfileController {
 		return "redirect:/" + user.getId() + "/profile";
 	}
 	
-	@GetMapping("/profile/redact")
+	@GetMapping("profile/redact")
 	public String redactProfile(@AuthenticationPrincipal User currentUser,
 								Model model) {
-		UserDto user = userService.findOneToStatistic(currentUser);
+		UserDto currentUserProfile = userService.findOneToStatistic(currentUser);
+		model.addAttribute("user", currentUserProfile);
 		model.addAttribute("blackList", currentUser.getBlackList());
 		return "userRedaction";
+	}
+	
+	@PostMapping("profile/redact")
+	public String redactProfile(@AuthenticationPrincipal User currentUser,
+							  	@RequestParam(required = false) String userTitle,
+							  	@RequestParam(required = false) String userInformation, 
+							  	@RequestParam("file") MultipartFile file,
+							  	Model model) throws IllegalStateException, IOException {
+		UserDto currentUserProfile = userService.findOneToStatistic(currentUser);
+		profileService.updateUserProfile(currentUser, file, userInformation, userTitle);
+		model.addAttribute("user", currentUserProfile);
+		return "redirect:/profile/redact";
 	}
 
 	@GetMapping("profile/settings")
