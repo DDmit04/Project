@@ -11,7 +11,9 @@
 	<#else>
 		<#assign requesting = request.requestTo >
 	</#if>
-	<ul class="list-group list-group-flush shadow border border-secondary mt-1">
+	<ul class="list-group list-group-flush mt-1" style="border-left: none;
+ 											 			 border-right: none;
+ 														 border-top: none">
 			<li class="list-group-item">
 				<div class="border-secondary media">
 					<div class="mt-2">

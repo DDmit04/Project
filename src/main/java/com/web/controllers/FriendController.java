@@ -17,14 +17,18 @@ public class FriendController {
 	@Autowired
 	private ProfileService profileService;
 	
-	@GetMapping("/friendRequest")
+	@GetMapping("/friendRequests/{listType}")
 	public String userFriendRequest(@AuthenticationPrincipal User currentUser,
-								   Model model) {
+									@PathVariable String listType,
+								    Model model) {
 		Iterable<FriendRequest> friendReqestsFrom = profileService.findRequestFrom(currentUser);
 		Iterable<FriendRequest> friendReqestsTo = profileService.findRequestTo(currentUser);
 		model.addAttribute("friendRequestsFrom", friendReqestsFrom);
 		model.addAttribute("friendRequestsTo", friendReqestsTo);
-		return "friendRequestList";
+		model.addAttribute("friendRequestsToCount", friendReqestsTo.spliterator().getExactSizeIfKnown());
+		model.addAttribute("friendRequestsFromCount", friendReqestsFrom.spliterator().getExactSizeIfKnown());
+		model.addAttribute("listType", listType);
+		return "friendRequestsList";
 	}
 	
 	@GetMapping("{user}/friendRequest")
@@ -42,7 +46,7 @@ public class FriendController {
 									  Model model) {
 		profileService.addFriend(friendRequest);
 		profileService.deleteFriendRequest(user, currentUser, friendRequest);
-		return "redirect:/friendRequest";
+		return "redirect:/friendRequests/friendRequestsTo";
 	}
 	
 	@GetMapping("/{user}/{currentUser}/deleteFriend")
@@ -58,6 +62,6 @@ public class FriendController {
 									  @PathVariable User user,
 									  Model model) {
 		profileService.deleteFriendRequest(friendRequest);
-		return "redirect:/friendRequest";
+		return "redirect:/friendRequests/friendRequestsTo";
 	}
 }

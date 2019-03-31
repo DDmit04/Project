@@ -113,16 +113,19 @@ public class PostController {
 		return "redirect:/" + post.getId() + "/edit" ;		
 	}
 	
-	@GetMapping("posts/{post}/like")
+	@GetMapping("posts/{post}/{user}/like")
 	public String likePost(@AuthenticationPrincipal User currentUser,
+						   @PathVariable User user,
 						   @PathVariable Post post,
 						   RedirectAttributes redirectAttributes,
 						   @RequestHeader(required = false) String referer) {
-		Set<User> like = post.getPostLikes();
-		if(like.contains(currentUser)) {
-			like.remove(currentUser);
-		} else {
-			like.add(currentUser);
+		if(user.equals(currentUser)) {
+			Set<User> like = post.getPostLikes();
+			if(like.contains(user)) {
+				like.remove(user);
+			} else {
+				like.add(user);
+			}
 		}
 		UriComponents components = UriComponentsBuilder.fromHttpUrl(referer).build();
 		components.getQueryParams()

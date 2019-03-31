@@ -1,8 +1,8 @@
 <#include "/parts/security.ftl">
 
-<div class="row">
+<div class="row ml-2">
 	<div class="col-3">
-		<div class="card border-secondary shadow" style="width: 240px;">
+		<div class="card border-secondary shadow" style="width: 280px;">
 			<div class="card-body">
 				<@picture.pic user "bigPic" "userProfile" />
 				<div class="container">
@@ -36,4 +36,4 @@
 			<#include "/parts/forms/addPostForm.ftl">
 		</#if>
 		<#include "/parts/postListHendle.ftl">
-</div>
+</div> 

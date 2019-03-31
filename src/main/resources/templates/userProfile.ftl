@@ -10,5 +10,4 @@
 	<#include "/parts/components/profile/accesProfile.ftl">
 </#if>
 
-
 </@shell.htmlPage>

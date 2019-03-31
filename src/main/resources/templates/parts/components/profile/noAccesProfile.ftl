@@ -1,12 +1,12 @@
-<div class="row">
+<div class="row ml-2">
 	<div class="col-3">
-		<div class="card border-secondary shadow" style="width: 240px;">
+		<div class="card border-secondary shadow" style="width: 280px;">
 			<div class="card-body">
 			  	<@picture.pic user "bigPic" "userProfile" />
 			</div>
 		</div>
 	</div>
-	<div class="col-8 ml-4">
+	<div class="col-8 ml-3">
 		<div class="card border-secondary shadow mb-3">
 			<div class="card-header">
 				<div class="row h5">

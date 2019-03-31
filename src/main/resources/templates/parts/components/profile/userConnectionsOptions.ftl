@@ -1,11 +1,11 @@
 <#if currentUsername != user.username>
 							  		
 	<#if user.isFriend>
-		<a class="btn btn-primary" href="/${user.id}/${currentUserId}/deleteFriend" role="button">Unfrend</a>
+		<a class="btn btn-primary" href="/${user.id}/${currentUserId}/deleteFriend" role="button">Unfriend</a>
 	<#elseif user.isRequested>
-		<a class="btn btn-primary disabled" href="/${user.id}/deleteFriend" role="button">request sent</a>
+		<a class="btn btn-primary disabled" href="/${user.id}/deleteFriend" role="button">Requesed</a>
 	<#else>
-		<a class="btn btn-primary" href="/${user.id}/friendRequest" role="button">Friend reqest</a>
+		<a class="btn btn-primary" href="/${user.id}/friendRequest" role="button">Friends</a>
 	</#if>
 							  			
 	<#if user.isSub>

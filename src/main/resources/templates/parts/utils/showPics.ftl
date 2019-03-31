@@ -15,7 +15,7 @@
 </#if>
 
 <#if picType == "bigPic">
-		<#assign picWidth = "200" picHeight = "200">
+		<#assign picWidth = "228" picHeight = "240">
 <#elseif picType == "mediumPic">
 		<#assign picWidth = "55" picHeight = "55">
 <#elseif picType == "smallPic">

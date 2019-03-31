@@ -32,11 +32,11 @@
 			</#if>
 			<#include "parts/postListHendle.ftl">
 		<#else>
-			<h4 class="display-4 ml-2 text-center">you were banned in this group</h4>
+			<h4 class="display-4 ml-2 text-center">you was banned in this group</h4>
 		</#if>
 	</div>
 	<div class="col-3">
-		<div class="card border-secondary shadow" style="width: 240px;">
+		<div class="card border-secondary shadow" style="width: 280px;">
 			<div class="card-body">
 		  		<@picture.pic group "bigPic" "groupAvatar" />
 		  		<div class="container">
@@ -52,7 +52,7 @@
 		  		</div>
 			</div>
 		</div>
-		<div class="card border-secondary shadow mt-3" style="height: 300px; width: 240px;">
+		<div class="card border-secondary shadow mt-3" style="height: 300px; width: 280px;">
 			<div class="card-body">
 				<a href="/groups/${group.id}/socialList/groupSubscriptions">group subs: ${group.subCount}</a>
 				<div class="ml-2 mt-2">
