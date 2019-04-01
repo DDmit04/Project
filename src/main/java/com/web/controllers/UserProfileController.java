@@ -50,7 +50,7 @@ public class UserProfileController {
 		UserDto userProfile = userService.findOneToUser(currentUser, user);
 		model.addAttribute("user", userProfile);
 		model.addAttribute("posts", searchByPostAuthor);
-		model.addAttribute("userGroups", user.getUserFriends());		
+		model.addAttribute("userGroups", user.getSubedGroups());		
 		return "userProfile";
 	}
 	
