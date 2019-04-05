@@ -1,11 +1,11 @@
 <#import "parts/HTMLshell.ftl" as shell>
 <#import "parts/showLists/showGroup.ftl" as groupList> 
- <@shell.htmlPage> 
+<@shell.htmlPage> 
 
 <#include "parts/security.ftl">
 
-<div class="row">
-	<div class="col-8">
+<div class="row ml-1">
+	<div class="col-9">
 		<nav>
 			<div class="nav nav-pills mr-2" role="tablist">
 				<a class="nav-item nav-link mr-1 btn-outline-primary active" data-toggle="tab" href="#nav-groupSubs" role="tab">

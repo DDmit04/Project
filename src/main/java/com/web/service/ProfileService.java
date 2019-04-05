@@ -6,15 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.web.data.Comment;
 import com.web.data.FriendRequest;
-import com.web.data.Post;
 import com.web.data.User;
 import com.web.repository.CommentRepo;
 import com.web.repository.FriendRequestRepo;
 import com.web.repository.UserRepo;
 import com.web.utils.DateUtil;
-import com.web.utils.ServiceUtils;
 
 @Service
 public class ProfileService {
@@ -41,9 +38,9 @@ public class ProfileService {
 	}
 	
 	public void deleteFriendRequest(User user, User currentUser, FriendRequest frendReqest) {
-		Long counterRequest = friendRequestRepo.findOneRequestById(user.getId(), currentUser.getId());
+		FriendRequest counterRequest = friendRequestRepo.findOneRequest(user.getId(), currentUser.getId());
 		if(counterRequest != null) {
-			friendRequestRepo.deleteById(counterRequest);
+			friendRequestRepo.delete(counterRequest);
 		}
 		deleteFriendRequest(frendReqest);	
 	}
@@ -84,15 +81,15 @@ public class ProfileService {
 			deleteFriend(user, currentUser);
 		}
 		userRepo.save(currentUser);
-		Long counterRequest = friendRequestRepo.findOneRequestById(user.getId(), currentUser.getId());
-		Long counterRequest1 = friendRequestRepo.findOneRequestById(currentUser.getId(), user.getId());
-		if(counterRequest1 != null) {
-			friendRequestRepo.deleteById(counterRequest1);
+		FriendRequest counterRequestTo = friendRequestRepo.findOneRequest(user.getId(), currentUser.getId());
+		FriendRequest counterRequestFrom = friendRequestRepo.findOneRequest(currentUser.getId(), user.getId());
+		if(counterRequestFrom != null) {
+			friendRequestRepo.delete(counterRequestFrom);
 		}
-		if(counterRequest != null) {
-			friendRequestRepo.deleteById(counterRequest);
+		if(counterRequestTo != null) {
+			friendRequestRepo.delete(counterRequestTo);
 		}
-		commentRepo.deleteAll(ServiceUtils.findBannedComments(currentUser, user));	
+		commentRepo.deleteAll(commentRepo.findBannedComments(currentUser, user));	
 	}
 	
 	public void updateUserProfile(User currentUser, MultipartFile file, String userInformation, String userTitle) throws IllegalStateException, IOException {

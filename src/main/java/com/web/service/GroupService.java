@@ -6,16 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.web.data.User;
-import com.web.data.Comment;
 import com.web.data.Group;
-import com.web.data.Post;
+import com.web.data.User;
 import com.web.data.dto.GroupDto;
 import com.web.exceptions.GroupException;
 import com.web.repository.CommentRepo;
 import com.web.repository.GroupRepo;
 import com.web.utils.DateUtil;
-import com.web.utils.ServiceUtils;
 
 @Service
 public class GroupService {
@@ -54,7 +51,7 @@ public class GroupService {
 	public void banUser(Group group, User user) {
 		group.getBanList().add(user);
 		groupRepo.save(group);
-		commentRepo.deleteAll(ServiceUtils.findBannedComments(group, user));
+		commentRepo.deleteAll(commentRepo.findBannedComments(group, user));
 	}
 
 	public void unbanUser(Group group, User user) {

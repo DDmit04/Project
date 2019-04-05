@@ -19,7 +19,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -48,6 +47,12 @@ public class User implements UserDetails {
 
 	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Comment> userComments;
+	
+	@OneToMany(mappedBy = "groupOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private Set<Group> belongGroup;
+	    
+	@OneToMany(mappedBy = "messageAuthor", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private Set<Message> sendedMessages;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_friendship", 
@@ -88,9 +93,6 @@ public class User implements UserDetails {
     )
     private Set<User> inBlackList = new HashSet<>();
     
-    @OneToMany(mappedBy = "groupOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private Set<Group> belongGroup;
-    
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupSubs")
 	private Set<Group> subedGroups;
 	
@@ -98,7 +100,14 @@ public class User implements UserDetails {
    	private Set<Group> adminedGroups;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "banList")
-	private Set<Group> bannedInGroups = new HashSet<>();
+	private Set<Group> bannedInGroups;
+    
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
+	@JoinTable(name = "user_chats", 
+				joinColumns = { @JoinColumn(name = "user_id") },
+				inverseJoinColumns = { @JoinColumn(name = "chat_id") } 
+	)
+	private Set<Chat> chats;
 
     public User() {
 	}
@@ -107,7 +116,6 @@ public class User implements UserDetails {
 		this.password = password;
 		this.registrationDate = registrationDate;
 	}
-	
 	@Override
 	public boolean equals(Object obj) {
     	if(this == obj) 
@@ -120,6 +128,18 @@ public class User implements UserDetails {
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(id);
+	}
+	public Set<Chat> getChats() {
+		return chats;
+	}
+	public void setChats(Set<Chat> chats) {
+		this.chats = chats;
+	}
+	public Set<Message> getSendedMessages() {
+		return sendedMessages;
+	}
+	public void setSendedMessages(Set<Message> sendedMessages) {
+		this.sendedMessages = sendedMessages;
 	}
 	public Set<User> getInBlackList() {
 		return inBlackList;

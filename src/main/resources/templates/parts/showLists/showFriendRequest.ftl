@@ -12,8 +12,8 @@
 		<#assign requesting = request.requestTo >
 	</#if>
 	<ul class="list-group list-group-flush mt-1" style="border-left: none;
- 											 			 border-right: none;
- 														 border-top: none">
+ 											 			border-right: none;
+ 														border-top: none">
 			<li class="list-group-item">
 				<div class="border-secondary media">
 					<div class="mt-2">
@@ -38,9 +38,9 @@
 		</ul>
 <#else>
 	<#if requestsType == "from">
-		<h2 class="display-4 mt-3" align="center">No request sent by you</h2>
+		<h2 class="display-4 ml-2" align="left">No request sent by you</h2>
 	<#else>
-		<h2 class="display-4 mt-3" align="center">No reqest sent to you</h2>
+		<h2 class="display-4 ml-2" align="left">No reqest sent to you</h2>
 	</#if>
 </#list>
 

@@ -12,11 +12,10 @@ public interface FriendRequestRepo extends CrudRepository<FriendRequest, Long> {
 	
 	Iterable<FriendRequest> findByRequestToId(Long requestToId);
 
-	@Query("select id " + 
-		   "from FriendRequest fr " + 
+	@Query("from FriendRequest fr " + 
 		   "where fr.requestToId = :requestToId and fr.requestFromId = :requestFromId " +
 		   "group by fr"
 		)
-	Long findOneRequestById(@Param("requestToId") Long requestToId, @Param("requestFromId") Long requestFromId);
+	FriendRequest findOneRequest(@Param("requestToId") Long requestToId, @Param("requestFromId") Long requestFromId);
 	
 }

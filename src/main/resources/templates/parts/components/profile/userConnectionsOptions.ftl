@@ -13,7 +13,9 @@
 	<#else>
 		<a class="btn btn-primary ml-2" href="/${user.id}/subscribe">sub</a>				  				
 	</#if>
-							  	
+	
+	<a class="btn btn-primary btn-lg btn-block mt-2" href="/${user.id}/createChat">Send message</a>	
+	
 <#else>
 	<a class="btn btn-primary btn-lg btn-block" href="/profile/redact" role="button">Redact</a>
 </#if>

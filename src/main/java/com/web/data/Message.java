@@ -1,9 +1,12 @@
 package com.web.data;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Message {
@@ -14,9 +17,30 @@ public class Message {
 	private String messageText;
 	private String messageDate;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User messageAuthor;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "chat_id")
+	private Chat messageChat;
+	
+	public Message() {
+	}
 	public Message(String messageText) {
-		super();
 		this.messageText = messageText;
+	}	
+	public Chat getMessageChat() {
+		return messageChat;
+	}
+	public void setMessageChat(Chat messageChat) {
+		this.messageChat = messageChat;
+	}
+	public User getMessageAuthor() {
+		return messageAuthor;
+	}
+	public void setMessageAuthor(User messageAuthor) {
+		this.messageAuthor = messageAuthor;
 	}
 	public Long getId() {
 		return id;
@@ -36,7 +60,4 @@ public class Message {
 	public void setMessageDate(String messageDate) {
 		this.messageDate = messageDate;
 	}
-
-	
-	
 }
