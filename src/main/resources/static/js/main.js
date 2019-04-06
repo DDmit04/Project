@@ -27,8 +27,6 @@ function onConnected() {
         {},
         JSON.stringify({sender: username})
     )
-
-    connectingElement.classList.add('hidden');
 }
 
 
@@ -56,25 +54,25 @@ function sendMessage(event) {
 
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
-
     var messageElement = document.createElement('li');
+    var avatar = document.createElement('img');
+    avatar.src = "/imgUserPic/" + currentUserPic;
+    avatar.width = 34;
+    avatar.height = 34;
+    avatar.classList.add('border border-secondary');
+    avatar.classList.add('mr-2');
+    if(message.sender == username) {
+        messageElement.classList.add("text-left");
+    } else {
+        messageElement.classList.add("text-right");
+    }
+    messageElement.classList.add('list-group-item');
+    messageElement.classList.add('mt-2');    
 
-    messageElement.classList.add('chat-message');
-
-    var avatarElement = document.createElement('i');
-    messageElement.appendChild(avatarElement);
-
-    var usernameElement = document.createElement('span');
-    var usernameText = document.createTextNode(message.sender);
-    usernameElement.appendChild(usernameText);
-    messageElement.appendChild(usernameElement);
-    
-
-    var textElement = document.createElement('p');
     var messageText = document.createTextNode(message.content);
-    textElement.appendChild(messageText);
 
-    messageElement.appendChild(textElement);
+    messageElement.appendChild(messageText);
+    messageElement.appendChild(avatar);
 
     messageArea.appendChild(messageElement);
     messageArea.scrollTop = messageArea.scrollHeight;

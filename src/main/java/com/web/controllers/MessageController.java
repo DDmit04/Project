@@ -2,8 +2,11 @@ package com.web.controllers;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -19,7 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.web.data.Chat;
 import com.web.data.Message;
-import com.web.data.MessageHelp;
+import com.web.data.MessageJson;
 import com.web.data.User;
 import com.web.repository.ChatRepo;
 import com.web.repository.MessageRepo;
@@ -42,15 +45,20 @@ public class MessageController {
 							  @PathVariable Chat chat, 
 							  Model model) {
     	Set<Message> chatMessages = chat.getChatMessages();
-		model.addAttribute("currentUsername", currentUser.getUsername());
-		model.addAttribute("chatId", chat.getId());
+		model.addAttribute("currentUser", currentUser);
+		if( currentUser.getUserPicName() != null) {
+			model.addAttribute("currentUserPicName", currentUser.getUserPicName());
+		} else {
+			model.addAttribute("currentUserPicName", "noUserPic");
+		}
+		model.addAttribute("chat", chat);
 		model.addAttribute("chatMessages", chatMessages);
 		return "index";
 	}
 	
     @MessageMapping("/chat.sendMessage/{chatId}")
 	@SendTo("/topic/public/{chatId}")
-	public MessageHelp sendMessage(@DestinationVariable Long chatId, @Payload MessageHelp chatMessage) {
+	public MessageJson sendMessage(@DestinationVariable Long chatId, @Payload MessageJson chatMessage) {
     	Message message = new Message(chatMessage.getContent());
     	message.setMessageAuthor(userRepo.findByUsername(chatMessage.getSender()));
     	Chat chat = chatRepo.findById1(chatId);
@@ -62,7 +70,7 @@ public class MessageController {
 
     @MessageMapping("/chat.addUser")
 	@SendTo("/topic/public/{chatId}")
-	public MessageHelp addUser(@DestinationVariable Long chatId, @Payload MessageHelp chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+	public MessageJson addUser(@DestinationVariable Long chatId, @Payload MessageJson chatMessage, SimpMessageHeaderAccessor headerAccessor) {
 		// Add username in web socket session
 		headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
 		return chatMessage;

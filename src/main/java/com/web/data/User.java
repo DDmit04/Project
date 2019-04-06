@@ -51,7 +51,8 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy = "groupOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Group> belongGroup;
 	    
-	@OneToMany(mappedBy = "messageAuthor", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "messageAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@javax.persistence.OrderBy("id")
 	private Set<Message> sendedMessages;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -102,11 +103,7 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "banList")
 	private Set<Group> bannedInGroups;
     
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
-	@JoinTable(name = "user_chats", 
-				joinColumns = { @JoinColumn(name = "user_id") },
-				inverseJoinColumns = { @JoinColumn(name = "chat_id") } 
-	)
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatMembers")
 	private Set<Chat> chats;
 
     public User() {

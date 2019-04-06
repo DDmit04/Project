@@ -3,7 +3,7 @@ package com.web.data;
 /**
  * Created by rajeevkumarsingh on 24/07/17.
  */
-public class MessageHelp {
+public class MessageJson {
 
 	private Long senderId;
     private String content;

@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -18,14 +20,28 @@ public class Chat {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	private String chatName;
+	private String chatTitle;
+	private String chatPicName;
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chats")
-   	private Set<User> chatMembers = new HashSet<>();
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
+	@JoinTable(name = "user_chats", 
+				joinColumns = { @JoinColumn(name = "chat_id") },
+				inverseJoinColumns = { @JoinColumn(name = "user_id") } 
+	)   	
+	private Set<User> chatMembers = new HashSet<>();
 	
 	@OneToMany(mappedBy = "messageChat", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	private Set<Message> chatMessages;
+	@javax.persistence.OrderBy("id")
+	private Set<Message> chatMessages = new HashSet<>();
 	
 	public Chat() {
+	}
+	public String getChatPicName() {
+		return chatPicName;
+	}
+	public void setChatPicName(String chatPicName) {
+		this.chatPicName = chatPicName;
 	}
 	public Long getId() {
 		return id;
@@ -44,6 +60,18 @@ public class Chat {
 	}
 	public void setChatMessages(Set<Message> chatMessages) {
 		this.chatMessages = chatMessages;
+	}
+	public String getChatName() {
+		return chatName;
+	}
+	public void setChatName(String chatName) {
+		this.chatName = chatName;
+	}
+	public String getChatTitle() {
+		return chatTitle;
+	}
+	public void setChatTitle(String chatTitle) {
+		this.chatTitle = chatTitle;
 	}
 	
 }

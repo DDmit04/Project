@@ -1,5 +1,3 @@
-
-
 <#include "/parts/security.ftl">
 
 <a class="btn btn-primary btn-lg btn-block mb-3" data-toggle="collapse" href="#collapseExample" role="button" 

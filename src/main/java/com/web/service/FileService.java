@@ -22,6 +22,9 @@ public class FileService {
 	 
 	 @Value("${upload.path.groupPics}")
 	 private String uploadPathGroupPics;
+	 
+	 @Value("${upload.path.chatPics}")
+	 private String uploadPathChatPics;
 	
 	private String uploadPath;
 	
@@ -38,6 +41,9 @@ public class FileService {
 		}
 		else if(type == UploadType.GROUP_PIC) {
 			uploadPath = uploadPathGroupPics;
+		}
+		else if(type == UploadType.CHAT_PIC) {
+			uploadPath = uploadPathChatPics;
 		}
 		if (file != null && !file.getOriginalFilename().isEmpty()) {
 			File uploadDir = new File(uploadPath);

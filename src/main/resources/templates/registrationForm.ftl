@@ -1,4 +1,5 @@
-<#import "parts/HTMLshell.ftl" as shell> <@shell.htmlPage> 
+<#import "parts/HTMLshell.ftl" as shell> 
+<@shell.htmlPage> 
 
 <div class="container-fluid">
 	<div class="row">

@@ -1,6 +1,6 @@
 <#macro pic picAuthor picType picTarget>
 
-<#assign  isPicExist = (picAuthor.groupPicName?? || picAuthor.userPicName??)>
+<#assign  isPicExist = (picAuthor.groupPicName?? || picAuthor.userPicName?? || picAuthor.chatPicName??)>
 
 <#if picTarget?contains("group")>
 		<#assign linkToAuthor = "/groups/${picAuthor.id}">
@@ -11,6 +11,11 @@
 		<#assign linkToAuthor = "/${picAuthor.id}/profile">
 		<#if isPicExist>
 			<#assign picPath = "/imgUserPic/${picAuthor.userPicName}">
+		</#if>
+<#elseif picTarget?contains("chat")>
+		<#assign linkToAuthor = "/chats/${picAuthor.id}">
+		<#if isPicExist>
+			<#assign picPath = "/imgChatPic/${picAuthor.chatPicName}">
 		</#if>
 </#if>
 
