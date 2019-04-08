@@ -19,6 +19,8 @@
 			<h4 class="display-4 ml-2 " align="left">No bans :(</h4>
 		<#elseif listType == "userBlackList">
 			<h4 class="display-4 ml-2 " align="left">black list is empty</h4>
+		<#elseif listType == "chatMembers">
+			<h4 class="display-4 ml-2 " align="left">empty here</h4>
 		<#else>
 			<h4 class="display-4 ml-2 " align="left">Empty List</h4>
 		</#if>

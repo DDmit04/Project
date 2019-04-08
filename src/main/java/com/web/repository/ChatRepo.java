@@ -11,14 +11,24 @@ import com.web.data.dto.ChatDto;
 public interface ChatRepo extends CrudRepository<Chat, Long>{
 	
 	@Query("from Chat ch where ch.id = :id group by ch")
-	Chat findById1(Long id);
+	Chat findChatById(Long id);
 	
 	@Query("select new com.web.data.dto.ChatDto(" +
-		   "  ch" +
-		   ")   " +
+		   "  ch  " +
+		   ") " +
 		   "  from Chat ch left join ch.chatMembers cm " +
-		   "  where cm = :currentUser " +
-		   "  group by ch")
+		   "     where cm = :currentUser " +
+		   "     group by ch")
 	Iterable<ChatDto> findUserChats(@Param("currentUser") User currentUser);
+	
+	@Query("select new com.web.data.dto.ChatDto(" +
+			   "  ch,  " +
+			   "  (select count(*) from ch.chatMembers)," +
+			   "  (select count(*) from ch.chatAdmins)" +
+			   ") " +
+			   "  from Chat ch left join ch.chatMembers cm " +
+			   "     where ch.id = :chatId" +
+			   "     group by ch")
+	ChatDto findOneChat(@Param("chatId") Long chatId);
 
 }

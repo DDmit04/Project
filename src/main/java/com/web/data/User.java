@@ -105,6 +105,9 @@ public class User implements UserDetails {
     
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatMembers")
 	private Set<Chat> chats;
+	
+	 @ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatAdmins")
+	 private Set<Chat> adminedChats;
 
     public User() {
 	}
@@ -125,6 +128,12 @@ public class User implements UserDetails {
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(id);
+	}
+	public Set<Chat> getAdminedChats() {
+		return adminedChats;
+	}
+	public void setAdminedChats(Set<Chat> adminedChats) {
+		this.adminedChats = adminedChats;
 	}
 	public Set<Chat> getChats() {
 		return chats;

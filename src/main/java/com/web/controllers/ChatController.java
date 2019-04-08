@@ -1,6 +1,7 @@
 package com.web.controllers;
 
 import java.io.IOException;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.Chat;
+import com.web.data.Message;
 import com.web.data.User;
 import com.web.repository.ChatRepo;
 import com.web.service.FileService;
@@ -38,23 +40,27 @@ public class ChatController {
 		return "chatList";
 	}
 	
-	@GetMapping(value = {"{user}/createChat", "/createChat"})
+	@GetMapping("/createChat")
 	public String createChat(@AuthenticationPrincipal User currentUser) {
 		return "createChat";
 	}
 	
-	@PostMapping("{user}/createChat")
+	@GetMapping("{user}/createChat")
 	public String createChat(@AuthenticationPrincipal User currentUser,
-							 @RequestParam String chatName,
-							 @RequestParam String chatTitle,
-							 @RequestParam("file") MultipartFile file,
-						     @PathVariable User user) throws IllegalStateException, IOException {
+						     @PathVariable User user) {
 		Chat chat = new Chat();
-		chat.setChatName(chatName);
-		chat.setChatTitle(chatTitle);
-		chat.setChatPicName(fileService.uploadFile(file, UploadType.CHAT_PIC));
+		chat.setChatName(currentUser.getUsername() + " - " + user.getUsername());
 		chatRepo.save(chat);
 		chat.getChatMembers().add(currentUser);
+		chat.getChatMembers().add(user);
+		chatRepo.save(chat);
+		return "redirect:/chats/" + chat.getId();
+	}
+	
+	@GetMapping("/chats/{chat}/{user}/invate")
+	public String invateUser(@AuthenticationPrincipal User currentUser,
+						     @PathVariable User user,
+						     @PathVariable Chat chat) {
 		chat.getChatMembers().add(user);
 		chatRepo.save(chat);
 		return "redirect:/chats/" + chat.getId();
@@ -63,7 +69,7 @@ public class ChatController {
 	@PostMapping("/createChat")
 	public String createChat(@AuthenticationPrincipal User currentUser,
 							 @RequestParam String chatName,
-							 @RequestParam String chatTitle,
+							 @RequestParam(required = false) String chatTitle,
 							 @RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
 		Chat chat = new Chat();
 		chat.setChatName(chatName);
@@ -71,7 +77,18 @@ public class ChatController {
 		chat.setChatPicName(fileService.uploadFile(file, UploadType.CHAT_PIC));
 		chatRepo.save(chat);
 		chat.getChatMembers().add(currentUser);
+		chat.getChatAdmins().add(currentUser);
 		chatRepo.save(chat);
 		return "redirect:/chats/" + chat.getId();
 	}
+	
+	 @GetMapping("chats/{chat}/{user}/leave")
+	 public String getMessages(@AuthenticationPrincipal User currentUser, 
+							   @PathVariable Chat chat, 
+							   @PathVariable User user, 
+							   Model model) {
+		 chat.getChatMembers().remove(user);
+		 chatRepo.save(chat);
+		 return "redirect:/messages";
+	 }
 }

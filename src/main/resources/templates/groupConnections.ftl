@@ -7,7 +7,7 @@
 
 <div class="col-8">
 	<h5 class="display-5 mt-2 mb-3" align="left">
-		${group.groupName}'s  connections list
+		${group.groupName}'s connections list
 	</h5>
 	<nav>
 		<div class="nav nav-pills mr-2" role="tablist">

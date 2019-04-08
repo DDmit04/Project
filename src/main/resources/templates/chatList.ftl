@@ -16,7 +16,7 @@
 					<div class="media-body">
 						<a href="/chats/${chat.id}" class="h4 ml-2">${chat.chatName}</a>
 						<div class="ml-2">
-							${chat.chatTitle?ifExists}
+							${chat.chatTitle!"no title"}
 						</div>
 					</div>
 				</div>

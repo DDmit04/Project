@@ -53,7 +53,18 @@
 						<i class="fas fa-ellipsis-v"></i>
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						<#if user.inBlackList?seq_contains(currentUser)>
+					
+					
+						<#if chat?? && !chatMembers?seq_contains(user)>
+							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/invate">invate</a> 
+						</#if>
+						
+						<#if chat?? && chatMembers?seq_contains(user) && chatAdmins?seq_contains(currentUser)>
+							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/leave">chase out</a> 
+						</#if>
+						
+						
+						<#if user.inBlackList?seq_contains(currentUser) >
 							<a class="dropdown-item" href="/${user.id}/${currentUser.id}/fromBlackList">unblock</a> 
 						<#else>
 							<a class="dropdown-item" href="/${user.id}/${currentUser.id}/inBlackList">block</a> 

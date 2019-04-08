@@ -8,6 +8,7 @@ public class MessageJson {
 	private Long senderId;
     private String content;
     private String sender;
+    private String userPicName;
 
     public String getContent() {
         return content;
@@ -31,5 +32,13 @@ public class MessageJson {
 
 	public void setSenderId(Long senderId) {
 		this.senderId = senderId;
+	}
+
+	public String getUserPicName() {
+		return userPicName;
+	}
+
+	public void setUserPicName(String userPicName) {
+		this.userPicName = userPicName;
 	}
 }

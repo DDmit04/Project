@@ -24,9 +24,14 @@ import com.web.data.Chat;
 import com.web.data.Message;
 import com.web.data.MessageJson;
 import com.web.data.User;
+import com.web.data.dto.GroupDto;
+import com.web.data.dto.UserDto;
 import com.web.repository.ChatRepo;
+import com.web.repository.GroupRepo;
 import com.web.repository.MessageRepo;
 import com.web.repository.UserRepo;
+import com.web.service.GroupService;
+import com.web.service.UserService;
  
 @Controller
 public class MessageController {
@@ -38,34 +43,45 @@ public class MessageController {
     private ChatRepo chatRepo;
     
     @Autowired
+    private UserService userService;
+    
+    @Autowired
     private UserRepo userRepo;
- 
+    
     @GetMapping("chats/{chat}")
 	public String getMessages(@AuthenticationPrincipal User currentUser, 
 							  @PathVariable Chat chat, 
 							  Model model) {
-    	Set<Message> chatMessages = chat.getChatMessages();
-		model.addAttribute("currentUser", currentUser);
-		if( currentUser.getUserPicName() != null) {
-			model.addAttribute("currentUserPicName", currentUser.getUserPicName());
-		} else {
-			model.addAttribute("currentUserPicName", "noUserPic");
-		}
-		model.addAttribute("chat", chat);
-		model.addAttribute("chatMessages", chatMessages);
-		return "index";
+    	if(chat.getChatMembers().contains(currentUser)) {
+    		UserDto usr = userService.findOneUserToList(currentUser);
+    		User user = userRepo.findByUsername(currentUser.getUsername());
+    		Set<Message> chatMessages = chat.getChatMessages();
+			model.addAttribute("chat", chatRepo.findOneChat(chat.getId()));
+			model.addAttribute("user", usr);
+			model.addAttribute("chatMembers", chat.getChatMembers());
+			model.addAttribute("chatMessages", chatMessages);
+			model.addAttribute("friends", user.getUserFriends());
+			model.addAttribute("subscriptions", user.getSubscriptions());
+			model.addAttribute("subscribers", user.getSubscribers());
+			model.addAttribute("chatAdmins", chat.getChatAdmins());
+			model.addAttribute("listType", "firends");
+			return "index";
+    	} else {
+    		return null;
+    	}
+		
 	}
 	
     @MessageMapping("/chat.sendMessage/{chatId}")
 	@SendTo("/topic/public/{chatId}")
-	public MessageJson sendMessage(@DestinationVariable Long chatId, @Payload MessageJson chatMessage) {
-    	Message message = new Message(chatMessage.getContent());
-    	message.setMessageAuthor(userRepo.findByUsername(chatMessage.getSender()));
-    	Chat chat = chatRepo.findById1(chatId);
+	public MessageJson sendMessage(@DestinationVariable Long chatId, @Payload MessageJson jsonMessage) {
+    	Message message = new Message(jsonMessage.getContent());
+    	message.setMessageAuthor(userRepo.findByUsername(jsonMessage.getSender()));
+    	Chat chat = chatRepo.findChatById(chatId);
     	message.setMessageChat(chat);
-    	message.setMessageAuthor(userRepo.findByUsername(chatMessage.getSender()));
+    	message.setMessageAuthor(userRepo.findByUsername(jsonMessage.getSender()));
 		messageRepo.save(message);
-		return chatMessage;
+		return jsonMessage;
 	}
 
     @MessageMapping("/chat.addUser")

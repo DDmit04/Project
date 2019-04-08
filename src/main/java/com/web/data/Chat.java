@@ -31,12 +31,26 @@ public class Chat {
 	)   	
 	private Set<User> chatMembers = new HashSet<>();
 	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "admined_chats", 
+		joinColumns = { @JoinColumn(name = "chat_id") },
+		inverseJoinColumns = { @JoinColumn(name = "user_id") } 
+	)
+	private Set<User> chatAdmins = new HashSet<>();
+	
 	@OneToMany(mappedBy = "messageChat", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@javax.persistence.OrderBy("id")
 	private Set<Message> chatMessages = new HashSet<>();
 	
 	public Chat() {
 	}
+	public Set<User> getChatAdmins() {
+		return chatAdmins;
+	}
+	public void setChatAdmins(Set<User> chatAdmins) {
+		this.chatAdmins = chatAdmins;
+	}
+
 	public String getChatPicName() {
 		return chatPicName;
 	}

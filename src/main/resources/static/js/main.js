@@ -1,12 +1,8 @@
 'use strict';
 
-var usernamePage = document.querySelector('#username-page');
-var chatPage = document.querySelector('#chat-page');
-var usernameForm = document.querySelector('#usernameForm');
-var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
-var connectingElement = document.querySelector('.connecting');
+var userPic = document.querySelector('#userPicName');
 
 var stompClient = null;
 
@@ -25,8 +21,9 @@ function onConnected() {
     // Tell your username to the server
     stompClient.send("/app/chat.addUser/" + chatId,
         {},
-        JSON.stringify({sender: username})
+        JSON.stringify({sender: currentUsername})
     )
+    messageArea.scrollTop = messageArea.scrollHeight;
 }
 
 
@@ -38,44 +35,65 @@ function onError(error) {
 
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
-
+    var userPicName;
+    if(userPic.value != "") {
+        userPicName = "/imgUserPic/" + userPic.value;
+    } else {
+        userPicName = "http://localhost:8080/static/images/title1.png"
+    }
     if(messageContent && stompClient) {
         var chatMessage = {
-            sender: username,
+            sender: currentUsername,
+            senderId: userId,
             content: messageInput.value,
+            userPicName: userPicName
         };
-
         stompClient.send("/app/chat.sendMessage/" + chatId, {}, JSON.stringify(chatMessage));
         messageInput.value = '';
+        userPicName = '';
     }
     event.preventDefault();
 }
 
 
 function onMessageReceived(payload) {
+
     var message = JSON.parse(payload.body);
+    var messageText = document.createTextNode(message.content);
+    var avatar = setAvatar(message);
+    
     var messageElement = document.createElement('li');
-    var avatar = document.createElement('img');
-    avatar.src = "/imgUserPic/" + currentUserPic;
-    avatar.width = 34;
-    avatar.height = 34;
-    avatar.classList.add('border border-secondary');
-    avatar.classList.add('mr-2');
-    if(message.sender == username) {
+    if(message.sender == currentUsername) {
         messageElement.classList.add("text-left");
     } else {
         messageElement.classList.add("text-right");
     }
     messageElement.classList.add('list-group-item');
-    messageElement.classList.add('mt-2');    
+    messageElement.classList.add('mt-2');
 
-    var messageText = document.createTextNode(message.content);
-
+    if(message.sender == currentUsername) {
+        messageElement.appendChild(avatar); 
+    }
     messageElement.appendChild(messageText);
-    messageElement.appendChild(avatar);
+
+     if(message.sender != currentUsername) {
+        messageElement.appendChild(avatar); 
+    }
 
     messageArea.appendChild(messageElement);
     messageArea.scrollTop = messageArea.scrollHeight;
+}
+
+function setAvatar(message) {
+    var avatar = document.createElement('img');
+    avatar.src = message.userPicName;
+    avatar.width = 34;
+    avatar.height = 34;
+    avatar.classList.add('border-secondary');
+    avatar.classList.add('border');
+    avatar.classList.add('mx-2');
+    avatar.classList.add('rounded-circle');
+    return avatar; 
 }
 
 window.onload = connect
