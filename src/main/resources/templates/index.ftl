@@ -19,8 +19,10 @@
 						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#invates">invate user</button>
 					<!-- Button trigger modal -->
 					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chatMembers">chat information</button>
-					<#if !chatAdmins?seq_contains(currentUser)>
+					<#if chatMembers?seq_contains(currentUser)>
 						<a href="/chats/${chat.id}/${currentUser.id}/leave" class="btn btn-primary" role="button">leave</a>
+					<#elseif !chatMembers?seq_contains(currentUser) && chatArcive?seq_contains(currentUser)>
+						<a href="/chats/${chat.id}/${currentUser.id}/return" class="btn btn-primary" role="button">return</a>
 					</#if>
 				</h2>
 						<!-- Modal -->
@@ -73,14 +75,16 @@
 	    			</li>
 	    		</#list>
     		</ul>
-	            <form id="messageForm" name="messageForm" nameForm="messageForm">
-	                <div class="form-group mt-2">
-	                    <div class="input-group clearfix">
-	                        <input type="text" id="message" placeholder="Type a message..." class="form-control"/>
-	                        <button type="submit" class="btn btn-primary ml-2">Send</button>
-	                    </div>
-	                </div>
-	            </form>
+    			<#if chatMembers?seq_contains(currentUser)>
+		            <form id="messageForm" name="messageForm" nameForm="messageForm">
+		                <div class="form-group mt-2">
+		                    <div class="input-group clearfix">
+		                        <input type="text" id="message" placeholder="Type a message..." class="form-control"/>
+		                        <button type="submit" class="btn btn-primary ml-2">Send</button>
+		                    </div>
+		                </div>
+		            </form>
+	            </#if>
         </div>
     </div>
 </div>

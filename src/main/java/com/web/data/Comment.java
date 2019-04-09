@@ -1,5 +1,7 @@
 package com.web.data;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -8,8 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Setter
+@Getter
+@NoArgsConstructor
 public class Comment {
 
 	@Id
@@ -27,47 +35,8 @@ public class Comment {
 	@JoinColumn(name = "user_id")
 	private User commentAuthor;
 	
-	public Comment() {
-		
-	}
 	public Comment(String commentText, String creationDate) {
 		this.commentText = commentText;
 		this.creationDate = creationDate;
-	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getCommentText() {
-		return commentText;
-	}
-	public void setCommentText(String commentText) {
-		this.commentText = commentText;
-	}
-	public String getCreationDate() {
-		return creationDate;
-	}
-	public void setCreationDate(String creationDate) {
-		this.creationDate = creationDate;
-	}
-	public Post getCommentedPost() {
-		return commentedPost;
-	}
-	public void setCommentedPost(Post commentePost) {
-		this.commentedPost = commentePost;
-	}
-	public User getCommentAuthor() {
-		return commentAuthor;
-	}
-	public void setCommentAuthor(User commentAuthor) {
-		this.commentAuthor = commentAuthor;
-	}
-	public String getCommentPicName() {
-		return commentPicName;
-	}
-	public void setCommentPicName(String commentPicName) {
-		this.commentPicName = commentPicName;
 	}
 }

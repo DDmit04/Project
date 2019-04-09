@@ -16,8 +16,8 @@ public interface ChatRepo extends CrudRepository<Chat, Long>{
 	@Query("select new com.web.data.dto.ChatDto(" +
 		   "  ch  " +
 		   ") " +
-		   "  from Chat ch left join ch.chatMembers cm " +
-		   "     where cm = :currentUser " +
+		   "  from Chat ch left join ch.chatsArcive ca left join ch.chatMembers cm " +
+		   "     where cm = :currentUser or ca = :currentUser " +
 		   "     group by ch")
 	Iterable<ChatDto> findUserChats(@Param("currentUser") User currentUser);
 	
@@ -26,7 +26,7 @@ public interface ChatRepo extends CrudRepository<Chat, Long>{
 			   "  (select count(*) from ch.chatMembers)," +
 			   "  (select count(*) from ch.chatAdmins)" +
 			   ") " +
-			   "  from Chat ch left join ch.chatMembers cm " +
+			   "  from Chat ch " +
 			   "     where ch.id = :chatId" +
 			   "     group by ch")
 	ChatDto findOneChat(@Param("chatId") Long chatId);

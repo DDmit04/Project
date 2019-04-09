@@ -47,31 +47,40 @@
 				</div>
 			</#if>
 		<#else>
-			<#if user.username != currentUsername>
 				<div class="col dropdown" align="right">
 					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 						<i class="fas fa-ellipsis-v"></i>
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					
-					
-						<#if chat?? && !chatMembers?seq_contains(user)>
-							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/invate">invate</a> 
-						</#if>
+						<#if user.username != currentUsername>
 						
-						<#if chat?? && chatMembers?seq_contains(user) && chatAdmins?seq_contains(currentUser)>
-							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/leave">chase out</a> 
-						</#if>
-						
-						
-						<#if user.inBlackList?seq_contains(currentUser) >
-							<a class="dropdown-item" href="/${user.id}/${currentUser.id}/fromBlackList">unblock</a> 
+							<#if user.inBlackList?seq_contains(currentUser) >
+								<a class="dropdown-item" href="/${user.id}/${currentUser.id}/fromBlackList">unblock</a> 
+							<#else>
+								<a class="dropdown-item" href="/${user.id}/${currentUser.id}/inBlackList">block</a> 
+							</#if>
+							
+							<#if chat??>
+								<#if !chatMembers?seq_contains(user)>
+									<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/invate">invate</a> 
+								</#if>
+								<#if chatMembers?seq_contains(user) && chatAdmins?seq_contains(currentUser) && !chatAdmins?seq_contains(user)>
+									<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/chaseOut">chase out</a> 
+								</#if>
+								<#if !chatAdmins?seq_contains(user) && chatAdmins?seq_contains(currentUser)>
+									<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/giveAdmin">give admin</a> 
+								</#if>
+							</#if>
+							
 						<#else>
-							<a class="dropdown-item" href="/${user.id}/${currentUser.id}/inBlackList">block</a> 
+							<#if chat??>
+								<#if chatAdmins?seq_contains(user)>
+									<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/removeAdmin">take off admin</a> 
+								</#if>
+							</#if>
 						</#if>
 					</div>
 				</div>
-			</#if>
 		</#if>
 	</li>
 </ul>

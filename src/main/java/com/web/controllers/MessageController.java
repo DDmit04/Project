@@ -1,12 +1,6 @@
 package com.web.controllers;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.Queue;
 import java.util.Set;
-import java.util.SortedSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -24,13 +18,10 @@ import com.web.data.Chat;
 import com.web.data.Message;
 import com.web.data.MessageJson;
 import com.web.data.User;
-import com.web.data.dto.GroupDto;
 import com.web.data.dto.UserDto;
 import com.web.repository.ChatRepo;
-import com.web.repository.GroupRepo;
 import com.web.repository.MessageRepo;
 import com.web.repository.UserRepo;
-import com.web.service.GroupService;
 import com.web.service.UserService;
  
 @Controller
@@ -52,13 +43,14 @@ public class MessageController {
 	public String getMessages(@AuthenticationPrincipal User currentUser, 
 							  @PathVariable Chat chat, 
 							  Model model) {
-    	if(chat.getChatMembers().contains(currentUser)) {
+    	if(chat.getChatMembers().contains(currentUser) || chat.getChatsArcive().contains(currentUser)) {
     		UserDto usr = userService.findOneUserToList(currentUser);
     		User user = userRepo.findByUsername(currentUser.getUsername());
     		Set<Message> chatMessages = chat.getChatMessages();
 			model.addAttribute("chat", chatRepo.findOneChat(chat.getId()));
 			model.addAttribute("user", usr);
 			model.addAttribute("chatMembers", chat.getChatMembers());
+			model.addAttribute("chatArcive", chat.getChatsArcive());
 			model.addAttribute("chatMessages", chatMessages);
 			model.addAttribute("friends", user.getUserFriends());
 			model.addAttribute("subscriptions", user.getSubscriptions());

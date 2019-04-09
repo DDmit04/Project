@@ -1,11 +1,20 @@
 package com.web.data;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@Setter
+@Getter
+@NoArgsConstructor
 public class FriendRequest {
 	
 	@Id
@@ -17,49 +26,11 @@ public class FriendRequest {
 	private Long requestToId;
 	private String creationDate;
 	
-	public FriendRequest() {
-	}
 	public FriendRequest(String creationDate, User requestFrom , User requestTo) {
 		this.creationDate = creationDate;
 		this.requestFrom = requestFrom;
 		this.requestTo = requestTo;
 		this.requestToId = requestTo.getId();
 		this.requestFromId = requestFrom.getId();
-	}
-	public String getCreationDate() {
-		return creationDate;
-	}
-	public void setCreationDate(String creationDate) {
-		this.creationDate = creationDate;
-	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public User getRequestFrom() {
-		return requestFrom;
-	}
-	public void setRequestFrom(User reqiestFrom) {
-		this.requestFrom = reqiestFrom;
-	}
-	public User getRequestTo() {
-		return requestTo;
-	}
-	public void setRequestTo(User reqiestTo) {
-		this.requestTo = reqiestTo;
-	}
-	public Long getRequestFromId() {
-		return requestFromId;
-	}
-	public void setRequestFromId(Long requestFromId) {
-		this.requestFromId = requestFromId;
-	}
-	public Long getRequestToId() {
-		return requestToId;
-	}
-	public void setRequestToId(Long requestToId) {
-		this.requestToId = requestToId;
 	}
 }

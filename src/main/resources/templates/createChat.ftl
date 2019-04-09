@@ -9,7 +9,7 @@
 			<form method="post" enctype="multipart/form-data" onsubmit="return validateGroupCreate()">
 				<div class="form-group mt-3">
 					<input id="chatName" name="chatName" class="form-control col-mt ${(chatNameError??)?string('is-invalid', '')}" type="text" 
-						   placeholder="chat name" value="${registrationName?ifExists}" onfocus="disposeAlert('chatName')"> 
+						   placeholder="chat name" value="${chatName?ifExists}" onfocus="disposeAlert('chatName')"> 
 					<div id="chatNameError" class="invalid-feedback"><#if chatNameError??>${chatNameError}</#if></div>
 					<input id="chatTitle" name="chatTitle" class="form-control mt-2" type="text" placeholder="chat title (optional)">
 					<div class="input-group mt-2">

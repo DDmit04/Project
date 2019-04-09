@@ -24,7 +24,14 @@ import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "usr")
 public class User implements UserDetails {
 
@@ -106,11 +113,12 @@ public class User implements UserDetails {
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatMembers")
 	private Set<Chat> chats;
 	
-	 @ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatAdmins")
-	 private Set<Chat> adminedChats;
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "chatsArcive")
+	private Set<Chat> savedChats;
+	
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatAdmins")
+	private Set<Chat> adminedChats;
 
-    public User() {
-	}
 	public User(String username, String password, String registrationDate) {
 		this.username = username;
 		this.password = password;
@@ -129,113 +137,11 @@ public class User implements UserDetails {
 	public int hashCode() {
 		return Objects.hashCode(id);
 	}
-	public Set<Chat> getAdminedChats() {
-		return adminedChats;
-	}
-	public void setAdminedChats(Set<Chat> adminedChats) {
-		this.adminedChats = adminedChats;
-	}
-	public Set<Chat> getChats() {
-		return chats;
-	}
-	public void setChats(Set<Chat> chats) {
-		this.chats = chats;
-	}
-	public Set<Message> getSendedMessages() {
-		return sendedMessages;
-	}
-	public void setSendedMessages(Set<Message> sendedMessages) {
-		this.sendedMessages = sendedMessages;
-	}
-	public Set<User> getInBlackList() {
-		return inBlackList;
-	}
-	public void setInBlackList(Set<User> inBlackList) {
-		this.inBlackList = inBlackList;
-	}
-	public Set<User> getBlackList() {
-		return blackList;
-	}
-	public void setBlackList(Set<User> blackList) {
-		this.blackList = blackList;
-	}
-	public Set<Group> getBannedInGroups() {
-		return bannedInGroups;
-	}
-	public void setBannedInGroups(Set<Group> bannedInGroups) {
-		this.bannedInGroups = bannedInGroups;
-	}
-	public Set<Group> getBelongGroup() {
-		return belongGroup;
-	}
-	public void setBelongGroup(Set<Group> belongGroup) {
-		this.belongGroup = belongGroup;
-	}
-	public Set<Group> getSubedGroups() {
-		return subedGroups;
-	}
-	public void setSubedGroups(Set<Group> subedGroups) {
-		this.subedGroups = subedGroups;
-	}
-	public Set<Group> getAdminedGroups() {
-		return adminedGroups;
-	}
-	public void setAdminedGroups(Set<Group> adminedGroups) {
-		this.adminedGroups = adminedGroups;
-	}
-//	public Set<UserGroup> getBannedInGroups() {
-//		return bannedInGroups;
-//	}
-//	public void setBannedInGroups(Set<UserGroup> bannedInGroups) {
-//		this.bannedInGroups = bannedInGroups;
-//	}
-	public Set<Comment> getUserComments() {
-		return userComments;
-	}
-	public void setUserComments(Set<Comment> userComments) {
-		this.userComments = userComments;
-	}
-	public Set<Post> getUserPosts() {
-		return userPosts;
-	}
-	public void setUserPosts(Set<Post> userPosts) {
-		this.userPosts = userPosts;
-	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
 	public String getUsername() {
 		return username;
 	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
 	public String getPassword() {
 		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public Set<UserRoles> getRoles() {
-		return roles;
-	}
-	public void setRoles(Set<UserRoles> set) {
-		this.roles = set;
-	}
-	public boolean isActive() {
-		return active;
-	}
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-	public String getRegistrationDate() {
-		return registrationDate;
-	}
-	public void setRegistrationDate(String registrationDate) {
-		this.registrationDate = registrationDate;
 	}
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -256,29 +162,5 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return isActive();
-	}
-	public String getUserPicName() {
-		return userPicName;
-	}
-	public void setUserPicName(String userPicName) {
-		this.userPicName = userPicName;
-	}
-	public Set<User> getUserFriends() {
-		return userFriends;
-	}
-	public void setUserFriends(Set<User> userFrends) {
-		this.userFriends = userFrends;
-	}
-	public Set<User> getSubscribers() {
-		return subscribers;
-	}
-	public void setSubscribers(Set<User> subscribers) {
-		this.subscribers = subscribers;
-	}
-	public Set<User> getSubscriptions() {
-		return subscriptions;
-	}
-	public void setSubscriptions(Set<User> subscriptions) {
-		this.subscriptions = subscriptions;
 	}
 }
