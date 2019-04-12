@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.web.data.User;
+import com.web.data.Chat;
 import com.web.data.Group;
 import com.web.data.dto.UserDto;
 
@@ -68,6 +69,17 @@ public interface UserRepo extends CrudRepository<User, Long> {
             " from User u " + 
             " where u.id = :id " +
             " group by u")
-	UserDto findOneToStatistic(Long id);		
+	UserDto findOneToStatistic(Long id);
 	
+	@Query("select new com.web.data.dto.UserDto(" +
+            "   u, " +
+            "   (select count(*) from u.userFriends), " +
+            "   (select count(*) from u.subscriptions), " +
+			"   (select count(*) from u.subscribers), " + 
+			"   sum(case when uc = :chat then 1 else 0 end) > 0 " + 
+            ") " +
+            " from User u left join u.chats uc" + 
+            " where u.id = :currentUserId " +
+            " group by u")
+	UserDto findOneToChat(@Param("currentUserId") Long currentUserId, @Param("chat") Chat chat);
 }

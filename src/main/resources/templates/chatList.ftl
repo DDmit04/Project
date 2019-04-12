@@ -23,7 +23,7 @@
 			</li>
 		</ul>
 	<#else>
-		<h4 class="display-4 ml-2 mt-3 " align="left">No chats :(</h4>
+		<h4 class="display-4 ml-2 mt-3 " align="center">No chats :(</h4>
 	</#list>
 </div>
 

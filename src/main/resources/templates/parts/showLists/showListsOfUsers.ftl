@@ -15,7 +15,7 @@
 			<h4 class="display-4 ml-2 " align="left">No subscribers :(</h4>
 		<#elseif listType == "groupAdmins">
 			<h4 class="display-4 ml-2 " align="left">No admins :(</h4>
-		<#elseif listType == "groupBanList">
+		<#elseif listType == "groupBanList" || listType == "chatBanList">
 			<h4 class="display-4 ml-2 " align="left">No bans :(</h4>
 		<#elseif listType == "userBlackList">
 			<h4 class="display-4 ml-2 " align="left">black list is empty</h4>

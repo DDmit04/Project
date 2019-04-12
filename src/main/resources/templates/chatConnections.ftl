@@ -15,6 +15,12 @@
 				href="#nav-chatMembers" role="tab">
 				chat members (${chat.membersCount})
 			</a>
+			<#if chatAdmins?seq_contains(currentUser)>
+				<a class="nav-item nav-link mr-1 btn-outline-primary" data-toggle="tab" 
+					href="#nav-chatBans" role="tab">
+					ban list (${chat.chatBanCount})
+				</a>
+			</#if>
 		</div>		
 	</nav>
 	<div class="tab-content shadow mt-2" id="nav-tabContent" style="background-color: white;">
@@ -26,4 +32,10 @@
 			aria-labelledby="nav-subscriptions-tab" style="padding: 15px 5px;">
 			<@userLists.showUsers chatMembers "chatMembers" />
 		</div>
+		<#if chatAdmins?seq_contains(currentUser)>
+			<div class="tab-pane fade" id="nav-chatBans" role="tabpanel" 
+				aria-labelledby="nav-subscriptions-tab" style="padding: 15px 5px;">
+				<@userLists.showUsers chatBanList "chatBans" />
+			</div>
+		</#if>
 	</div>

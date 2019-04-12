@@ -103,6 +103,7 @@ public class UserProfileController {
 								 @RequestParam("password") String newPassword,
 							   	 RedirectAttributes redirectAttrs,
 								 Model model) {
+		//Password encoder!!!
 		try {
 			userService.changePassword(currentUser, currentPassword, newPassword);
 		} catch (UserException userException) {

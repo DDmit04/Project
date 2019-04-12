@@ -13,74 +13,119 @@
 			</div>
 		</div>
 		<#if group??>
-			<#if group.groupOwner == currentUser && currentUser != user>
+			<#assign thisUserIsGroupAdmin = groupAdmins?seq_contains(user)
+					 thisUserInGroupBanList = groupBanList?seq_contains(user)
+					 currentUserIsGroupAdmin = groupAdmins?seq_contains(currentUser)
+					 groupOwner = group.groupOwner>
+					  
+			<#if groupOwner == currentUser && currentUser != user>
 				<div class="col dropdown" align="right">
 					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 						<i class="fas fa-ellipsis-v"></i>
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						<#if groupAdmins?seq_contains(user)>
-							<a class="dropdown-item" href="/groups/${group.id}/${user.id}/removeAdmin">remove admin</a> 
-							<a class="dropdown-item" href="/groups/${group.id}/${user.id}/makeOwner">make owner</a>
-						<#else>
-							<a class="dropdown-item" href="/groups/${group.id}/${user.id}/addAdmin">give admin</a>
-							<#if banList?seq_contains(user)>
-								<a class="dropdown-item" href="/groups/${group.id}/${user.id}/unban">unban</a>
+					
+						<#if !thisUserInGroupBanList>
+							<#if thisUserIsGroupAdmin>
+								<a class="dropdown-item" href="/groups/${group.id}/${user.id}/removeAdmin">remove admin</a> 
+								<a class="dropdown-item" href="/groups/${group.id}/${user.id}/makeOwner">make owner</a>
 							<#else>
-								<a class="dropdown-item" href="/groups/${group.id}/${user.id}/ban">ban</a>
+								<a class="dropdown-item" href="/groups/${group.id}/${user.id}/addAdmin">give admin</a>
 							</#if>
+						</#if>
+						<#if thisUserInGroupBanList>
+							<a class="dropdown-item" href="/groups/${group.id}/${user.id}/unban">unban</a>
+						<#else>
+							<a class="dropdown-item" href="/groups/${group.id}/${user.id}/ban">ban</a>
+						</#if>
+						
+					</div>
+				</div>
+			</#if>
+			<#if currentUser != user && currentUserIsGroupAdmin && groupOwner != user && groupOwner != currentUser>
+				<div class="col dropdown" align="right">
+					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
+						<i class="fas fa-ellipsis-v"></i>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<#if thisUserInGroupBanList>
+							<a class="dropdown-item" href="/groups/${group.id}/${user.id}/unban">unban</a>
+						</#if>
+						<#if !thisUserInGroupBanList>
+							<a class="dropdown-item" href="/groups/${group.id}/${user.id}/ban">ban</a>
+						</#if>					
+					</div>
+				</div>
+			</#if>
+			<#if groupOwner != currentUser && currentUser == user && currentUserIsGroupAdmin>
+				<div class="col dropdown" align="right">
+					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
+						<i class="fas fa-ellipsis-v"></i>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="/groups/${group.id}/${currentUser.id}/removeAdmin">take off admin</a> 
+					</div>
+				</div>
+			</#if>
+		<#elseif chat??>
+			<#assign currentUserIsChatAdmin = chatAdmins?seq_contains(currentUser)
+					 thisUserIsChatMember = chatMembers?seq_contains(user)
+					 thisUserIsChatAdmin = chatAdmins?seq_contains(user)
+					 chatOwnerExists = chat.chatOwner??>	
+					 
+			<#if user.username != currentUsername && chatOwnerExists && chat.chatOwner != user 
+				&& (currentUserIsChatAdmin || !thisUserIsChatMember || !thisUserIsChatAdmin)>
+				<div class="col dropdown" align="right">
+					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
+						<i class="fas fa-ellipsis-v"></i>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					
+						<#if !thisUserIsChatMember && !chatBanList?seq_contains(user)>
+							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/invate">invate</a> 
+						<#elseif currentUserIsChatAdmin && thisUserIsChatMember && !thisUserIsChatAdmin>
+							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/chaseOut">chase out</a> 
+							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/giveAdmin">give admin</a> 
+						</#if>
+						<#if currentUserIsChatAdmin || (chatOwnerExists && chat.chatOwner == currentUser)>
+							<#if !chatBanList?seq_contains(user)>
+								<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/ban">ban</a> 
+							<#else>
+								<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/unban">unban</a> 
+							</#if>
+						</#if>
+						<#if chatOwnerExists && chat.chatOwner == currentUser && thisUserIsChatAdmin>
+							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/removeAdmin">remove admin</a> 
+							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/makeOwner">make owner</a> 
 						</#if>
 					</div>
 				</div>
 			</#if>
-			<#if group.groupOwner != currentUser && currentUser == user>
+			<#if chatOwnerExists && chat.chatOwner != currentUser && currentUser == user && currentUserIsChatAdmin>
 				<div class="col dropdown" align="right">
 					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 						<i class="fas fa-ellipsis-v"></i>
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						<#if groupAdmins?seq_contains(currentUser)>
-<!-- 						modal appears in groupConnections -->
-							<a class="dropdown-item" data-toggle="modal" data-target="#takeOfAdmin">take off admin</a> 
-						</#if>
+						<a class="dropdown-item" href="/chats/${chat.id}/${currentUser.id}/removeAdmin">take off admin</a> 
 					</div>
 				</div>
 			</#if>
 		<#else>
+			<#if user.username != currentUsername>
 				<div class="col dropdown" align="right">
 					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 						<i class="fas fa-ellipsis-v"></i>
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						<#if user.username != currentUsername>
-						
-							<#if user.inBlackList?seq_contains(currentUser) >
-								<a class="dropdown-item" href="/${user.id}/${currentUser.id}/fromBlackList">unblock</a> 
-							<#else>
-								<a class="dropdown-item" href="/${user.id}/${currentUser.id}/inBlackList">block</a> 
-							</#if>
-							
-							<#if chat??>
-								<#if !chatMembers?seq_contains(user)>
-									<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/invate">invate</a> 
-								</#if>
-								<#if chatMembers?seq_contains(user) && chatAdmins?seq_contains(currentUser) && !chatAdmins?seq_contains(user)>
-									<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/chaseOut">chase out</a> 
-								</#if>
-								<#if !chatAdmins?seq_contains(user) && chatAdmins?seq_contains(currentUser)>
-									<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/giveAdmin">give admin</a> 
-								</#if>
-							</#if>
-							
+						<#if user.inBlackList?seq_contains(currentUser) >
+							<a class="dropdown-item" href="/${user.id}/${currentUser.id}/fromBlackList">unblock</a> 
 						<#else>
-							<#if chat??>
-								<#if chatAdmins?seq_contains(user)>
-									<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/removeAdmin">take off admin</a> 
-								</#if>
-							</#if>
+							<a class="dropdown-item" href="/${user.id}/${currentUser.id}/inBlackList">block</a> 
 						</#if>
 					</div>
 				</div>
+			</#if>
 		</#if>
 	</li>
 </ul>

@@ -18,6 +18,7 @@ import com.web.data.Chat;
 import com.web.data.Message;
 import com.web.data.MessageJson;
 import com.web.data.User;
+import com.web.data.dto.ChatDto;
 import com.web.data.dto.UserDto;
 import com.web.repository.ChatRepo;
 import com.web.repository.MessageRepo;
@@ -44,22 +45,25 @@ public class MessageController {
 							  @PathVariable Chat chat, 
 							  Model model) {
     	if(chat.getChatMembers().contains(currentUser) || chat.getChatsArcive().contains(currentUser)) {
-    		UserDto usr = userService.findOneUserToList(currentUser);
-    		User user = userRepo.findByUsername(currentUser.getUsername());
+    		User userFromDb = userRepo.findByUsername(currentUser.getUsername());
+    		UserDto userDto = userRepo.findOneToChat(currentUser.getId(), chat);
+    		ChatDto chatDto = chatRepo.findOneChat(chat.getId());
     		Set<Message> chatMessages = chat.getChatMessages();
-			model.addAttribute("chat", chatRepo.findOneChat(chat.getId()));
-			model.addAttribute("user", usr);
+			model.addAttribute("user", userDto);
+			model.addAttribute("chatMessages", chatMessages);
+			model.addAttribute("friends", userFromDb.getUserFriends());
+			model.addAttribute("subscriptions", userFromDb.getSubscriptions());
+			model.addAttribute("subscribers", userFromDb.getSubscribers());
+			model.addAttribute("chat", chatDto);
 			model.addAttribute("chatMembers", chat.getChatMembers());
 			model.addAttribute("chatArcive", chat.getChatsArcive());
-			model.addAttribute("chatMessages", chatMessages);
-			model.addAttribute("friends", user.getUserFriends());
-			model.addAttribute("subscriptions", user.getSubscriptions());
-			model.addAttribute("subscribers", user.getSubscribers());
 			model.addAttribute("chatAdmins", chat.getChatAdmins());
-			model.addAttribute("listType", "firends");
-			return "index";
+			model.addAttribute("chatBanList", chat.getChatBanList());
+//			Important
+			model.addAttribute("listType", " "); 
+			return "chat";
     	} else {
-    		return null;
+    		return "noAccessChat";
     	}
 		
 	}
@@ -67,20 +71,12 @@ public class MessageController {
     @MessageMapping("/chat.sendMessage/{chatId}")
 	@SendTo("/topic/public/{chatId}")
 	public MessageJson sendMessage(@DestinationVariable Long chatId, @Payload MessageJson jsonMessage) {
-    	Message message = new Message(jsonMessage.getContent());
-    	message.setMessageAuthor(userRepo.findByUsername(jsonMessage.getSender()));
     	Chat chat = chatRepo.findChatById(chatId);
+    	User messageAuthor = userRepo.findByUsername(jsonMessage.getSender());
+    	Message message = new Message(jsonMessage.getContent());
+    	message.setMessageAuthor(messageAuthor);
     	message.setMessageChat(chat);
-    	message.setMessageAuthor(userRepo.findByUsername(jsonMessage.getSender()));
 		messageRepo.save(message);
 		return jsonMessage;
-	}
-
-    @MessageMapping("/chat.addUser")
-	@SendTo("/topic/public/{chatId}")
-	public MessageJson addUser(@DestinationVariable Long chatId, @Payload MessageJson chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-		// Add username in web socket session
-		headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-		return chatMessage;
 	}
 }

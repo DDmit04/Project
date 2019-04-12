@@ -1,7 +1,6 @@
 package com.web.data;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -15,7 +14,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -50,11 +48,11 @@ public class Group {
 	private Set<User> groupSubs = new HashSet<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-   	@JoinTable(name = "banned_users", 
+   	@JoinTable(name = "group_banned_users", 
    		joinColumns = { @JoinColumn(name = "group_id") },
    		inverseJoinColumns = { @JoinColumn(name = "user_id") } 
    	)
-	private Set<User> banList = new HashSet<>();
+	private Set<User> groupBanList = new HashSet<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "admined_groups", 

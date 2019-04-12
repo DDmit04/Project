@@ -57,10 +57,34 @@ public class User implements UserDetails {
 	
 	@OneToMany(mappedBy = "groupOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Group> belongGroup;
+	
+	@OneToMany(mappedBy = "chatOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private Set<Chat> belongChat;
 	    
 	@OneToMany(mappedBy = "messageAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@javax.persistence.OrderBy("id")
 	private Set<Message> sendedMessages;
+	
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupSubs")
+	private Set<Group> subedGroups;
+	
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupAdmins")
+   	private Set<Group> adminedGroups;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupBanList")
+	private Set<Group> bannedInGroups;
+    
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatMembers")
+	private Set<Chat> chats;
+	
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatAdmins")
+	private Set<Chat> adminedChats;
+	
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatBanList")
+	private Set<Chat> bannedInChats;
+	
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatsArcive")
+	private Set<Chat> savedChats;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_friendship", 
@@ -101,24 +125,6 @@ public class User implements UserDetails {
     )
     private Set<User> inBlackList = new HashSet<>();
     
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupSubs")
-	private Set<Group> subedGroups;
-	
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupAdmins")
-   	private Set<Group> adminedGroups;
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "banList")
-	private Set<Group> bannedInGroups;
-    
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatMembers")
-	private Set<Chat> chats;
-	
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "chatsArcive")
-	private Set<Chat> savedChats;
-	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatAdmins")
-	private Set<Chat> adminedChats;
-
 	public User(String username, String password, String registrationDate) {
 		this.username = username;
 		this.password = password;

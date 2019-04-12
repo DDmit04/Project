@@ -1,14 +1,18 @@
 package com.web.data.dto;
 
 import com.web.data.User;
+
+import lombok.Getter;
+
 import com.web.data.Group;
 
+@Getter
 public class GroupDto {
 	
 	private Long id;
 	private Long subCount;
 	private Long adminCount;
-	private Long banCount;
+	private Long groupBanCount;
 	private String groupName;
 	private String groupInformation;
 	private String creationDate;
@@ -17,7 +21,7 @@ public class GroupDto {
 	private String groupTitle;
 	
 //	group to user
-	public GroupDto(Group userGroup, Long subCount, Long adminCount, Long banCount) {
+	public GroupDto(Group userGroup, Long subCount, Long adminCount, Long groupBanCount) {
 		this.id = userGroup.getId();
 		this.subCount = subCount;
 		this.groupName = userGroup.getGroupName();
@@ -27,47 +31,17 @@ public class GroupDto {
 		this.groupOwner = userGroup.getGroupOwner();
 		this.groupTitle = userGroup.getGroupTitle();
 		this.adminCount = adminCount;
-		this.banCount = banCount;
+		this.groupBanCount = groupBanCount;
 	}
 //	group to list
 	public GroupDto(Group userGroup, Long subCount) {
 		this.id = userGroup.getId();
-		this.subCount = subCount;
 		this.groupName = userGroup.getGroupName();
 		this.groupInformation = userGroup.getGroupInformation();
 		this.creationDate = userGroup.getCreationDate();
 		this.groupPicName = userGroup.getGroupPicName();
 		this.groupOwner = userGroup.getGroupOwner();
 		this.groupTitle = userGroup.getGroupTitle();
-	}
-	public Long getBanCount() {
-		return banCount;
-	}
-	public Long getAdminCount() {
-		return adminCount;
-	}
-	public String getGroupTitle() {
-		return groupTitle;
-	}
-	public Long getSubCount() {
-		return subCount;
-	}
-	public Long getId() {
-		return id;
-	}
-	public String getGroupName() {
-		return groupName;
-	}
-	public String getGroupInformation() {
-		return groupInformation;
-	}
-	public String getCreationDate() {
-		return creationDate;
-	}
-	public String getGroupPicName() {
-		return groupPicName;
-	}
-	public User getGroupOwner() {
-		return groupOwner;
+		this.subCount = subCount;
 	}
 }

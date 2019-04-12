@@ -36,38 +36,14 @@ public class ChatController {
 	@GetMapping("messages")
 	public String getUserChats(@AuthenticationPrincipal User currentUser,
 							   Model model) {
-		model.addAttribute("userChats", chatRepo.findUserChats(currentUser));
+		Iterable<ChatDto> userChats = chatRepo.findUserChats(currentUser);
+		model.addAttribute("userChats", userChats);
 		return "chatList";
 	}
 	
 	@GetMapping("/createChat")
-	public String createChat(@AuthenticationPrincipal User currentUser) {
+	public String createChat() {
 		return "createChat";
-	}
-	
-	@GetMapping("{user}/createChat")
-	public String createChat(@AuthenticationPrincipal User currentUser,
-						     @PathVariable User user) {
-		Chat chat = new Chat();
-		chat.setChatName(currentUser.getUsername() + " - " + user.getUsername());
-		chatRepo.save(chat);
-		chat.getChatMembers().add(currentUser);
-		chat.getChatMembers().add(user);
-		chatRepo.save(chat);
-		chat.getChatsArcive().add(currentUser);
-		chat.getChatsArcive().add(user);
-		chatRepo.save(chat);
-		return "redirect:/chats/" + chat.getId();
-	}
-	
-	@GetMapping("/chats/{chat}/{user}/invate")
-	public String invateUser(@AuthenticationPrincipal User currentUser,
-						     @PathVariable User user,
-						     @PathVariable Chat chat) {
-		chat.getChatMembers().add(user);
-		chat.getChatsArcive().add(user);
-		chatRepo.save(chat);
-		return "redirect:/chats/" + chat.getId();
 	}
 	
 	@PostMapping("/createChat")
@@ -80,9 +56,35 @@ public class ChatController {
 		chat.setChatTitle(chatTitle);
 		chat.setChatPicName(fileService.uploadFile(file, UploadType.CHAT_PIC));
 		chatRepo.save(chat);
+		chat.setChatOwner(currentUser);
 		chat.getChatMembers().add(currentUser);
 		chat.getChatAdmins().add(currentUser);
 		chat.getChatsArcive().add(currentUser);
+		chatRepo.save(chat);
+		return "redirect:/chats/" + chat.getId();
+	}
+	
+	@GetMapping("{user}/createChat")
+	public String createChat(@AuthenticationPrincipal User currentUser,
+						     @PathVariable User user) {
+		Chat chat = new Chat();
+		chat.setChatName(currentUser.getUsername() + " - " + user.getUsername());
+		chatRepo.save(chat);
+		chat.setChatOwner(currentUser);
+		chat.getChatMembers().add(currentUser);
+		chat.getChatMembers().add(user);
+		chat.getChatsArcive().add(currentUser);
+		chat.getChatsArcive().add(user);
+		chatRepo.save(chat);
+		return "redirect:/chats/" + chat.getId();
+	}
+	
+	@GetMapping("/chats/{chat}/{user}/invate")
+	public String invateUser(@AuthenticationPrincipal User currentUser,
+						     @PathVariable User user,
+						     @PathVariable Chat chat) {
+		chat.getChatMembers().add(user);
+		chat.getChatsArcive().add(user);
 		chatRepo.save(chat);
 		return "redirect:/chats/" + chat.getId();
 	}
@@ -109,36 +111,102 @@ public class ChatController {
 		 return "redirect:/chats/" + chat.getId();
 	 }
 	 
+	 @GetMapping("chats/{chat}/{user}/delete")
+	 public String deleteChat(@AuthenticationPrincipal User currentUser, 
+							 @PathVariable Chat chat, 
+							 @PathVariable User user, 
+							 Model model) {
+		 if(currentUser.equals(user)) {
+			 if(chat.getChatAdmins().contains(currentUser)) {
+				 chat.getChatAdmins().remove(user);
+			 }
+			 if(chat.getChatMembers().contains(currentUser)) {
+				 chat.getChatMembers().remove(user);
+			 }
+			 chat.getChatsArcive().remove(user);
+			 chatRepo.save(chat);
+		 }
+		 return "redirect:/chats/" + chat.getId();
+	 }
+	 
 	 @GetMapping("chats/{chat}/{user}/chaseOut")
 	 public String chaseOutUser(@AuthenticationPrincipal User currentUser, 
-							   @PathVariable Chat chat, 
-							   @PathVariable User user, 
-							   Model model) {
-		 chat.getChatMembers().remove(user);
-		 chatRepo.save(chat);
-		 return "redirect:/chats/" + chat.getId();
+							    @PathVariable Chat chat, 
+							    @PathVariable User user, 
+							    Model model) {
+		if (chat.getChatAdmins().contains(currentUser) || chat.getChatOwner().equals(currentUser)) {
+			chat.getChatMembers().remove(user);
+			chatRepo.save(chat);
+		}
+		return "redirect:/chats/" + chat.getId();
 	 }
 	 
 	 @GetMapping("/chats/{chat}/{user}/giveAdmin")
 		public String giveAdmin(@AuthenticationPrincipal User currentUser,
 								@PathVariable Chat chat,
 								@PathVariable User user) {
-			if(chat.getChatAdmins().contains(currentUser)) {
-				chat.getChatAdmins().add(user);
-				chatRepo.save(chat);
-			}
-			return "redirect:/chats/" + chat.getId();
+		if(chat.getChatOwner().equals(currentUser)) {
+			chat.getChatAdmins().add(user);
+			chatRepo.save(chat);
 		}
+		return "redirect:/chats/" + chat.getId();
+	}
 	 
 	 @GetMapping("/chats/{chat}/{user}/removeAdmin")
 		public String removeAdmin(@AuthenticationPrincipal User currentUser,
 								  @PathVariable Chat chat,
 								  @PathVariable User user) {
-			if(user.equals(currentUser)) {
+			if(user.equals(currentUser) || chat.getChatOwner().equals(currentUser)) {
 				chat.getChatAdmins().remove(user);
 				chatRepo.save(chat);
 			}
 			return "redirect:/chats/" + chat.getId();
 	 }
+	 
+	 @GetMapping("/chats/{chat}/{user}/ban")
+		public String banUserInChat(@AuthenticationPrincipal User currentUser,
+							  		@PathVariable Chat chat,
+							  		@PathVariable User user) {
+			if(chat.getChatOwner().equals(currentUser) || chat.getChatAdmins().contains(currentUser)) {
+				chat.getChatBanList().add(user);
+				chat.getChatMembers().remove(user);
+				chatRepo.save(chat);
+			}
+			return "redirect:/chats/" + chat.getId();
+		}
+		
+		@GetMapping("/chats/{chat}/{user}/unban")
+		public String unbanUserInChat(@AuthenticationPrincipal User currentUser,
+						 	 		  @PathVariable Chat chat,
+						 	 		  @PathVariable User user) {
+			if(chat.getChatOwner().equals(currentUser) || chat.getChatAdmins().contains(currentUser)) {
+				chat.getChatBanList().remove(user);
+				chatRepo.save(chat);
+			}
+			return "redirect:/chats/" + chat.getId();
+		}
+		
+		@GetMapping("/chats/{chat}/{user}/makeOwner")
+		public String makeChatOwnerAuth(Model model) {
+			model.addAttribute("loginAttention", "confirm the action on the group with login and password");
+			return "login";
+		}
+		
+		@PostMapping("/chats/{chat}/{user}/makeOwner")
+		public String makeChatOwner(@AuthenticationPrincipal User currentUser,
+								 	@RequestParam String username,
+								 	@RequestParam String password,
+								 	@PathVariable Chat chat,
+								 	@PathVariable User user) {
+			//Password encoder!!!
+			User chatOwner = chat.getChatOwner();
+			if(chatOwner.equals(currentUser) 
+					&& username.equals(chatOwner.getUsername()) 
+					&& password.equals(chatOwner.getPassword())) {
+				chat.setChatOwner(user);
+				chatRepo.save(chat);
+			}
+			return "redirect:/groups//socialList/groupAdmins";
+		}
 		
 }

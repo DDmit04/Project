@@ -3,6 +3,7 @@
 var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
 var userPic = document.querySelector('#userPicName');
+var chatIsActive = document.querySelector('#isChatActive');
 
 var stompClient = null;
 
@@ -15,14 +16,16 @@ function connect(event) {
 
 
 function onConnected() {
-    // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public/' + chatId, onMessageReceived);
+    if(chatIsActive.value == true) {
+        // Subscribe to the Public Topic
+        stompClient.subscribe('/topic/public/' + chatId, onMessageReceived);
 
-    // Tell your username to the server
-    stompClient.send("/app/chat.addUser/" + chatId,
-        {},
-        JSON.stringify({sender: currentUsername})
-    )
+        // Tell your username to the server
+        stompClient.send("/app/chat.addUser/" + chatId,
+            {},
+            JSON.stringify({sender: currentUsername})
+        )
+    }
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 

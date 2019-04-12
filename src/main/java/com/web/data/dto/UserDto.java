@@ -2,6 +2,11 @@ package com.web.data.dto;
 
 import com.web.data.User;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class UserDto {
 
 	private Long id;
@@ -13,7 +18,6 @@ public class UserDto {
     private String username;
 	private String registrationDate;
 	private String userPicName;
-	private boolean active;
 	private boolean isFriend;
 	private boolean isBloking;
 	private boolean isBloked;
@@ -22,6 +26,7 @@ public class UserDto {
 	private boolean isGroupSub;
 	private boolean isGroupAdmin;
 	private boolean isBannedInGroup;
+	private boolean isChatMember;
 
 //	user to user
 	public UserDto(User user, 
@@ -29,7 +34,6 @@ public class UserDto {
 				   boolean isFriend, boolean isRequested, boolean isSub, boolean isBloking, boolean isBloked) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.active = user.isActive();
 		this.registrationDate = user.getRegistrationDate();
 		this.userPicName = user.getUserPicName();
 		this.friendCount = frendCount;
@@ -47,7 +51,6 @@ public class UserDto {
 	public UserDto(User user, boolean isGroupSub, boolean isGroupAdmin, boolean isBannedInGroup) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.active = user.isActive();
 		this.userPicName = user.getUserPicName();
 		this.isGroupSub = isGroupSub;
 		this.isGroupAdmin = isGroupAdmin;
@@ -60,7 +63,6 @@ public class UserDto {
 				   Long groupSubscriptionsCount, Long blackListCount) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.active = user.isActive();
 		this.registrationDate = user.getRegistrationDate();
 		this.userPicName = user.getUserPicName();
 		this.friendCount = frendCount;
@@ -73,21 +75,30 @@ public class UserDto {
 	
 //	user to statistic
 	public UserDto(User user, Long frendCount, Long subscribersCount, Long subscriptionsCount, Long groupSubscriptionsCount) {
-	this.id = user.getId();
-	this.username = user.getUsername();
-	this.active = user.isActive();
-	this.registrationDate = user.getRegistrationDate();
-	this.userPicName = user.getUserPicName();
-	this.friendCount = frendCount;
-	this.subscriptionsCount = subscriptionsCount;
-	this.subscribersCount = subscribersCount;
-	this.groupSubscriptionsCount = groupSubscriptionsCount;
+		this.id = user.getId();
+		this.username = user.getUsername();
+		this.registrationDate = user.getRegistrationDate();
+		this.userPicName = user.getUserPicName();
+		this.friendCount = frendCount;
+		this.subscriptionsCount = subscriptionsCount;
+		this.subscribersCount = subscribersCount;
+		this.groupSubscriptionsCount = groupSubscriptionsCount;
 	}
+	
+//	user to chat
+	public UserDto(User user, Long frendCount, Long subscriptionsCount, Long subscribersCount, boolean isChatMember) {
+		this.id = user.getId();
+		this.username = user.getUsername();
+		this.registrationDate = user.getRegistrationDate();
+		this.userPicName = user.getUserPicName();
+		this.isChatMember = isChatMember;
+		this.friendCount = frendCount;
+		this.subscriptionsCount = subscriptionsCount;
+		this.subscribersCount = subscribersCount;
+	}
+	
 	public boolean getIsBloked() {
 		return isBloked;
-	}
-	public Long getBlackListCount() {
-		return blackListCount;
 	}
 	public boolean getIsBloking() {
 		return isBloking;
@@ -98,35 +109,8 @@ public class UserDto {
 	public boolean getIsGroupSub() {
 		return isGroupSub;
 	}
-	public Long getGroupSubscriptionsCount() {
-		return groupSubscriptionsCount;
-	}
-	public Long getSubscriptionsCount() {
-		return subscriptionsCount;
-	}
-	public Long getSubscribersCount() {
-		return subscribersCount;
-	}
 	public boolean getIsRequested() {
 		return isRequested;
-	}
-	public Long getId() {
-		return id;
-	}
-	public String getUsername() {
-		return username;
-	}
-	public boolean getIsActive() {
-		return active;
-	}
-	public String getRegistrationDate() {
-		return registrationDate;
-	}
-	public String getUserPicName() {
-		return userPicName;
-	}
-	public Long getFriendCount() {
-		return friendCount;
 	}
 	public boolean getIsFriend() {
 		return isFriend;

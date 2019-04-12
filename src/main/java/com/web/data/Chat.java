@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
@@ -31,6 +32,10 @@ public class Chat {
 	private String chatTitle;
 	private String chatPicName;
 	
+	 @ManyToOne(fetch = FetchType.EAGER)
+	 @JoinColumn(name = "user_id")
+	 private User chatOwner;
+	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
 	@JoinTable(name = "user_chats", 
 				joinColumns = { @JoinColumn(name = "chat_id") },
@@ -44,6 +49,13 @@ public class Chat {
 				inverseJoinColumns = { @JoinColumn(name = "user_id") } 
 	)   	
 	private Set<User> chatsArcive = new HashSet<>();
+	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+   	@JoinTable(name = "chat_banned_users", 
+   		joinColumns = { @JoinColumn(name = "group_id") },
+   		inverseJoinColumns = { @JoinColumn(name = "user_id") } 
+   	)
+	private Set<User> chatBanList = new HashSet<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "admined_chats", 

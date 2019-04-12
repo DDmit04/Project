@@ -6,7 +6,7 @@
 <div class="card shadow col-8">
 	<div class="card-body">
 		<div class="text-center card-text">
-			<form method="post" enctype="multipart/form-data" onsubmit="return validateGroupCreate()">
+			<form method="post" enctype="multipart/form-data" onsubmit="return validateChatCreate()">
 				<div class="form-group mt-3">
 					<input id="chatName" name="chatName" class="form-control col-mt ${(chatNameError??)?string('is-invalid', '')}" type="text" 
 						   placeholder="chat name" value="${chatName?ifExists}" onfocus="disposeAlert('chatName')"> 

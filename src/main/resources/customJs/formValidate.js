@@ -80,6 +80,17 @@ function validateGroupCreate() {
 	return true;
 }
 
+function validateChatCreate() {
+	var groupName = document.getElementById("chatName");
+	if(!groupName.value) {
+		groupName.classList.add('is-invalid');
+		var groupNameError = document.getElementById("chatNameError");
+		groupNameError.innerHTML = 'chat name can not be empty!';
+		return false;
+	}
+	return true;
+}
+
 function disposeAlert(elementName) {
 	var element = document.getElementById(elementName);
 	var elementError = element.nextSibling;

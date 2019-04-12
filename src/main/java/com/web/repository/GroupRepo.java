@@ -16,7 +16,7 @@ public interface GroupRepo extends CrudRepository<Group, Long> {
 		   "   ug, " +
 		   "   (select count(*) from ug.groupSubs), " +
 		   "   (select count(*) from ug.groupAdmins), " +
-		   "   (select count(*) from ug.banList) " + 
+		   "   (select count(*) from ug.groupBanList) " + 
 		   "   )" +
 		   "   from Group ug " +
 		   "   where ug.id = :groupId" +

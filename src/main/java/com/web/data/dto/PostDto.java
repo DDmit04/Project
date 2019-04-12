@@ -1,9 +1,12 @@
 package com.web.data.dto;
 
+import com.web.data.Group;
 import com.web.data.Post;
 import com.web.data.User;
-import com.web.data.Group;
 
+import lombok.Getter;
+
+@Getter
 public class PostDto {
 	
 	private Long id;
@@ -32,41 +35,5 @@ public class PostDto {
 		this.repost = post.getRepost();
 		this.repostsCount = post.getRepostsCount();
 		this.postGroup = post.getPostGroup();
-	}
-	public Group getPostGroup() {
-		return postGroup;
-	}
-	public Long getRepostsCount() {
-		return repostsCount;
-	}
-	public Long getId() {
-		return id;
-	}
-	public String getPostText() {
-		return postText;
-	}
-	public String getTags() {
-		return tags;
-	}
-	public String getCreationDate() {
-		return creationDate;
-	}
-	public String getFilename() {
-		return filename;
-	}
-	public boolean isLiked() {
-		return liked;
-	}
-	public Long getLikes() {
-		return likes;
-	}
-	public User getPostAuthor() {
-		return postAuthor;
-	}
-	public Long getCommentsCount() {
-		return commentsCount;
-	}
-	public Post getRepost() {
-		return repost;
 	}
 }

@@ -9,7 +9,7 @@
 		<div class="card border-secondary shadow mb-3">
 			<div class="card-header">
 				<h5>${group.groupName}</h5>
-				${group.groupTitle!"no title"}
+				${group.groupTitle?ifExists}
 			</div>
 			<div class="card-body">
 				<div class="mb-2">
@@ -42,11 +42,12 @@
 		  		<div class="container">
 			  		<div class="row mt-3">
 			  			<#if !user.isGroupSub>
-			  				<a class="<#if user.isBannedInGroup>disabled</#if> btn btn-primary btn-lg btn-block " role="button" href="/groups/${group.id}/sub">sub</a>
-			  			<#elseif user.isGroupAdmin>
-							<a class="btn btn-primary btn-lg btn-block" role="button" href="#">redact</a>
+			  				<a class="<#if user.isBannedInGroup>disabled</#if> btn btn-primary btn-lg btn-block " role="button" href="/groups/${group.id}/${currentUser.id}/sub">sub</a>
 						<#else>
-			  				<a class="btn btn-primary btn-lg btn-block " role="button" href="/groups/${group.id}/unsub">unsub</a>
+			  				<a class="btn btn-primary btn-lg btn-block " role="button" href="/groups/${group.id}/${currentUser.id}/unsub">unsub</a>
+						</#if>
+						<#if user.isGroupAdmin>
+							<a class="btn btn-primary btn-lg btn-block" role="button" href="#">redact</a>
 						</#if>
 			  		</div>
 		  		</div>

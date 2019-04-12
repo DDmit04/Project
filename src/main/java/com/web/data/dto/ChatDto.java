@@ -1,24 +1,32 @@
 package com.web.data.dto;
 
 import com.web.data.Chat;
+import com.web.data.User;
 
+import lombok.Getter;
+
+@Getter
 public class ChatDto {
 	
 	private Long id;
 	private Long adminCount;
 	private Long membersCount;
+	private Long chatBanCount;
 	private String chatName;
 	private String chatTitle;
 	private String chatPicName;
+	private User chatOwner;
 	
-//	chat ti chat
-	public ChatDto(Chat chat, Long membersCount, Long adminCount) {
+//	chat to chat
+	public ChatDto(Chat chat, Long membersCount, Long adminCount, Long chatBanCount) {
 		this.id = chat.getId();
 		this.chatName = chat.getChatName();
 		this.chatTitle = chat.getChatTitle();
 		this.chatPicName = chat.getChatPicName();
+		this.chatOwner = chat.getChatOwner();
 		this.adminCount = adminCount;
 		this.membersCount = membersCount;
+		this.chatBanCount = chatBanCount;
 	}
 	
 //	chat to list
@@ -28,26 +36,4 @@ public class ChatDto {
 		this.chatTitle = chat.getChatTitle();
 		this.chatPicName = chat.getChatPicName();
 	}
-	
-	public Long getAdminCount() {
-		return adminCount;
-	}
-	public Long getMembersCount() {
-		return membersCount;
-	}
-	public Long getId() {
-		return id;
-	}
-	public String getChatName() {
-		return chatName;
-	}
-	public String getChatTitle() {
-		return chatTitle;
-	}
-	public String getChatPicName() {
-		return chatPicName;
-	}
-	
-	
-
 }

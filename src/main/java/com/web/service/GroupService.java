@@ -49,13 +49,16 @@ public class GroupService {
 	}
 	
 	public void banUser(Group group, User user) {
-		group.getBanList().add(user);
+		group.getGroupBanList().add(user);
+		if(group.getGroupAdmins().contains(user)) {
+			group.getGroupAdmins().remove(user);
+		}
 		groupRepo.save(group);
 		commentRepo.deleteAll(commentRepo.findBannedComments(group, user));
 	}
 
 	public void unbanUser(Group group, User user) {
-		group.getBanList().remove(user);
+		group.getGroupBanList().remove(user);
 		groupRepo.save(group);		
 	}
 	

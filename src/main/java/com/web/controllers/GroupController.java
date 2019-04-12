@@ -94,17 +94,23 @@ public class GroupController {
 		return "redirect:/groups/" + group.getId();
 	}
 	
-	@GetMapping("/groups/{group}/sub")
+	@GetMapping("/groups/{group}/{user}/sub")
 	public String subGroup(@AuthenticationPrincipal User currentUser,
+						   @PathVariable User user,
 						   @PathVariable Group group) {
-		groupService.addGroupSub(group, currentUser);
+		if(user.equals(currentUser)) {
+			groupService.addGroupSub(group, user); 
+		}
 		return "redirect:/groups/" + group.getId();
 	}
 	
-	@GetMapping("/groups/{group}/unsub")
+	@GetMapping("/groups/{group}/{user}/unsub")
 	public String unsubGroup(@AuthenticationPrincipal User currentUser,
+							 @PathVariable User user,
 							 @PathVariable Group group) {
-		groupService.removeGroupSub(group, currentUser);
+		if(user.equals(currentUser)) {
+			groupService.removeGroupSub(group, user);
+		}
 		return "redirect:/groups/" + group.getId();
 	}
 	
@@ -129,40 +135,42 @@ public class GroupController {
 	}
 	
 	@GetMapping("/groups/{group}/{user}/ban")
-	public String banUser(@AuthenticationPrincipal User currentUser,
-						  @PathVariable Group group,
-						  @PathVariable User user) {
-		if(group.getGroupOwner().equals(currentUser)) {
+	public String banUserInGroup(@AuthenticationPrincipal User currentUser,
+						  		 @PathVariable Group group,
+						  		 @PathVariable User user) {
+		if(group.getGroupOwner().equals(currentUser) || group.getGroupAdmins().contains(currentUser)) {
 			groupService.banUser(group, user);
 		}
 		return "redirect:/groups/" + group.getId() + "/socialList/groupBanList";
 	}
 	
 	@GetMapping("/groups/{group}/{user}/unban")
-	public String unban(@AuthenticationPrincipal User currentUser,
-					 	@PathVariable Group group,
-					    @PathVariable User user) {
-		if(group.getGroupOwner().equals(currentUser)) {
+	public String unbanUserInGroup(@AuthenticationPrincipal User currentUser,
+					 	 		   @PathVariable Group group,
+					 	 		   @PathVariable User user) {
+		if(group.getGroupOwner().equals(currentUser) || group.getGroupAdmins().contains(currentUser)) {
 			groupService.unbanUser(group, user);
 		}
 		return "redirect:/groups/" + group.getId() + "/socialList/groupBanList";
 	}
 	
 	@GetMapping("/groups/{group}/{user}/makeOwner")
-	public String makeOwner(Model model) {
+	public String makeGroupOwnerAuth(Model model) {
 		model.addAttribute("loginAttention", "confirm the action on the group with login and password");
 		return "login";
 	}
 	
 	@PostMapping("/groups/{group}/{user}/makeOwner")
-	public String makeOwner1(@AuthenticationPrincipal User currentUser,
-							 @RequestParam String username,
-							 @RequestParam String password,
-							 @PathVariable Group group,
-							 @PathVariable User user) {
-		if(group.getGroupOwner().equals(currentUser) 
-				&& username.equals(group.getGroupOwner().getUsername()) 
-				&& password.equals(group.getGroupOwner().getPassword())) {
+	public String makeGroupOwner(@AuthenticationPrincipal User currentUser,
+							 	 @RequestParam String username,
+							 	 @RequestParam String password,
+							 	 @PathVariable Group group,
+							 	 @PathVariable User user) {
+		//Password encoder!!!
+		User groupOwner = group.getGroupOwner();
+		if(groupOwner.equals(currentUser) 
+				&& username.equals(groupOwner.getUsername()) 
+				&& password.equals(groupOwner.getPassword())) {
 			groupService.makeOwner(group, user);
 		}
 		return "redirect:/groups/" + group.getId() + "/socialList/groupAdmins";
@@ -177,7 +185,7 @@ public class GroupController {
 		model.addAttribute("group", currentGroup);
 		model.addAttribute("groupSubscrabers", group.getGroupSubs());
 		model.addAttribute("groupAdmins", group.getGroupAdmins());
-		model.addAttribute("banList", group.getBanList());
+		model.addAttribute("groupBanList", group.getGroupBanList());
 		model.addAttribute("listType", listType);
 		return "groupConnections";
 	}
