@@ -25,13 +25,14 @@
 								<!-- Button trigger modal -->
 								<a class="dropdown-item" data-toggle="modal" data-target="#invates">invate user</a>
 								<!-- Button trigger modal -->
-								<a class="dropdown-item" data-toggle="modal" data-target="#chatMembers">chat information</a>
-								<a href="/chats/${chat.id}/${currentUser.id}/leave" class="dropdown-item" role="button">leave</a>
+								<a class="dropdown-item" data-toggle="modal" data-target="#chatInfo">chat information</a>
+								<a href="/chats/${chat.id}/${currentUser.id}/leave" class="dropdown-item">leave</a>
 							<#else>
-								<a href="/chats/${chat.id}/${currentUser.id}/return" class="dropdown-item" role="button">return</a>
+								<a href="/chats/${chat.id}/${currentUser.id}/return" class="dropdown-item">return</a>
 							</#if>
 						</div>
 					</#if>
+					<a href="/${chat.chatOwner.id}/profile" class="btn btn-primary">chat owner</a>
 				</h2>
 				<!-- Modal -->
 				<div class="modal fade" id="invates" tabindex="-1" role="dialog" aria-labelledby="invates" aria-hidden="true">
@@ -50,7 +51,7 @@
 				  </div>
 				</div>
 				<!-- Modal -->
-				<div class="modal fade" id="chatMembers" tabindex="-1" role="dialog" aria-labelledby="chatMembers" aria-hidden="true">
+				<div class="modal fade" id="chatInfo" tabindex="-1" role="dialog" aria-labelledby="chatInfo" aria-hidden="true">
 				  <div class="modal-dialog modal-lg" role="document">
 				    <div class="modal-content">
 				      <div class="modal-header">
@@ -73,9 +74,9 @@
 				<#list chatMessages as message>
 				<#assign currentUserIsMessageAuthor = (message.messageAuthor.username == currentUsername) >
 	    			<li class="list-group-item mt-2">
-	    				<div class="mx-2 <#if currentUserIsMessageAuthor>text-left<#else>text-right</#if>">
+	    				<div class="<#if currentUserIsMessageAuthor>text-left<#else>text-right</#if>">
 	    					<#if currentUserIsMessageAuthor>
-	    						<@picture.pic message.messageAuthor "smallPic" "userPic" /> ${message.messageText}
+	    						<@picture.pic message.messageAuthor "smallPic" "userPic" />${message.messageText}
 	    					<#else>
 	    						${message.messageText} <@picture.pic message.messageAuthor "smallPic" "userPic" />
 	    					</#if>

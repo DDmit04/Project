@@ -30,16 +30,16 @@
 <#if picType == "bigPic">
 
 	<#if isPicExist>
-		<img class="mr-2 border border-secondary" src=${picPath} width=${picWidth} height=${picHeight} >
+		<img class="mx-1 border border-secondary" src=${picPath} width=${picWidth} height=${picHeight} >
 	<#else>
-		<img class="mr-2 border border-secondary" src="http://localhost:8080/static/images/title1.png" width=${picWidth} height=${picHeight} >
+		<img class="mx-1 border border-secondary" src="http://localhost:8080/static/images/title1.png" width=${picWidth} height=${picHeight} >
 	</#if>
 <#elseif picType == "mediumPic" || picType == "smallPic">
 	<a href=${linkToAuthor}>
 		<#if isPicExist>
-			<img class="mr-2 rounded-circle border border-secondary" src=${picPath} width=${picWidth} height=${picHeight}>
+			<img class="mx-1 rounded-circle border border-secondary" src=${picPath} width=${picWidth} height=${picHeight}>
 		<#else>
-			<img class="mr-2 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width=${picWidth} height=${picHeight}>
+			<img class="mx-1 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width=${picWidth} height=${picHeight}>
 		</#if>
 	</a>
 </#if>

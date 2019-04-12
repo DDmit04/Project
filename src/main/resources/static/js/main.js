@@ -66,11 +66,14 @@ function onMessageReceived(payload) {
     var avatar = setAvatar(message);
     
     var messageElement = document.createElement('li');
+
+
     if(message.sender == currentUsername) {
-        messageElement.classList.add("text-left");
+        messageElement.classList.add('text-left');
     } else {
-        messageElement.classList.add("text-right");
+        messageElement.classList.add('text-right');
     }
+
     messageElement.classList.add('list-group-item');
     messageElement.classList.add('mt-2');
 
@@ -88,14 +91,18 @@ function onMessageReceived(payload) {
 }
 
 function setAvatar(message) {
-    var avatar = document.createElement('img');
-    avatar.src = message.userPicName;
-    avatar.width = 34;
-    avatar.height = 34;
-    avatar.classList.add('border-secondary');
-    avatar.classList.add('border');
-    avatar.classList.add('mx-2');
-    avatar.classList.add('rounded-circle');
+    var userPic = document.createElement('img');
+    userPic.src = message.userPicName;
+    userPic.width = 34;
+    userPic.height = 34;
+    userPic.classList.add('border-secondary');
+    userPic.classList.add('border');
+    userPic.classList.add('ml-1');
+    userPic.classList.add('mr-2');
+    userPic.classList.add('rounded-circle');
+    var avatar = document.createElement('a');
+    avatar.href = "/" + message.senderId + "/profile";
+    avatar.appendChild(userPic);
     return avatar; 
 }
 

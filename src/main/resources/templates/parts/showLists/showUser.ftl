@@ -71,9 +71,9 @@
 			<#assign currentUserIsChatAdmin = chatAdmins?seq_contains(currentUser)
 					 thisUserIsChatMember = chatMembers?seq_contains(user)
 					 thisUserIsChatAdmin = chatAdmins?seq_contains(user)
-					 chatOwnerExists = chat.chatOwner??>	
+					 chatOwner = chat.chatOwner>	
 					 
-			<#if user.username != currentUsername && chatOwnerExists && chat.chatOwner != user 
+			<#if user.username != currentUsername && chatOwner != user 
 				&& (currentUserIsChatAdmin || !thisUserIsChatMember || !thisUserIsChatAdmin)>
 				<div class="col dropdown" align="right">
 					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
@@ -87,21 +87,22 @@
 							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/chaseOut">chase out</a> 
 							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/giveAdmin">give admin</a> 
 						</#if>
-						<#if currentUserIsChatAdmin || (chatOwnerExists && chat.chatOwner == currentUser)>
+						<#if (currentUserIsChatAdmin || (chatOwner == currentUser)) && !thisUserIsChatAdmin>
 							<#if !chatBanList?seq_contains(user)>
 								<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/ban">ban</a> 
 							<#else>
 								<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/unban">unban</a> 
 							</#if>
 						</#if>
-						<#if chatOwnerExists && chat.chatOwner == currentUser && thisUserIsChatAdmin>
+						<#if chat.chatOwner == currentUser && thisUserIsChatAdmin>
 							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/removeAdmin">remove admin</a> 
 							<a class="dropdown-item" href="/chats/${chat.id}/${user.id}/makeOwner">make owner</a> 
 						</#if>
+						
 					</div>
 				</div>
 			</#if>
-			<#if chatOwnerExists && chat.chatOwner != currentUser && currentUser == user && currentUserIsChatAdmin>
+			<#if chatOwner != currentUser && currentUser == user && currentUserIsChatAdmin>
 				<div class="col dropdown" align="right">
 					<button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 						<i class="fas fa-ellipsis-v"></i>

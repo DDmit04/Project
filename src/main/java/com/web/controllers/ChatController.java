@@ -13,30 +13,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.Chat;
-import com.web.data.Group;
 import com.web.data.User;
 import com.web.data.dto.ChatDto;
-import com.web.repository.ChatRepo;
-import com.web.service.FileService;
-import com.web.service.UploadType;
-import com.web.service.UserService;
+import com.web.service.ChatService;
 
 @Controller
 public class ChatController {
 	
 	@Autowired
-	private ChatRepo chatRepo;
-	
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private FileService fileService;
+	private ChatService chatService;
 	
 	@GetMapping("messages")
 	public String getUserChats(@AuthenticationPrincipal User currentUser,
 							   Model model) {
-		Iterable<ChatDto> userChats = chatRepo.findUserChats(currentUser);
+		Iterable<ChatDto> userChats = chatService.findUserChats(currentUser);
 		model.addAttribute("userChats", userChats);
 		return "chatList";
 	}
@@ -51,31 +41,14 @@ public class ChatController {
 							 @RequestParam String chatName,
 							 @RequestParam(required = false) String chatTitle,
 							 @RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
-		Chat chat = new Chat();
-		chat.setChatName(chatName);
-		chat.setChatTitle(chatTitle);
-		chat.setChatPicName(fileService.uploadFile(file, UploadType.CHAT_PIC));
-		chatRepo.save(chat);
-		chat.setChatOwner(currentUser);
-		chat.getChatMembers().add(currentUser);
-		chat.getChatAdmins().add(currentUser);
-		chat.getChatsArcive().add(currentUser);
-		chatRepo.save(chat);
+		Chat chat = chatService.createChat(chatName, chatTitle, file, currentUser);
 		return "redirect:/chats/" + chat.getId();
 	}
 	
 	@GetMapping("{user}/createChat")
 	public String createChat(@AuthenticationPrincipal User currentUser,
 						     @PathVariable User user) {
-		Chat chat = new Chat();
-		chat.setChatName(currentUser.getUsername() + " - " + user.getUsername());
-		chatRepo.save(chat);
-		chat.setChatOwner(currentUser);
-		chat.getChatMembers().add(currentUser);
-		chat.getChatMembers().add(user);
-		chat.getChatsArcive().add(currentUser);
-		chat.getChatsArcive().add(user);
-		chatRepo.save(chat);
+		Chat chat = chatService.createChat(user, currentUser);
 		return "redirect:/chats/" + chat.getId();
 	}
 	
@@ -83,9 +56,7 @@ public class ChatController {
 	public String invateUser(@AuthenticationPrincipal User currentUser,
 						     @PathVariable User user,
 						     @PathVariable Chat chat) {
-		chat.getChatMembers().add(user);
-		chat.getChatsArcive().add(user);
-		chatRepo.save(chat);
+		chatService.invateUser(user, chat);
 		return "redirect:/chats/" + chat.getId();
 	}
 	
@@ -94,8 +65,7 @@ public class ChatController {
 							 @PathVariable Chat chat, 
 							 @PathVariable User user, 
 							 Model model) {
-		 chat.getChatMembers().remove(user);
-		 chatRepo.save(chat);
+		 chatService.userLeave(user, currentUser, chat);
 		 return "redirect:/chats/" + chat.getId();
 	 }
 	 
@@ -104,28 +74,16 @@ public class ChatController {
 							  @PathVariable Chat chat, 
 							  @PathVariable User user, 
 							  Model model) {
-		 if(user.getSavedChats().contains(chat)) {
-			 chat.getChatMembers().add(user);
-		 }
-		 chatRepo.save(chat);
+		 chatService.userReturn(user, chat);
 		 return "redirect:/chats/" + chat.getId();
 	 }
 	 
 	 @GetMapping("chats/{chat}/{user}/delete")
 	 public String deleteChat(@AuthenticationPrincipal User currentUser, 
-							 @PathVariable Chat chat, 
-							 @PathVariable User user, 
-							 Model model) {
-		 if(currentUser.equals(user)) {
-			 if(chat.getChatAdmins().contains(currentUser)) {
-				 chat.getChatAdmins().remove(user);
-			 }
-			 if(chat.getChatMembers().contains(currentUser)) {
-				 chat.getChatMembers().remove(user);
-			 }
-			 chat.getChatsArcive().remove(user);
-			 chatRepo.save(chat);
-		 }
+							  @PathVariable Chat chat, 
+							  @PathVariable User user, 
+							  Model model) {
+		 chatService.geleteChatHitory(user, currentUser, chat);
 		 return "redirect:/chats/" + chat.getId();
 	 }
 	 
@@ -134,10 +92,7 @@ public class ChatController {
 							    @PathVariable Chat chat, 
 							    @PathVariable User user, 
 							    Model model) {
-		if (chat.getChatAdmins().contains(currentUser) || chat.getChatOwner().equals(currentUser)) {
-			chat.getChatMembers().remove(user);
-			chatRepo.save(chat);
-		}
+		 chatService.chaseOutUser(user, currentUser, chat);
 		return "redirect:/chats/" + chat.getId();
 	 }
 	 
@@ -145,10 +100,7 @@ public class ChatController {
 		public String giveAdmin(@AuthenticationPrincipal User currentUser,
 								@PathVariable Chat chat,
 								@PathVariable User user) {
-		if(chat.getChatOwner().equals(currentUser)) {
-			chat.getChatAdmins().add(user);
-			chatRepo.save(chat);
-		}
+		chatService.giveAdmin(user, currentUser, chat);
 		return "redirect:/chats/" + chat.getId();
 	}
 	 
@@ -156,10 +108,7 @@ public class ChatController {
 		public String removeAdmin(@AuthenticationPrincipal User currentUser,
 								  @PathVariable Chat chat,
 								  @PathVariable User user) {
-			if(user.equals(currentUser) || chat.getChatOwner().equals(currentUser)) {
-				chat.getChatAdmins().remove(user);
-				chatRepo.save(chat);
-			}
+			chatService.removeAdmin(user, currentUser, chat);
 			return "redirect:/chats/" + chat.getId();
 	 }
 	 
@@ -167,11 +116,7 @@ public class ChatController {
 		public String banUserInChat(@AuthenticationPrincipal User currentUser,
 							  		@PathVariable Chat chat,
 							  		@PathVariable User user) {
-			if(chat.getChatOwner().equals(currentUser) || chat.getChatAdmins().contains(currentUser)) {
-				chat.getChatBanList().add(user);
-				chat.getChatMembers().remove(user);
-				chatRepo.save(chat);
-			}
+		 	chatService.banUser(user, currentUser, chat);
 			return "redirect:/chats/" + chat.getId();
 		}
 		
@@ -179,10 +124,7 @@ public class ChatController {
 		public String unbanUserInChat(@AuthenticationPrincipal User currentUser,
 						 	 		  @PathVariable Chat chat,
 						 	 		  @PathVariable User user) {
-			if(chat.getChatOwner().equals(currentUser) || chat.getChatAdmins().contains(currentUser)) {
-				chat.getChatBanList().remove(user);
-				chatRepo.save(chat);
-			}
+		 	chatService.unbanUser(user, currentUser, chat);
 			return "redirect:/chats/" + chat.getId();
 		}
 		
@@ -198,15 +140,8 @@ public class ChatController {
 								 	@RequestParam String password,
 								 	@PathVariable Chat chat,
 								 	@PathVariable User user) {
-			//Password encoder!!!
-			User chatOwner = chat.getChatOwner();
-			if(chatOwner.equals(currentUser) 
-					&& username.equals(chatOwner.getUsername()) 
-					&& password.equals(chatOwner.getPassword())) {
-				chat.setChatOwner(user);
-				chatRepo.save(chat);
-			}
-			return "redirect:/groups//socialList/groupAdmins";
+			chatService.changeChatOwner(user, currentUser, chat, username, password);
+			return "redirect:/chats/" + chat.getId();
 		}
 		
 }
