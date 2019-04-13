@@ -73,7 +73,7 @@ public class GroupController {
 	
 	@GetMapping("{user}/groups/create")
 	public String createGroup() {
-		return "createGroupForm";
+		return "createGroup";
 	}
 	
 	@PostMapping("{user}/groups/create")

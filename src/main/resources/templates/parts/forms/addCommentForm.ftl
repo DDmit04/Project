@@ -1,3 +1,5 @@
+<!-- uses in commentList -->
+
 <form method="post" enctype="multipart/form-data" action="" onsubmit="return validateComment()">
 	<input id="commentText" class="form-control col-mt" type="text" name="commentText" placeholder="comment..." value="<#if editedComment??>${comment.commentText}</#if>"
 		onfocus="disposeAlert('commentText')"> 

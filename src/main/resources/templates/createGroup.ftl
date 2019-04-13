@@ -6,7 +6,7 @@
 <div class="card shadow col-8">
 	<div class="card-body">
 		<div class="text-center card-text">
-			<#include "/parts/forms/createChatForm.ftl">
+			<#include "parts/forms/createGroupForm.ftl">
 		</div>
 	</div>
 </div>

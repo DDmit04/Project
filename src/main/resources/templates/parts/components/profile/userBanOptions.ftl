@@ -1,3 +1,5 @@
+<!-- uses in parts/components/profile/noAccesProfile -->
+
 <button class="btn btn-light round" id="dropdownMenuButton" data-toggle="dropdown">
 	<i class="fas fa-ellipsis-v"></i>
 </button>

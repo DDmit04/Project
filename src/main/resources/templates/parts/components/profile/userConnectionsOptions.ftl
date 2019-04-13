@@ -1,3 +1,5 @@
+<!-- parts/components/profile/noAccesProfile  -->
+
 <#if currentUsername != user.username>
 							  		
 	<#if user.isFriend>

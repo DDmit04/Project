@@ -134,5 +134,16 @@ public class ChatService {
 	public Iterable<ChatDto> findUserChats(User currentUser) {
 		return chatRepo.findUserChats(currentUser);
 	}
-	
+
+	public void updateChatSettings(User currentUser, Chat chat, String newChatName, String chatTitle, MultipartFile file) 
+			throws IllegalStateException, IOException {
+		if(currentUser.equals(chat.getChatOwner()) || chat.getChatAdmins().contains(currentUser)) {
+			chat.setChatName(newChatName);
+			chat.setChatTitle(chatTitle);
+			if(!file.isEmpty()) {
+				chat.setChatPicName(fileService.uploadFile(file, UploadType.CHAT_PIC));
+			}
+			chatRepo.save(chat);
+		}
+	}
 }

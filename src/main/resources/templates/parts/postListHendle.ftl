@@ -1,5 +1,10 @@
+<!-- uses in postList
+			 userProfile
+			 group
+			 parts/components/profile/noAccesProfile  -->
+
 <#import "showLists/showPost.ftl" as showPost> 
-<!-- is used in postList and userProfile -->
+
 <#if !isEdit>
 	<#list posts as post>
 		<@showPost.show post 0 "post" />

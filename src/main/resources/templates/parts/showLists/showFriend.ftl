@@ -1,3 +1,5 @@
+<!-- uses in friendList -->
+
 <#import "/parts/utils/showPics.ftl" as picture>
 
 <ul class="list-group shadow">

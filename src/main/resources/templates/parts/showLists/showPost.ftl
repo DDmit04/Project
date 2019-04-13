@@ -1,3 +1,6 @@
+<!-- uses in commentList
+			 parts/postHendle -->
+
 <#macro show post parentPost postType>
 
 <#import "/parts/utils/showPics.ftl" as picture>

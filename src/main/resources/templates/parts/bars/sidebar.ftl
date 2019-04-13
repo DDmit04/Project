@@ -1,3 +1,5 @@
+<!-- uses in parts/HTMLShell -->
+
 <div class="sidebar-fixed position-fixed grey lighten-3 shadow">
 	<div class="list-group list-group-flush">
 		<a class="list-group-item" href="/${currentUserId}/profile"><i class="fas fa-home mr-2"></i>My page</a>

@@ -1,3 +1,5 @@
+<!-- parts/components/profile/noAccesProfile  -->
+
 <a href="/${user.id}/profile/socialList/friends" role="button" class="btn btn-primary">
 	 friends: <span class="badge badge-light">${user.friendCount}</span>
 </a>

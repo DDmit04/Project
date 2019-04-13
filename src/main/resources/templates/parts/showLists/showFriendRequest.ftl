@@ -1,3 +1,5 @@
+<!-- uses in friendRequestList -->
+
 <#macro showFriendRequest requests requestsType>
 
 <#import "/parts/utils/showPics.ftl" as picture>

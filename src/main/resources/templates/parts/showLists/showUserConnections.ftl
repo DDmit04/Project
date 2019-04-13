@@ -1,3 +1,5 @@
+<!-- uses in userConnections -->
+
 <#import "/parts/showLists/showListsOfUsers.ftl" as userLists> 
 <#import "/parts/showLists/showGroup.ftl" as groupList> 
 

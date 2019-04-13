@@ -1,3 +1,17 @@
+<!-- uses in userProfile
+			 group
+			 chatSettings
+			 chatList
+			 chat
+			 parts/show/showUser 
+			 parts/show/showProfile
+			 parts/show/showPost
+			 parts/show/showGroup
+			 parts/show/showFriendRequest
+			 parts/show/showFriend 
+			 parts/show/showComment 
+			 parts/components/profile/noAccesProfile -->
+
 <#macro pic picAuthor picType picTarget>
 
 <#assign  isPicExist = (picAuthor.groupPicName?? || picAuthor.userPicName?? || picAuthor.chatPicName??)>

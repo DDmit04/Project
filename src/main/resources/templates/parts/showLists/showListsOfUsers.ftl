@@ -1,3 +1,8 @@
+<!-- uses in groupConnections
+			 chatCOnnections 
+			 chat
+			 parts/show/showUserConnections -->
+
 <#macro showUsers usersList listType>
 
 <#if listType == "groupOwner">

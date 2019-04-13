@@ -1,3 +1,5 @@
+<!-- uses in commentList -->
+
 <#import "/parts/utils/showPics.ftl" as picture>
 
 <#assign commentAuthor = comment.commentAuthor

@@ -33,6 +33,9 @@
 						</div>
 					</#if>
 					<a href="/${chat.chatOwner.id}/profile" class="btn btn-primary">chat owner</a>
+					<#if chat.chatOwner == currentUser || chatAdmins?seq_contains(currentUser)>
+						<a href="/chats/${chat.id}/settings" class="btn btn-primary">chat settings</a>
+					</#if>
 				</h2>
 				<!-- Modal -->
 				<div class="modal fade" id="invates" tabindex="-1" role="dialog" aria-labelledby="invates" aria-hidden="true">

@@ -1,3 +1,7 @@
+<!-- uses in groupList
+			 groupConnections
+			 parts/show/showUserConnections  -->
+
 <#macro groupList groups >
 
 <#import "/parts/utils/showPics.ftl" as picture>

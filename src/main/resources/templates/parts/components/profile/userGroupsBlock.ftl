@@ -1,3 +1,5 @@
+<!-- parts/components/profile/noAccesProfile  -->
+
 <div class="card border-secondary shadow mt-3" style="height: 300px; width: 280px;">
 	<div class="card-body">
 		<a href="/${user.id}/profile/socialList/groups">
