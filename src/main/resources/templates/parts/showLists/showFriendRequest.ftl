@@ -25,7 +25,7 @@
 						<a href="/${requesting.id}/profile" class="h6 ml-2">${requesting.username}</a>
 						<div class="ml-2">
 							<div class="my-2">
-								<small>${request.creationDate}</small>
+								<small>${request.friendRequestCreationDate}</small>
 							</div>
 							<div class="mt-2">
 								<#if requestsType == "to">

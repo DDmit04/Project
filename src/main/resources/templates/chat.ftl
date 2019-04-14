@@ -76,15 +76,18 @@
 															top:0;">
 				<#list chatMessages as message>
 				<#assign currentUserIsMessageAuthor = (message.messageAuthor.username == currentUsername) >
-	    			<li class="list-group-item mt-2">
-	    				<div class="<#if currentUserIsMessageAuthor>text-left<#else>text-right</#if>">
-	    					<#if currentUserIsMessageAuthor>
-	    						<@picture.pic message.messageAuthor "smallPic" "userPic" />${message.messageText}
-	    					<#else>
-	    						${message.messageText} <@picture.pic message.messageAuthor "smallPic" "userPic" />
-	    					</#if>
-	    				</div>
-	    			</li>
+					<#if (!DateUtills.isLater(session.connectChat, message.messageDate)) 
+					    || (DateUtills.isLater(session.disconnectChat, message.messageDate))>
+		    			<li class="list-group-item mt-2">
+		    				<div class="<#if currentUserIsMessageAuthor>text-left<#else>text-right</#if>">
+		    					<#if currentUserIsMessageAuthor>
+		    						<@picture.pic message.messageAuthor "smallPic" "userPic" />${message.messageText}
+		    					<#else>
+		    						${message.messageText} <@picture.pic message.messageAuthor "smallPic" "userPic" />
+		    					</#if>
+		    				</div>
+		    			</li>
+		    		</#if>
 	    		</#list>
     		</ul>
     			<#if currentUserIsChatMember>

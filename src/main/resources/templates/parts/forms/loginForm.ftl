@@ -17,3 +17,5 @@
       <h5 class="h5 mt-3 font-weight-normal">go to <a href="/registration">registration</a></h5> 
       <input type="hidden" name="_csrf" value="${_csrf.token}" />
 </form>
+
+<script src="/customJs/formValidate.js"></script>

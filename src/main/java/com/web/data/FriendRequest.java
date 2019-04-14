@@ -1,5 +1,7 @@
 package com.web.data;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,17 +20,15 @@ public class FriendRequest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private User requestFrom;
 	private Long requestFromId;
+	private User requestFrom;
 	private User requestTo;
-	private Long requestToId;
-	private String creationDate;
+	private LocalDateTime friendRequestCreationDate;
 	
-	public FriendRequest(String creationDate, User requestFrom , User requestTo) {
-		this.creationDate = creationDate;
+	public FriendRequest(LocalDateTime friendRequestcreationDate, User requestFrom , User requestTo) {
+		this.friendRequestCreationDate = friendRequestcreationDate;
 		this.requestFrom = requestFrom;
 		this.requestTo = requestTo;
-		this.requestToId = requestTo.getId();
 		this.requestFromId = requestFrom.getId();
 	}
 }

@@ -1,6 +1,7 @@
 package com.web.data.dto;
 
 import com.web.data.User;
+import com.web.utils.DateUtil;
 
 import lombok.Getter;
 
@@ -26,7 +27,7 @@ public class GroupDto {
 		this.subCount = subCount;
 		this.groupName = userGroup.getGroupName();
 		this.groupInformation = userGroup.getGroupInformation();
-		this.creationDate = userGroup.getCreationDate();
+		this.creationDate = DateUtil.formatDate(userGroup.getGroupCreationDate());
 		this.groupPicName = userGroup.getGroupPicName();
 		this.groupOwner = userGroup.getGroupOwner();
 		this.groupTitle = userGroup.getGroupTitle();
@@ -38,7 +39,7 @@ public class GroupDto {
 		this.id = userGroup.getId();
 		this.groupName = userGroup.getGroupName();
 		this.groupInformation = userGroup.getGroupInformation();
-		this.creationDate = userGroup.getCreationDate();
+		this.creationDate = DateUtil.formatDate(userGroup.getGroupCreationDate());
 		this.groupPicName = userGroup.getGroupPicName();
 		this.groupOwner = userGroup.getGroupOwner();
 		this.groupTitle = userGroup.getGroupTitle();

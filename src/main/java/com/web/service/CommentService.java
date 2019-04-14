@@ -1,6 +1,7 @@
 package com.web.service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.web.data.Comment;
 import com.web.data.Post;
 import com.web.data.User;
+import com.web.data.dto.CommentDto;
 import com.web.repository.CommentRepo;
 import com.web.utils.DateUtil;
 
@@ -24,14 +26,14 @@ public class CommentService {
 	private FileService fileService;
 
 	public void addComment(Post post, String commentText, User currentUser, MultipartFile commentPic) throws IllegalStateException, IOException {
-		Comment comment = new Comment(commentText, DateUtil.getLocalDate());
+		Comment comment = new Comment(commentText, LocalDateTime.now());
 		comment.setCommentedPost(post);
 		comment.setCommentAuthor(currentUser);
 		comment.setCommentPicName(fileService.uploadFile(commentPic, UploadType.COMMENT));
 		commentRepo.save(comment);		
 	}
 
-	public Iterable<Comment> findCommentsByCommentedPost(Post post) {
+	public Iterable<CommentDto> findCommentsByCommentedPost(Post post) {
 		return commentRepo.findByCommentedPost(post);
 	}
 
@@ -41,7 +43,7 @@ public class CommentService {
 
 	public void updateComment(Comment comment, String commentText, MultipartFile commentPic) throws IllegalStateException, IOException {
 		comment.setCommentText(commentText);
-		comment.setCreationDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "(edited)");
+		comment.setCommentCreationDate(LocalDateTime.now());
 		comment.setCommentPicName(fileService.uploadFile(commentPic, UploadType.COMMENT));
 		commentRepo.save(comment);
 	}

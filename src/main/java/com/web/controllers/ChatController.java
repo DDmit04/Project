@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.Chat;
+import com.web.data.ChatSession;
 import com.web.data.User;
-import com.web.data.dto.ChatDto;
-import com.web.repository.ChatRepo;
+import com.web.repository.ChatSessionRepo;
 import com.web.service.ChatService;
-import com.web.service.FileService;
-import com.web.service.UploadType;
+import com.web.utils.DateUtil;
 
 @Controller
 public class ChatController {
@@ -26,11 +25,15 @@ public class ChatController {
 	@Autowired
 	private ChatService chatService;
 	
+	@Autowired
+	private ChatSessionRepo chatSessionRepo;
+	
 	@GetMapping("messages")
 	public String getUserChats(@AuthenticationPrincipal User currentUser,
 							   Model model) {
-		Iterable<ChatDto> userChats = chatService.findUserChats(currentUser);
-		model.addAttribute("userChats", userChats);
+		Iterable<ChatSession> sessions = chatSessionRepo.findSessionsByUser(currentUser);
+		model.addAttribute("chatSessions", sessions);
+		model.addAttribute("DateUtills", new DateUtil());
 		return "chatList";
 	}
 	

@@ -21,7 +21,7 @@
 					<a href="/groups/${post.postGroup.id}" class="h5">${post.postGroup.groupName}</a>
 				</#if>
 			</div>
-			<small class="ml-2">${post.creationDate}</small>
+			<small class="ml-2">${post.postCreationDate}</small>
 		</div>
 		<#if post.postAuthor??>
 			<#if currentUsername == post.postAuthor.username && postType != "repost"> 

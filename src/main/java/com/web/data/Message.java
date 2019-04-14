@@ -1,5 +1,8 @@
 package com.web.data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,7 +25,7 @@ public class Message {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String messageText;
-	private String messageDate;
+	private LocalDateTime messageDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
@@ -32,7 +35,8 @@ public class Message {
 	@JoinColumn(name = "chat_id")
 	private Chat messageChat;
 	
-	public Message(String messageText) {
+	public Message(String messageText, LocalDateTime messageDate) {
 		this.messageText = messageText;
+		this.messageDate = messageDate;
 	}	
 }

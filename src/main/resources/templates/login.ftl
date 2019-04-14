@@ -21,7 +21,6 @@
 		<div class="col-md-6"></div>
 	</div>
 </div>
-<script src="/customJs/formValidate.js"></script>
 <script>
 	window.onload = validateLogin;
 </script>

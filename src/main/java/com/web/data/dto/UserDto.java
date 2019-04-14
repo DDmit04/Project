@@ -1,6 +1,7 @@
 package com.web.data.dto;
 
 import com.web.data.User;
+import com.web.utils.DateUtil;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +35,11 @@ public class UserDto {
 				   boolean isFriend, boolean isRequested, boolean isSub, boolean isBloking, boolean isBloked) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.registrationDate = user.getRegistrationDate();
+		if(user.getRegistrationDate() == null) {
+			this.registrationDate = "test";
+		} else {
+			this.registrationDate = DateUtil.formatDate(user.getRegistrationDate()); 
+		}
 		this.userPicName = user.getUserPicName();
 		this.friendCount = frendCount;
 		this.isFriend = isFriend;
@@ -63,7 +68,6 @@ public class UserDto {
 				   Long groupSubscriptionsCount, Long blackListCount) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.registrationDate = user.getRegistrationDate();
 		this.userPicName = user.getUserPicName();
 		this.friendCount = frendCount;
 		this.subscriptionsCount = subscriptionsCount;
@@ -77,7 +81,7 @@ public class UserDto {
 	public UserDto(User user, Long frendCount, Long subscribersCount, Long subscriptionsCount, Long groupSubscriptionsCount) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.registrationDate = user.getRegistrationDate();
+		this.registrationDate = DateUtil.formatDate(user.getRegistrationDate());
 		this.userPicName = user.getUserPicName();
 		this.friendCount = frendCount;
 		this.subscriptionsCount = subscriptionsCount;
@@ -89,7 +93,6 @@ public class UserDto {
 	public UserDto(User user, Long frendCount, Long subscriptionsCount, Long subscribersCount, boolean isChatMember) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.registrationDate = user.getRegistrationDate();
 		this.userPicName = user.getUserPicName();
 		this.isChatMember = isChatMember;
 		this.friendCount = frendCount;

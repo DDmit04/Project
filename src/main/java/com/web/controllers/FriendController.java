@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.web.data.FriendRequest;
 import com.web.data.User;
+import com.web.data.dto.FriendRequestDto;
 import com.web.service.ProfileService;
 
 @Controller
@@ -21,8 +22,8 @@ public class FriendController {
 	public String userFriendRequest(@AuthenticationPrincipal User currentUser,
 									@PathVariable String listType,
 								    Model model) {
-		Iterable<FriendRequest> friendReqestsFrom = profileService.findRequestFrom(currentUser);
-		Iterable<FriendRequest> friendReqestsTo = profileService.findRequestTo(currentUser);
+		Iterable<FriendRequestDto> friendReqestsFrom = profileService.findRequestFrom(currentUser);
+		Iterable<FriendRequestDto> friendReqestsTo = profileService.findRequestTo(currentUser);
 		model.addAttribute("friendRequestsFrom", friendReqestsFrom);
 		model.addAttribute("friendRequestsTo", friendReqestsTo);
 		model.addAttribute("friendRequestsToCount", friendReqestsTo.spliterator().getExactSizeIfKnown());

@@ -1,6 +1,8 @@
 package com.web.service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class GroupService {
 		if(groupFromDb != null) {
 			throw new GroupException("group with name" + groupFromDb.getGroupName() + "already exists!", groupFromDb);
 		}
-		Group group = new Group (groupName, groupInformation, groupTitle, DateUtil.getLocalDate());
+		Group group = new Group (groupName, groupInformation, groupTitle, LocalDateTime.now());
 		group.setGroupPicName(fileService.uploadFile(file,UploadType.GROUP_PIC));
 		group.setGroupOwner(currentUser);
 		groupRepo.save(group);	

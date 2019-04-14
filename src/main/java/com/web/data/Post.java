@@ -1,5 +1,7 @@
 package com.web.data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +32,7 @@ public class Post {
 	private Long id;
 	private String postText;
 	private String tags;
-	private String creationDate;
+	private LocalDateTime PostCreationDate;
 	private String filename;
 	private Long repostsCount = (long) 0;
 
@@ -56,9 +58,9 @@ public class Post {
 	@JoinColumn(name = "grup_id")
 	private Group postGroup;
 
-	public Post(String postText, String tags, String creationDate) {
+	public Post(String postText, String tags, LocalDateTime PostCreationDate) {
 		this.postText = postText;
 		this.tags = tags;
-		this.creationDate = creationDate;
+		this.PostCreationDate = PostCreationDate;
 	}	
 }

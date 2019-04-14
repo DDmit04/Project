@@ -1,5 +1,7 @@
 package com.web.data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -41,7 +43,7 @@ public class User implements UserDetails {
 	private String username;
 	private String password;
 	private boolean active;
-	private String registrationDate;
+	private LocalDateTime registrationDate;
 	private String userPicName;
 
 	@ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)
@@ -60,6 +62,9 @@ public class User implements UserDetails {
 	
 	@OneToMany(mappedBy = "chatOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Chat> belongChat;
+	
+	@OneToMany(mappedBy = "connectedUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private Set<ChatSession> chatSessions;
 	    
 	@OneToMany(mappedBy = "messageAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@javax.persistence.OrderBy("id")
@@ -125,7 +130,7 @@ public class User implements UserDetails {
     )
     private Set<User> inBlackList = new HashSet<>();
     
-	public User(String username, String password, String registrationDate) {
+	public User(String username, String password, LocalDateTime registrationDate) {
 		this.username = username;
 		this.password = password;
 		this.registrationDate = registrationDate;

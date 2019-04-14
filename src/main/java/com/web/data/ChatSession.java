@@ -1,6 +1,5 @@
 package com.web.data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -16,28 +15,30 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
-public class Comment {
+public class ChatSession {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private String commentText;
-	private LocalDateTime commentCreationDate;
-	private String commentPicName;
+	private LocalDateTime lastView;
+	private LocalDateTime connectChat;
+	private LocalDateTime disconnectChat;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "post_id")
-	private Post commentedPost;
+	@JoinColumn(name = "chat_id")
+	private Chat connectedChat;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
-	private User commentAuthor;
+	private User connectedUser;
 	
-	public Comment(String commentText, LocalDateTime commentCreationDate) {
-		this.commentText = commentText;
-		this.commentCreationDate = commentCreationDate;
+	public ChatSession(Chat chat, User user, LocalDateTime connectChat) {
+		this.connectedChat = chat;
+		this.connectedUser = user;
+		this.connectChat = connectChat;
 	}
+	
 }

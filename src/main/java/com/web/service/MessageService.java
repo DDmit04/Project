@@ -1,5 +1,7 @@
 package com.web.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,33 +18,37 @@ import com.web.repository.UserRepo;
 @Service
 public class MessageService {
 
-	 @Autowired
-	    private MessageRepo messageRepo;
-	    
-	    @Autowired
-	    private ChatRepo chatRepo;
-	    
-	    @Autowired
-	    private UserRepo userRepo;
+	@Autowired
+	private MessageRepo messageRepo;
 
-		public User findUserByUsername(User currentUser) {
-			return userRepo.findByUsername(currentUser.getUsername());
-		}
+	@Autowired
+	private ChatRepo chatRepo;
 
-		public UserDto findOneUserToChat(User currentUser, Chat chat) {
-			return userRepo.findOneToChat(currentUser.getId(), chat);
-		}
+	@Autowired
+	private UserRepo userRepo;
 
-		public ChatDto findOneChat(Chat chat) {
-			return chatRepo.findOneChat(chat.getId());
-		}
+	public User findUserByUsername(User currentUser) {
+		return userRepo.findByUsername(currentUser.getUsername());
+	}
 
-		public void createMessage(Long chatId, MessageJson jsonMessage) {
-			Chat chat = chatRepo.findChatById(chatId);
-	    	User messageAuthor = userRepo.findByUsername(jsonMessage.getSender());
-	    	Message message = new Message(jsonMessage.getContent());
-	    	message.setMessageAuthor(messageAuthor);
-	    	message.setMessageChat(chat);
-			messageRepo.save(message);			
-		}
+	public UserDto findOneUserToChat(User currentUser, Chat chat) {
+		return userRepo.findOneToChat(currentUser.getId(), chat);
+	}
+
+	public ChatDto findOneChat(Chat chat) {
+		return chatRepo.findOneChat(chat.getId());
+	}
+
+	public void createMessage(Long chatId, MessageJson jsonMessage) {
+		LocalDateTime messageTime = LocalDateTime.now();
+		Chat chat = chatRepo.findChatById(chatId);
+		User messageAuthor = userRepo.findByUsername(jsonMessage.getSender());
+		Message message = new Message(jsonMessage.getContent(), messageTime);
+		message.setMessageAuthor(messageAuthor);
+		message.setMessageChat(chat);
+		messageRepo.save(message);
+
+		chat.setLastMessageDate(messageTime);
+		chatRepo.save(chat);
+	}
 }

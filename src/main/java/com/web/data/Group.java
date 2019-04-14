@@ -1,5 +1,7 @@
 package com.web.data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,9 +34,9 @@ public class Group {
 	private Long id;
 	private String groupName;
 	private String groupInformation;
-	private String creationDate;
 	private String groupPicName;
 	private String groupTitle;
+	private LocalDateTime groupCreationDate;
 	
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -64,8 +66,8 @@ public class Group {
 	@OneToMany(mappedBy = "postGroup", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Post> groupPosts;
 
-	public Group(String groupName, String groupInformation, String groupTitle,  String creationDate) {
-		this.creationDate = creationDate;
+	public Group(String groupName, String groupInformation, String groupTitle, LocalDateTime groupCreationDate) {
+		this.groupCreationDate = groupCreationDate;
 		this.groupName = groupName;
 		this.groupInformation = groupInformation;
 		this.groupTitle = groupTitle;

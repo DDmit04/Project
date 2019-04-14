@@ -1,6 +1,8 @@
 package com.web.service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.FriendRequest;
 import com.web.data.User;
+import com.web.data.dto.FriendRequestDto;
 import com.web.repository.CommentRepo;
 import com.web.repository.FriendRequestRepo;
 import com.web.repository.UserRepo;
@@ -29,7 +32,7 @@ public class ProfileService {
 	private FileService fileService;
 	
 	public void addFriendRequest(User user, User currentUser) {
-		FriendRequest friendReqest = new FriendRequest(DateUtil.getLocalDate(), currentUser, user);
+		FriendRequest friendReqest = new FriendRequest(LocalDateTime.now(), currentUser, user);
 		friendRequestRepo.save(friendReqest);		
 	}
 	
@@ -38,7 +41,7 @@ public class ProfileService {
 	}
 	
 	public void deleteFriendRequest(User user, User currentUser, FriendRequest frendReqest) {
-		FriendRequest counterRequest = friendRequestRepo.findOneRequest(user.getId(), currentUser.getId());
+		FriendRequest counterRequest = friendRequestRepo.findOneRequest(user, currentUser);
 		if(counterRequest != null) {
 			friendRequestRepo.delete(counterRequest);
 		}
@@ -81,8 +84,8 @@ public class ProfileService {
 			deleteFriend(user, currentUser);
 		}
 		userRepo.save(currentUser);
-		FriendRequest counterRequestTo = friendRequestRepo.findOneRequest(user.getId(), currentUser.getId());
-		FriendRequest counterRequestFrom = friendRequestRepo.findOneRequest(currentUser.getId(), user.getId());
+		FriendRequest counterRequestTo = friendRequestRepo.findOneRequest(user, currentUser);
+		FriendRequest counterRequestFrom = friendRequestRepo.findOneRequest(currentUser, user);
 		if(counterRequestFrom != null) {
 			friendRequestRepo.delete(counterRequestFrom);
 		}
@@ -108,12 +111,12 @@ public class ProfileService {
 		userRepo.save(currentUser);
 	}
 	
-	public Iterable<FriendRequest> findRequestTo(User currentUser) {
-		return friendRequestRepo.findByRequestToId(currentUser.getId());
+	public Iterable<FriendRequestDto> findRequestTo(User currentUser) {
+		return friendRequestRepo.findByRequestToId(currentUser);
 	}
 
-	public Iterable<FriendRequest> findRequestFrom(User currentUser) {
-		return friendRequestRepo.findByRequestFromId(currentUser.getId());
+	public Iterable<FriendRequestDto> findRequestFrom(User currentUser) {
+		return friendRequestRepo.findByRequestFromId(currentUser);
 	}
 
 }

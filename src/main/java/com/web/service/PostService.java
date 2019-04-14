@@ -1,6 +1,8 @@
 package com.web.service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,14 +33,14 @@ public class PostService {
 	}
 	
 	public Post createPost(String postText, User user, String tags, MultipartFile file) throws IllegalStateException, IOException {
-		Post post = new Post(postText, tags, DateUtil.getLocalDate("yyyy-MM-dd HH:mm:ss"));
+		Post post = new Post(postText, tags, LocalDateTime.now());
 		post.setPostAuthor(user);
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
 		return post;
 	}
 	
 	public Post createGroupPost(String postText, Group group, String tags, MultipartFile file) throws IllegalStateException, IOException {
-		Post post = new Post(postText, tags, DateUtil.getLocalDate("yyyy-MM-dd HH:mm:ss"));
+		Post post = new Post(postText, tags, LocalDateTime.now());
 		post.setPostGroup(group);
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
 		return post;
@@ -47,7 +49,7 @@ public class PostService {
 	public void updatePost(Post post, String text, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		post.setPostText(text);
 		post.setTags(tags);
-		post.setCreationDate(DateUtil.getLocalDate() + " (edited)");
+		post.setPostCreationDate(LocalDateTime.now());
 		post.setFilename(fileService.uploadFile(file, UploadType.POST));
 		postRepo.save(post);
 	}

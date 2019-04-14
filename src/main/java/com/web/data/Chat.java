@@ -1,5 +1,6 @@
 package com.web.data;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,10 +32,15 @@ public class Chat {
 	private String chatName;
 	private String chatTitle;
 	private String chatPicName;
+	private LocalDateTime chatCreationDate;
+	private LocalDateTime lastMessageDate;
 	
-	 @ManyToOne(fetch = FetchType.EAGER)
-	 @JoinColumn(name = "user_id")
-	 private User chatOwner;
+	@OneToMany(mappedBy = "connectedChat", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private Set<ChatSession> sessions;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_id")
+	private User chatOwner;
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
 	@JoinTable(name = "user_chats", 
@@ -67,5 +73,9 @@ public class Chat {
 	@OneToMany(mappedBy = "messageChat", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@javax.persistence.OrderBy("id")
 	private Set<Message> chatMessages = new HashSet<>();
-	
+
+	public Chat(String chatName, LocalDateTime chatCreationDate) {
+		this.chatName = chatName;
+		this.chatCreationDate = chatCreationDate;
+	}
 }
