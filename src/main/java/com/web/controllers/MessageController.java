@@ -40,13 +40,12 @@ public class MessageController {
 							  Model model) {
 		if (chat.getChatMembers().contains(currentUser) || chat.getChatsArcive().contains(currentUser)) {
 			
-			
+			//on work
 			ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, currentUser);
 			session.setLastView(LocalDateTime.now());
 			chatSessionRepo.save(session);
 			
-			ChatSession session1 = chatSessionRepo.findSessionByChatAndUser(chat, currentUser);
-			model.addAttribute("session", session1);
+			model.addAttribute("session", session);
 			model.addAttribute("DateUtills", new DateUtil());
 			
 			

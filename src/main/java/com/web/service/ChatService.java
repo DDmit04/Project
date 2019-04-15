@@ -21,10 +21,10 @@ public class ChatService {
 	private ChatRepo chatRepo;
 	
 	@Autowired
-	private ChatSessionRepo chatSessionRepo;
+	private FileService fileService;
 	
 	@Autowired
-	private FileService fileService;
+	private ChatSessionService chatSessionService;
 	
 	public boolean userIsAdminOrOwner (User user, User currentUser, Chat chat) {
 		return chat.getChatOwner().equals(currentUser) || chat.getChatAdmins().contains(currentUser);
@@ -41,25 +41,12 @@ public class ChatService {
 		chat.getChatAdmins().add(currentUser);
 		chat.getChatsArcive().add(currentUser);
 		chatRepo.save(chat);
-		createSession(chat, currentUser);
+		chatSessionService.createChatSession(chat, currentUser);
 		return chat;
 	}
 
-	private void createSession(Chat chat, User currentUser) {
-		ChatSession session = new ChatSession(chat, currentUser, LocalDateTime.now());
-		session.setLastView(LocalDateTime.now());
-		chatSessionRepo.save(session);
-	}
-	
-	private void deleteSession(Chat chat, User currentUser) {
-		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, currentUser);
-		chatSessionRepo.delete(session);
-	}
-
 	public Chat createChat(User user, User currentUser) {
-		Chat chat = new Chat();
-		chat.setChatCreationDate(LocalDateTime.now());
-		chat.setChatName(currentUser.getUsername() + " - " + user.getUsername());
+		Chat chat = new Chat(currentUser.getUsername() + " - " + user.getUsername(), LocalDateTime.now());
 		chat.setLastMessageDate(LocalDateTime.now());
 		chatRepo.save(chat);
 		chat.setChatOwner(currentUser);
@@ -68,8 +55,8 @@ public class ChatService {
 		chat.getChatsArcive().add(currentUser);
 		chat.getChatsArcive().add(user);
 		chatRepo.save(chat);
-		createSession(chat, currentUser);
-		createSession(chat, user);
+		chatSessionService.createChatSession(chat, currentUser);
+		chatSessionService.createChatSession(chat, user);
 		return chat;
 	}
 	
@@ -82,7 +69,7 @@ public class ChatService {
 				 chat.getChatMembers().remove(user);
 			 }
 			 chat.getChatsArcive().remove(user);
-			 deleteSession(chat, currentUser);
+			 chatSessionService.deleteChatSession(chat, currentUser);
 			 chatRepo.save(chat);
 		 }		
 	}
@@ -91,16 +78,14 @@ public class ChatService {
 		chat.getChatMembers().add(user);
 		chat.getChatsArcive().add(user);
 		chatRepo.save(chat);		
-		createSession(chat, user);
+		chatSessionService.createChatSession(chat, user);
 	}
 
 	public void userLeave(User user, User currentUser, Chat chat) {
 		if (currentUser.equals(user)) {
 			chat.getChatMembers().remove(user);
 			chatRepo.save(chat);
-			ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
-			session.setDisconnectChat(LocalDateTime.now());
-			chatSessionRepo.save(session);
+			chatSessionService.setDisonnectionDate(chat, user);
 		}
 	}
 
@@ -109,18 +94,14 @@ public class ChatService {
 			 chat.getChatMembers().add(user);
 		 }
 		 chatRepo.save(chat);
-		 ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
-		 session.setConnectChat(LocalDateTime.now());
-		 chatSessionRepo.save(session);
+		 chatSessionService.setConnectionDate(chat, user);
 	}
 
 	public void chaseOutUser(User user, User currentUser, Chat chat) {
 		if (userIsAdminOrOwner(user, currentUser, chat)) {
 			chat.getChatMembers().remove(user);
 			chatRepo.save(chat);
-			ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
-			session.setDisconnectChat(LocalDateTime.now());
-			chatSessionRepo.save(session);
+			chatSessionService.setDisonnectionDate(chat, user);
 		}		
 	}
 
@@ -143,9 +124,7 @@ public class ChatService {
 			chat.getChatBanList().add(user);
 			chat.getChatMembers().remove(user);
 			chatRepo.save(chat);
-			ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
-			session.setDisconnectChat(LocalDateTime.now());
-			chatSessionRepo.save(session);
+			chatSessionService.setDisonnectionDate(chat, user);
 		}
 	}
 

@@ -40,5 +40,20 @@ public class DateUtil {
 		}
 		return res;
 	}
-
+	
+	public static boolean dateInRange(LocalDateTime currentDate, LocalDateTime date, LocalDateTime date1) {
+		if(currentDate.isAfter(date) && currentDate.isBefore(date1)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static boolean isSameDate(LocalDateTime date, LocalDateTime date1) {
+		if(date.equals(date1)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

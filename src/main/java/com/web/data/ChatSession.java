@@ -1,7 +1,12 @@
 package com.web.data;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,8 +30,12 @@ public class ChatSession {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private LocalDateTime lastView;
-	private LocalDateTime connectChat;
-	private LocalDateTime disconnectChat;
+	private boolean isConnected;
+	
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ChatSessionConnection> dates = new HashSet<>();
+    
+    private Long lastConnectionId;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "chat_id")
@@ -35,10 +45,10 @@ public class ChatSession {
 	@JoinColumn(name = "user_id")
 	private User connectedUser;
 	
-	public ChatSession(Chat chat, User user, LocalDateTime connectChat) {
+	public ChatSession(Chat chat, User user, boolean isConnected) {
 		this.connectedChat = chat;
 		this.connectedUser = user;
-		this.connectChat = connectChat;
+		this.isConnected = isConnected;
 	}
 	
 }

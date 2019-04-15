@@ -75,20 +75,22 @@
 															overflow: auto;
 															top:0;">
 				<#list chatMessages as message>
-				<#assign currentUserIsMessageAuthor = (message.messageAuthor.username == currentUsername) >
-					<#if (!DateUtills.isLater(session.connectChat, message.messageDate)) 
-					    || (DateUtills.isLater(session.disconnectChat, message.messageDate))>
-		    			<li class="list-group-item mt-2">
-		    				<div class="<#if currentUserIsMessageAuthor>text-left<#else>text-right</#if>">
-		    					<#if currentUserIsMessageAuthor>
-		    						<@picture.pic message.messageAuthor "smallPic" "userPic" />${message.messageText}
-		    					<#else>
-		    						${message.messageText} <@picture.pic message.messageAuthor "smallPic" "userPic" />
-		    					</#if>
-		    				</div>
-		    			</li>
-		    		</#if>
-	    		</#list>
+				<#assign currentUserIsMessageAuthor = (message.messageAuthor.username == currentUsername)>
+					<#list session.dates as date>
+						<#if (!date.disconnectChat?? && !DateUtills.isLater(date.connectChat, message.messageDate))
+							|| (date.disconnectChat?? && DateUtills.dateInRange(message.messageDate, date.connectChat, date.disconnectChat))>
+			    			<li class="list-group-item mt-2">
+			    				<div class="<#if currentUserIsMessageAuthor>text-left<#else>text-right</#if>">
+			    					<#if currentUserIsMessageAuthor>
+			    						<@picture.pic message.messageAuthor "smallPic" "userPic" />${message.messageText}
+			    					<#else>
+			    						${message.messageText} <@picture.pic message.messageAuthor "smallPic" "userPic" />
+			    					</#if>
+			    				</div>
+			    			</li>
+			    		</#if>
+			    	</#list>
+		    	</#list>
     		</ul>
     			<#if currentUserIsChatMember>
 		            <form id="messageForm" name="messageForm" nameForm="messageForm">
