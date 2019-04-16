@@ -56,11 +56,7 @@ public class CommentController {
 							    @PathVariable Post post,
 								@PathVariable Comment comment,
 								Model model) {
-		if(((comment.getCommentAuthor().equals(currentUser)))
-			|| (post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser))
-			|| (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser))) {
-			commentService.deleteComment(comment);
-		}
+		commentService.deleteComment(currentUser, post, comment);
 		return "redirect:/" + post.getId() + "/comments";
 	}
 	
@@ -84,9 +80,7 @@ public class CommentController {
 							  @RequestParam("commentPic") MultipartFile commentPic,
 							  @RequestParam String commentText,
 							  Model model) throws IllegalStateException, IOException {
-		if(comment.getCommentAuthor().equals(currentUser)) {
-			commentService.updateComment(comment, commentText, commentPic);
-		}
+		commentService.updateComment(currentUser, comment, commentText, commentPic);
 		return "redirect:/" + post.getId() + "/comments";
 	}
 

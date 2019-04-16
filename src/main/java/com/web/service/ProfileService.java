@@ -1,7 +1,6 @@
 package com.web.service;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import com.web.data.dto.FriendRequestDto;
 import com.web.repository.CommentRepo;
 import com.web.repository.FriendRequestRepo;
 import com.web.repository.UserRepo;
-import com.web.utils.DateUtil;
 
 @Service
 public class ProfileService {

@@ -1,7 +1,6 @@
 package com.web.controllers;
 
-import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -21,9 +20,9 @@ import com.web.data.MessageJson;
 import com.web.data.User;
 import com.web.data.dto.ChatDto;
 import com.web.data.dto.UserDto;
-import com.web.repository.ChatSessionRepo;
+import com.web.service.ChatSessionConnectionService;
+import com.web.service.ChatSessionService;
 import com.web.service.MessageService;
-import com.web.utils.DateUtil;
  
 @Controller
 public class MessageController {
@@ -32,31 +31,25 @@ public class MessageController {
     private MessageService messageService;
     
     @Autowired
-	private ChatSessionRepo chatSessionRepo;
+   	private ChatSessionConnectionService chatSessionConnectionService;
+    
+    @Autowired
+   	private ChatSessionService chatSessionService;
 	    
     @GetMapping("chats/{chat}")
 	public String getMessages(@AuthenticationPrincipal User currentUser, 
 							  @PathVariable Chat chat, 
 							  Model model) {
 		if (chat.getChatMembers().contains(currentUser) || chat.getChatsArcive().contains(currentUser)) {
-			
-			//on work
-			ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, currentUser);
-			session.setLastView(LocalDateTime.now());
-			chatSessionRepo.save(session);
-			
-			model.addAttribute("session", session);
-			model.addAttribute("DateUtills", new DateUtil());
-			
-			
-			
+			ChatSession session = chatSessionService.findSession(currentUser, chat);
+			chatSessionConnectionService.setLastView(session);
 			User userFromDb = messageService.findUserByUsername(currentUser);
 			UserDto userDto = messageService.findOneUserToChat(currentUser, chat);
 			ChatDto chatDto = messageService.findOneChat(chat);
-			Set<Message> chatMessages = chat.getChatMessages();
-			
+			LinkedList<Message> chatMessages = messageService.findChatMessages(session, chat);
 			model.addAttribute("user", userDto);
 			model.addAttribute("chat", chatDto);
+			model.addAttribute("session", session);
 			model.addAttribute("chatMessages", chatMessages);
 			model.addAttribute("friends", userFromDb.getUserFriends());
 			model.addAttribute("subscriptions", userFromDb.getSubscriptions());

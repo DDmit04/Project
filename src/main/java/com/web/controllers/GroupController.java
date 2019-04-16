@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.web.data.User;
 import com.web.data.Group;
+import com.web.data.User;
+import com.web.data.dto.GroupDto;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
 import com.web.exceptions.GroupException;
-import com.web.data.dto.GroupDto;
-import com.web.repository.GroupRepo;
 import com.web.service.GroupService;
 import com.web.service.PostService;
 import com.web.service.UserService;
@@ -109,7 +108,7 @@ public class GroupController {
 							 @PathVariable User user,
 							 @PathVariable Group group) {
 		if(user.equals(currentUser)) {
-			groupService.removeGroupSub(group, user);
+			groupService.removeGroupSub(user, group);
 		}
 		return "redirect:/groups/" + group.getId();
 	}
@@ -118,9 +117,8 @@ public class GroupController {
 	public String addAdmin(@AuthenticationPrincipal User currentUser,
 						   @PathVariable Group group,
 						   @PathVariable User user) {
-		if(group.getGroupOwner().equals(currentUser)) {
-			groupService.addGroupAdmin(group, user);
-		}
+		
+		groupService.addGroupAdmin(currentUser, user, group);
 		return "redirect:/groups/" + group.getId() + "/socialList/groupAdmins";
 	}
 	
@@ -128,9 +126,8 @@ public class GroupController {
 	public String removeAdmin(@AuthenticationPrincipal User currentUser,
 							  @PathVariable Group group,
 							  @PathVariable User user) {
-		if(group.getGroupOwner().equals(currentUser) || user.equals(currentUser)) {
-			groupService.removeGroupAdmin(group, user);
-		}
+		
+		groupService.removeGroupAdmin(currentUser, user, group);
 		return "redirect:/groups/" + group.getId() + "/socialList/groupAdmins";
 	}
 	
@@ -138,9 +135,7 @@ public class GroupController {
 	public String banUserInGroup(@AuthenticationPrincipal User currentUser,
 						  		 @PathVariable Group group,
 						  		 @PathVariable User user) {
-		if(group.getGroupOwner().equals(currentUser) || group.getGroupAdmins().contains(currentUser)) {
-			groupService.banUser(group, user);
-		}
+		groupService.banUser(currentUser, user, group);
 		return "redirect:/groups/" + group.getId() + "/socialList/groupBanList";
 	}
 	
@@ -148,9 +143,7 @@ public class GroupController {
 	public String unbanUserInGroup(@AuthenticationPrincipal User currentUser,
 					 	 		   @PathVariable Group group,
 					 	 		   @PathVariable User user) {
-		if(group.getGroupOwner().equals(currentUser) || group.getGroupAdmins().contains(currentUser)) {
-			groupService.unbanUser(group, user);
-		}
+		groupService.unbanUser(currentUser, user, group);
 		return "redirect:/groups/" + group.getId() + "/socialList/groupBanList";
 	}
 	

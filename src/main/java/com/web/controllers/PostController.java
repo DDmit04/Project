@@ -1,7 +1,6 @@
 package com.web.controllers;
 
 import java.io.IOException;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +19,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
-import com.web.data.dto.UserDto;
 import com.web.service.PostService;
 
 @Controller
@@ -84,20 +82,14 @@ public class PostController {
 						   @RequestParam String tags, 
 						   @RequestParam("file") MultipartFile file,
 						   Model model) throws IllegalStateException, IOException {
-		if((post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser))
-		|| (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser))) {
-			postService.updatePost(post, postText, tags, file);
-		}
+		postService.updatePost(currentUser, post, postText, tags, file);
 		return "redirect:/posts";
 	}
 	
 	@GetMapping("{post}/delete")
 	public String deletePost(@AuthenticationPrincipal User currentUser,
 							 @PathVariable Post post) {
-		if((post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser))
-		|| (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser))) {
-			postService.deletePost(post, currentUser);
-		}
+		postService.deletePost(currentUser, post);
 		return "redirect:/posts";
 	}
 	
@@ -106,10 +98,7 @@ public class PostController {
 							   @PathVariable Post post,
 			 				   RedirectAttributes redirectAttributes,
 			 				   @RequestHeader(required = false) String referer) {
-		if((post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser))
-		|| (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser))) {
-			postService.removeRepost(post);
-		}
+		postService.removeRepost(currentUser, post);
 		return "redirect:/" + post.getId() + "/edit" ;		
 	}
 	
@@ -119,14 +108,7 @@ public class PostController {
 						   @PathVariable Post post,
 						   RedirectAttributes redirectAttributes,
 						   @RequestHeader(required = false) String referer) {
-		if(user.equals(currentUser)) {
-			Set<User> like = post.getPostLikes();
-			if(like.contains(user)) {
-				like.remove(user);
-			} else {
-				like.add(user);
-			}
-		}
+		postService.like(currentUser, user, post);
 		UriComponents components = UriComponentsBuilder.fromHttpUrl(referer).build();
 		components.getQueryParams()
 			.entrySet()

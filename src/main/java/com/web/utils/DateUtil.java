@@ -1,9 +1,9 @@
 package com.web.utils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Set;
+import java.util.List;
+import java.util.ListIterator;
 
 import com.web.data.Message;
 
@@ -27,30 +27,22 @@ public class DateUtil {
         return formatDateTime;
 	}
 	
-	public static boolean isLater(LocalDateTime date, LocalDateTime date1) {
-		return date.isAfter(date1);
+	public static boolean isLater(LocalDateTime firstDate, LocalDateTime secondDate) {
+		return firstDate.isAfter(secondDate);
 	}
 	
-	public static Long calculateNewMessages(Iterable<Message> messages, LocalDateTime date) {
+	public static Long calculateNewMessages(List<Message> messages, LocalDateTime lastViewDate) {
 		Long res = (long) 0;
-		for(Message message : messages ) {
-			if(message.getMessageDate().isAfter(date)) {
-				res++;
-			}
+		ListIterator<Message> iterator = messages.listIterator(messages.size()); 
+		while(iterator.hasPrevious() 
+				&& iterator.previous().getMessageDate().isAfter(lastViewDate)) {
+			res++;
 		}
 		return res;
 	}
 	
 	public static boolean dateInRange(LocalDateTime currentDate, LocalDateTime date, LocalDateTime date1) {
 		if(currentDate.isAfter(date) && currentDate.isBefore(date1)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public static boolean isSameDate(LocalDateTime date, LocalDateTime date1) {
-		if(date.equals(date1)) {
 			return true;
 		} else {
 			return false;

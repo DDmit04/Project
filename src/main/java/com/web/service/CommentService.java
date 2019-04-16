@@ -1,9 +1,7 @@
 package com.web.service;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +12,6 @@ import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.CommentDto;
 import com.web.repository.CommentRepo;
-import com.web.utils.DateUtil;
 
 @Service
 public class CommentService {
@@ -37,15 +34,21 @@ public class CommentService {
 		return commentRepo.findByCommentedPost(post);
 	}
 
-	public void deleteComment(Comment comment) {
-		commentRepo.delete(comment);
+	public void deleteComment(User currentUser, Post post, Comment comment) {
+		if(((comment.getCommentAuthor().equals(currentUser)))
+			|| (post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser))
+			|| (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser))) {
+			commentRepo.delete(comment);
+		}
 	}
 
-	public void updateComment(Comment comment, String commentText, MultipartFile commentPic) throws IllegalStateException, IOException {
-		comment.setCommentText(commentText);
-		comment.setCommentCreationDate(LocalDateTime.now());
-		comment.setCommentPicName(fileService.uploadFile(commentPic, UploadType.COMMENT));
-		commentRepo.save(comment);
+	public void updateComment(User currentUser, Comment comment, String commentText, MultipartFile commentPic) throws IllegalStateException, IOException {
+		if(comment.getCommentAuthor().equals(currentUser)) {
+			comment.setCommentText(commentText);
+			comment.setCommentCreationDate(LocalDateTime.now());
+			comment.setCommentPicName(fileService.uploadFile(commentPic, UploadType.COMMENT));
+			commentRepo.save(comment);
+		}
 	}
 
 }

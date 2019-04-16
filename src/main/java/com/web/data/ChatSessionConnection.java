@@ -23,7 +23,6 @@ public class ChatSessionConnection {
 	private Long id;
 	private LocalDateTime connectChat;
 	private LocalDateTime disconnectChat;
-	private boolean isLastDate;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "chat_session_id")

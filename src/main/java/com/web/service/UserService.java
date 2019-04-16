@@ -1,8 +1,6 @@
 package com.web.service;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +10,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.web.data.User;
 import com.web.data.Group;
+import com.web.data.User;
 import com.web.data.UserRoles;
 import com.web.data.dto.UserDto;
 import com.web.exceptions.UserException;
 import com.web.exceptions.UserExceptionType;
 import com.web.repository.UserRepo;
-import com.web.utils.DateUtil;
 
 @Service
 public class UserService implements UserDetailsService{

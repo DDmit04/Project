@@ -1,7 +1,6 @@
 package com.web.service;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import com.web.data.dto.GroupDto;
 import com.web.exceptions.GroupException;
 import com.web.repository.CommentRepo;
 import com.web.repository.GroupRepo;
-import com.web.utils.DateUtil;
 
 @Service
 public class GroupService {
@@ -50,18 +48,22 @@ public class GroupService {
 		groupRepo.save(group);
 	}
 	
-	public void banUser(Group group, User user) {
-		group.getGroupBanList().add(user);
-		if(group.getGroupAdmins().contains(user)) {
-			group.getGroupAdmins().remove(user);
+	public void banUser(User currentUser, User user, Group group) {
+		if(userIsGroupOwner(currentUser, group) || userIsGroupAdmin(currentUser, group)) {
+			group.getGroupBanList().add(user);
+			if(group.getGroupAdmins().contains(user)) {
+				group.getGroupAdmins().remove(user);
+			}
+			groupRepo.save(group);
+			commentRepo.deleteAll(commentRepo.findBannedComments(group, user));
 		}
-		groupRepo.save(group);
-		commentRepo.deleteAll(commentRepo.findBannedComments(group, user));
 	}
 
-	public void unbanUser(Group group, User user) {
-		group.getGroupBanList().remove(user);
-		groupRepo.save(group);		
+	public void unbanUser(User currentUser, User user, Group group) {
+		if(userIsGroupOwner(currentUser, group) || userIsGroupAdmin(currentUser, group)) {
+			group.getGroupBanList().remove(user);
+			groupRepo.save(group);		
+		}
 	}
 	
 	public void addGroupSub(Group group, User user) {
@@ -69,19 +71,31 @@ public class GroupService {
 		groupRepo.save(group);
 	}
 
-	public void removeGroupSub(Group group, User user) {
+	public void removeGroupSub(User user, Group group) {
 		group.getGroupSubs().remove(user);
 		groupRepo.save(group);		
 	}
 
-	public void addGroupAdmin(Group group, User user) {
-		group.getGroupAdmins().add(user);
-		groupRepo.save(group);		
+	public void addGroupAdmin(User currentUser, User user, Group group) {
+		if(userIsGroupOwner(currentUser, group)) {
+			group.getGroupAdmins().add(user);
+			groupRepo.save(group);		
+		}
 	}
 
-	public void removeGroupAdmin(Group group, User user) {
-		group.getGroupAdmins().remove(user);
-		groupRepo.save(group);				
+	public void removeGroupAdmin(User currentUser, User user, Group group) {
+		if(userIsGroupOwner(currentUser, group) || user.equals(currentUser)) {
+			group.getGroupAdmins().remove(user);
+			groupRepo.save(group);	
+		}
+	}
+	
+	public boolean userIsGroupOwner(User currentUser, Group group) {
+		return group.getGroupOwner().equals(currentUser);
+	}
+	
+	public boolean userIsGroupAdmin(User currentUser, Group group) {
+		return group.getGroupAdmins().contains(currentUser);
 	}
 
 	public GroupDto findOneGroup(Group group, User currentUser) {
