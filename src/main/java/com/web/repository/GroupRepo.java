@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import com.web.data.User;
 import com.web.data.Group;
 import com.web.data.dto.GroupDto;
+import com.web.data.dto.SearchResultsGeneric;
 
 public interface GroupRepo extends CrudRepository<Group, Long> {
 	
@@ -39,5 +40,14 @@ public interface GroupRepo extends CrudRepository<Group, Long> {
 		   "   from Group ug " +
 		   "   group by ug")
 	Iterable<GroupDto> findAllGroupsDto();
+
+	@Query("select new com.web.data.dto.GroupDto(" +
+			   "   ug, " +
+			   "   (select count(*) from ug.groupSubs) " +
+			   "   )" +
+			   "   from Group ug " +
+			   "   where ug.groupName like concat('%',:search,'%')" +
+			   "   group by ug")
+	Iterable<GroupDto> searchGroupsDto(@Param("search") String search);
 	
 }

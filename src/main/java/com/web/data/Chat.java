@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,45 +36,38 @@ public class Chat {
 	private LocalDateTime chatCreationDate;
 	private LocalDateTime lastMessageDate;
 	
-	@OneToMany(mappedBy = "connectedChat", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	private Set<ChatSession> sessions;
-	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	private User chatOwner;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
+	@OneToMany(mappedBy = "connectedChat", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private Set<ChatSession> sessions;
+	
+	@OrderBy("id")	
+	@OneToMany(mappedBy = "messageChat", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private Set<Message> chatMessages = new HashSet<>();
+	
+	@ManyToMany(fetch = FetchType.EAGER) 
 	@JoinTable(name = "user_chats", 
 				joinColumns = { @JoinColumn(name = "chat_id") },
 				inverseJoinColumns = { @JoinColumn(name = "user_id") } 
 	)   	
 	private Set<User> chatMembers = new HashSet<>();
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) 
-	@JoinTable(name = "saved_user_chats", 
-				joinColumns = { @JoinColumn(name = "chat_id") },
-				inverseJoinColumns = { @JoinColumn(name = "user_id") } 
-	)   	
-	private Set<User> chatsArcive = new HashSet<>();
-	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
    	@JoinTable(name = "chat_banned_users", 
    		joinColumns = { @JoinColumn(name = "group_id") },
    		inverseJoinColumns = { @JoinColumn(name = "user_id") } 
    	)
 	private Set<User> chatBanList = new HashSet<>();
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "admined_chats", 
 		joinColumns = { @JoinColumn(name = "chat_id") },
 		inverseJoinColumns = { @JoinColumn(name = "user_id") } 
 	)
 	private Set<User> chatAdmins = new HashSet<>();
 	
-	@OneToMany(mappedBy = "messageChat", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	@javax.persistence.OrderBy("id")
-	private Set<Message> chatMessages = new HashSet<>();
-
 	public Chat(String chatName, LocalDateTime chatCreationDate) {
 		this.chatName = chatName;
 		this.chatCreationDate = chatCreationDate;

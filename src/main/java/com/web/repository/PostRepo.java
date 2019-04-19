@@ -18,6 +18,7 @@ public interface PostRepo extends CrudRepository<Post, Long> {
             ") " +
             "from Post p left join p.postLikes pl " +
             "group by p")
+	//uses in search
     Iterable<PostDto> findAll(@Param("currentUser") User currentUser);
 	
 	@Query("select new com.web.data.dto.PostDto(" +
@@ -28,6 +29,7 @@ public interface PostRepo extends CrudRepository<Post, Long> {
             "from Post p left join p.postLikes pl " +
             "where p.tags = :tags " +
             "group by p")
+	//uses in search
     Iterable<PostDto> findByTag(@Param("currentUser") User currentUser, @Param("tags") String tags);
 	
 	@Query("select new com.web.data.dto.PostDto(" +

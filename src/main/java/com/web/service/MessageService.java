@@ -37,15 +37,14 @@ public class MessageService {
 	}
 
 	public UserDto findOneUserToChat(User currentUser, Chat chat) {
-		return userRepo.findOneToChat(currentUser.getId(), chat);
+		return userRepo.findOneUserToChat(currentUser.getId(), chat);
 	}
 
 	public ChatDto findOneChat(Chat chat) {
 		return chatRepo.findOneChat(chat.getId());
 	}
 
-	public void createMessage(Long chatId, MessageJson jsonMessage) {
-		LocalDateTime messageTime = LocalDateTime.now();
+	public void createMessage(Long chatId, MessageJson jsonMessage, LocalDateTime messageTime) {
 		Chat chat = chatRepo.findChatById(chatId);
 		User messageAuthor = userRepo.findByUsername(jsonMessage.getSender());
 		Message message = new Message(jsonMessage.getContent(), messageTime);

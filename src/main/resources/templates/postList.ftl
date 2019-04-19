@@ -1,7 +1,7 @@
 <#import "parts/HTMLshell.ftl" as shell> 
 <@shell.htmlPage> 
 
-<div class="col-8">
+<div class="col-md-9">
 	<#include "parts/forms/addPostForm.ftl">
 	<#include "parts/postListHendle.ftl">
 </div>

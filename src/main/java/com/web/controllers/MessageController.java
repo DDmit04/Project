@@ -1,5 +1,6 @@
 package com.web.controllers;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,8 @@ public class MessageController {
 	public String getMessages(@AuthenticationPrincipal User currentUser, 
 							  @PathVariable Chat chat, 
 							  Model model) {
-		if (chat.getChatMembers().contains(currentUser) || chat.getChatsArcive().contains(currentUser)) {
-			ChatSession session = chatSessionService.findSession(currentUser, chat);
+    	ChatSession session = chatSessionService.findSession(currentUser, chat);
+		if (session != null) {
 			chatSessionConnectionService.setLastView(session);
 			User userFromDb = messageService.findUserByUsername(currentUser);
 			UserDto userDto = messageService.findOneUserToChat(currentUser, chat);
@@ -55,7 +56,6 @@ public class MessageController {
 			model.addAttribute("subscriptions", userFromDb.getSubscriptions());
 			model.addAttribute("subscribers", userFromDb.getSubscribers());
 			model.addAttribute("chatMembers", chat.getChatMembers());
-			model.addAttribute("chatArcive", chat.getChatsArcive());
 			model.addAttribute("chatAdmins", chat.getChatAdmins());
 			model.addAttribute("chatBanList", chat.getChatBanList());
 //			Important
@@ -65,11 +65,18 @@ public class MessageController {
 			return "noAccessChat";
 		}
 	}
+    
+    @GetMapping("chats/{chat}/disconnectChat")
+   	public String disconnect(@AuthenticationPrincipal User currentUser, 
+   							 @PathVariable Chat chat) {
+       chatSessionService.setLastView(chat, currentUser);
+       return "redirect:/messages";
+   	}
 	
     @MessageMapping("/chat.sendMessage/{chatId}")
 	@SendTo("/topic/public/{chatId}")
 	public MessageJson sendMessage(@DestinationVariable Long chatId, @Payload MessageJson jsonMessage) {
-    	messageService.createMessage(chatId, jsonMessage);
+    	messageService.createMessage(chatId, jsonMessage, LocalDateTime.now());
 		return jsonMessage;
 	}
 }

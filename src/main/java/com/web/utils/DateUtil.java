@@ -9,18 +9,6 @@ import com.web.data.Message;
 
 public class DateUtil {
 	
-	public static String getLoalDate() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formatDateTime = LocalDateTime.now().format(formatter);
-        return formatDateTime;
-	}
-	
-	public static String getLoalDate(String pattern) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-        String formatDateTime = LocalDateTime.now().format(formatter);
-        return formatDateTime;
-	}
-	
 	public static String formatDate(LocalDateTime date) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formatDateTime = date.format(formatter);

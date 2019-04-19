@@ -89,6 +89,7 @@ public class ChatController {
 							 @PathVariable Chat chat, 
 							 @PathVariable User user, 
 							 Model model) {
+//		uses chatSessionConnectionService 
 		chatService.userReturn(user, chat);
 		chatSessionService.setConnectionDate(chat, user);
 		return "redirect:/chats/" + chat.getId();
@@ -99,9 +100,9 @@ public class ChatController {
 							 @PathVariable Chat chat, 
 							 @PathVariable User user, 
 							 Model model) {
-		chatService.geleteChatHitory(user, currentUser, chat);
 		chatSessionService.deleteChatSession(chat, currentUser);
-		return "redirect:/chats/" + chat.getId();
+		chatService.geleteChatHitory(user, currentUser, chat);
+		return "redirect:/messages";
 	}
 	 
 }

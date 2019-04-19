@@ -1,7 +1,8 @@
 <!-- uses in groupConnections
 			 chatCOnnections 
 			 chat
-			 parts/show/showUserConnections -->
+			 parts/show/showUserConnections
+			 searchList -->
 
 <#macro showUsers usersList listType>
 
@@ -13,7 +14,9 @@
 		<#include "/parts/showLists/showUser.ftl" >
 	<#else>
 		<#if listType == "friends">
-			<h4 class="display-4 ml-2 " align="left">No friends :(</h4>			
+			<h4 class="display-4 ml-2 " align="left">No friends :(</h4>	
+		<#elseif listType == "searchUsers">
+			<h4 class="display-4 ml-2 " align="center">No users :(</h4>		
 		<#elseif listType == "subscriptions">
 			<h4 class="display-4 ml-2 " align="left">No subscriptions :(</h4>
 		<#elseif listType == "groupSubscrabers" || listType == "subscribers">

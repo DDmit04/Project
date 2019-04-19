@@ -1,9 +1,16 @@
 <!-- parts/components/profile/noAccesProfile  -->
 
+<#include "/parts/security.ftl">
+
 <div class="card border-secondary shadow mt-3" style="height: 300px; width: 280px;">
 	<div class="card-body">
 		<a href="/${user.id}/profile/socialList/groups">
-			user Groups:(${user.groupSubscriptionsCount})
+			<#if user.username == currentUsername>
+				my
+			<#else>
+				user
+			</#if>
+			Groups:(${user.groupSubscriptionsCount})
 		</a>
 		<div class="ml-2 mt-2">
 			<#assign i = 0>

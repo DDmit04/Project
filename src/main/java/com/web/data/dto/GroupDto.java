@@ -8,7 +8,7 @@ import lombok.Getter;
 import com.web.data.Group;
 
 @Getter
-public class GroupDto {
+public class GroupDto extends SearchResultsGeneric{
 	
 	private Long id;
 	private Long subCount;

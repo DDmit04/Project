@@ -22,6 +22,7 @@ public interface UserRepo extends CrudRepository<User, Long> {
             "   sum(case when uf = :currentUser then 1 else 0 end) > 0, " +
 			//??????
 			"   sum(select count(*) from FriendRequest fr where fr.requestFromId = :currentUserId) > 0, " +
+			//??????
             "   sum(case when us = :currentUser then 1 else 0 end) > 0, " +
             "   sum(case when bloking = :currentUser then 1 else 0 end) > 0, " +
             "   sum(case when bloked = :currentUser then 1 else 0 end) > 0 " +
@@ -59,6 +60,31 @@ public interface UserRepo extends CrudRepository<User, Long> {
             " where u.id = :id " +
             " group by u")
     UserDto findOneUserForListDto(@Param("id") Long id);
+	
+	@Query("select new com.web.data.dto.UserDto(" +
+            "   u, " +
+			"   (select count(*) from u.userFriends), " +
+            "   (select count(*) from u.subscriptions), " +
+			"   (select count(*) from u.subscribers), " + 
+            "   (select count(*) from u.subedGroups), " + 
+			"   (select count(*) from u.blackList) " + 
+            ") " +
+            " from User u " +
+            " where u.username like concat('%',:search,'%')" +
+            " group by u")
+    Iterable<UserDto> searchUsersDto(@Param("search") String search);
+	
+	@Query("select new com.web.data.dto.UserDto(" +
+            "   u, " +
+			"   (select count(*) from u.userFriends), " +
+            "   (select count(*) from u.subscriptions), " +
+			"   (select count(*) from u.subscribers), " + 
+            "   (select count(*) from u.subedGroups), " + 
+			"   (select count(*) from u.blackList) " + 
+            ") " +
+            " from User u " +
+            " group by u")
+    Iterable<UserDto> searchAllUsersDto();
 
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
@@ -70,7 +96,7 @@ public interface UserRepo extends CrudRepository<User, Long> {
             " from User u " + 
             " where u.id = :id " +
             " group by u")
-	UserDto findOneToStatistic(Long id);
+	UserDto findOneUserToStatistic(Long id);
 	
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
@@ -82,5 +108,5 @@ public interface UserRepo extends CrudRepository<User, Long> {
             " from User u left join u.chats uc" + 
             " where u.id = :currentUserId " +
             " group by u")
-	UserDto findOneToChat(@Param("currentUserId") Long currentUserId, @Param("chat") Chat chat);
+	UserDto findOneUserToChat(@Param("currentUserId") Long currentUserId, @Param("chat") Chat chat);
 }

@@ -37,7 +37,6 @@ public class ChatService {
 		chat.setChatOwner(currentUser);
 		chat.getChatMembers().add(currentUser);
 		chat.getChatAdmins().add(currentUser);
-		chat.getChatsArcive().add(currentUser);
 		chatRepo.save(chat);
 		return chat;
 	}
@@ -49,28 +48,31 @@ public class ChatService {
 		chat.setChatOwner(currentUser);
 		chat.getChatMembers().add(currentUser);
 		chat.getChatMembers().add(user);
-		chat.getChatsArcive().add(currentUser);
-		chat.getChatsArcive().add(user);
+		chat.getChatAdmins().add(currentUser);
+		chat.getChatAdmins().add(user);
 		chatRepo.save(chat);
 		return chat;
 	}
 	
 	public void geleteChatHitory(User user, User currentUser, Chat chat) {
-		if(currentUser.equals(user)) {
-			 if(chat.getChatAdmins().contains(user)) {
-				 chat.getChatAdmins().remove(user);
-			 }
-			 if(chat.getChatMembers().contains(user)) {
-				 chat.getChatMembers().remove(user);
-			 }
-			 chat.getChatsArcive().remove(user);
-			 chatRepo.save(chat);
-		 }		
+		if (currentUser.equals(user)) {
+			if (chat.getSessions().size() != 0) {
+				if (chat.getChatAdmins().contains(user)) {
+					chat.getChatAdmins().remove(user);
+				}
+				if (chat.getChatMembers().contains(user)) {
+					chat.getChatMembers().remove(user);
+				}
+				chatRepo.save(chat);
+			} else {
+				chat.setChatOwner(null);
+				chatRepo.delete(chat);
+			}
+		}
 	}
 
 	public void invateUser(User user, Chat chat) {
 		chat.getChatMembers().add(user);
-		chat.getChatsArcive().add(user);
 		chatRepo.save(chat);		
 	}
 
@@ -83,11 +85,10 @@ public class ChatService {
 	}
 
 	public void userReturn(User user, Chat chat) {
-		 if(user.getSavedChats().contains(chat)) {
+		 if(chatSessionService.findSession(user, chat) != null) {
 			 chat.getChatMembers().add(user);
 		 }
 		 chatRepo.save(chat);
-//		 chatSessionService.setConnectionDate(chat, user);
 	}
 
 	public void chaseOutUser(User user, User currentUser, Chat chat) {

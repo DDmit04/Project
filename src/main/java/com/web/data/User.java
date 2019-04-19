@@ -21,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -66,8 +67,8 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy = "connectedUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<ChatSession> chatSessions;
 	    
+	@OrderBy("id")
 	@OneToMany(mappedBy = "messageAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	@javax.persistence.OrderBy("id")
 	private Set<Message> sendedMessages;
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "groupSubs")
@@ -87,9 +88,6 @@ public class User implements UserDetails {
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatBanList")
 	private Set<Chat> bannedInChats;
-	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatsArcive")
-	private Set<Chat> savedChats;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_friendship", 

@@ -1,6 +1,7 @@
 <!-- uses in groupList
 			 groupConnections
-			 parts/show/showUserConnections  -->
+			 parts/show/showUserConnections
+			 searchList  -->
 
 <#macro groupList groups >
 
@@ -26,7 +27,7 @@
 		</li>
 	</ul>
 <#else>
-	<h4 class="display-4 ml-2 " align="left">No groups :(</h4>
+	<h4 class="display-4 ml-2 " align="<#if !search??>left<#else>center</#if>">No groups :(</h4>
 </#list>
 
 </#macro>

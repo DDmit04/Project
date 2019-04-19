@@ -16,8 +16,13 @@
 			    	</li>
 			    	<li class="nav-item">
 			    		<#if currentUser??>
-				    		<form class="form-inline my-2 my-lg-0" action="/posts?search=${search?ifExists}">
+				    		<form class="form-inline my-2 my-lg-0" action="/search">
 				 				<input class="form-control mr-sm-2" type="text" name="search" placeholder="Search" value="${search?ifExists}">
+				 				<select class="custom-select mr-2" id="inputGroupSelect" name="searchType">
+				 				    <option value="posts" id="posts">posts</option>
+    						 		<option value="users" id="users">users</option>
+    						 		<option value="groups" id="groups">groups</option>
+  							 	</select>
 				 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 				 			</form>
 			 			</#if>
@@ -34,3 +39,20 @@
 		 </#if>
 	 </div>
 </nav>
+<script>
+	var searchType = '${searchType?ifExists}';
+	var posts = document.getElementById("posts");
+	var users = document.getElementById("users");
+	var groups = document.getElementById("groups");
+	if(searchType == "posts") {
+		posts.selected = true;
+	}  
+	else if(searchType == "users") {
+		users.selected = true;
+	}
+	else if(searchType == "groups") {
+		groups.selected = true;
+	} else {
+		posts.selected = true;
+	}
+</script>

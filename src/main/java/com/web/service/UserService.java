@@ -77,6 +77,6 @@ public class UserService implements UserDetailsService{
 	}
 
 	public UserDto findOneToStatistic(User currentUser) {
-		return userRepo.findOneToStatistic(currentUser.getId());
+		return userRepo.findOneUserToStatistic(currentUser.getId());
 	}
 }

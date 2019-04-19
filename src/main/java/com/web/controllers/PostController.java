@@ -2,7 +2,11 @@ package com.web.controllers;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,20 +38,31 @@ public class PostController {
 	
 	@GetMapping("/posts")
 	public String getPosts(@AuthenticationPrincipal User currentUser,
-						   @RequestParam(required = false) String search,
 						   Model model) {
-		Iterable<PostDto> searchByTag = postService.searchPostsByTag(search, currentUser);
+		Iterable<PostDto> searchByTag = postService.findAllPosts(currentUser);
 		model.addAttribute("user", currentUser);
 		model.addAttribute("posts", searchByTag);
-		model.addAttribute("search", search);
 		return "postList";
+	}
+	
+	@GetMapping("/search")
+	public String search(@AuthenticationPrincipal User currentUser,
+						 @RequestParam String search,
+						 @RequestParam String searchType,
+						 Model model) {
+		Iterable<?> searchResults = postService.search(currentUser, search, searchType);
+		model.addAttribute("user", currentUser);
+		model.addAttribute("searchResults", searchResults);
+		model.addAttribute("search", search);
+		model.addAttribute("searchType", searchType);
+		return "searchList";
 	}
 	
 	@GetMapping("/subscriptionPosts")
 	public String getFriendPosts(@AuthenticationPrincipal User currentUser,
 							     @RequestParam(required = false) String search,
 							     Model model) {
-		Iterable<PostDto> searchFriendPosts = postService.searchSubscriptionsPosts(currentUser);
+		Iterable<PostDto> searchFriendPosts = postService.findSubscriptionsPosts(currentUser);
 		model.addAttribute("user", currentUser);
 		model.addAttribute("posts", searchFriendPosts);
 		model.addAttribute("search", search);

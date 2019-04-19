@@ -18,9 +18,9 @@ function connect(event) {
 function onConnected() {
     if(chatIsActive.value == true) {
         // Subscribe to the Public Topic
-        stompClient.subscribe('/topic/public/' + chatId, onMessageReceived);
+        stompClient.subscribe('/topic/public/chatList' + userId, onMessageReceived);
     }
-    messageArea.scrollTop = messageArea.scrollHeight;
+    // messageArea.scrollTop = messageArea.scrollHeight;
 }
 
 
@@ -31,22 +31,20 @@ function onError(error) {
 
 
 function sendMessage(event) {
-    var messageContent = messageInput.value.trim();
-    var userPicName;
-    if(userPic.value != "") {
-        userPicName = "/imgUserPic/" + userPic.value;
+    var chatContent = messageInput.value.trim();
+    var chatPicName;
+    if(chatPic.value != "") {
+        userPicName = "/imgChatPic/" + chatPic.value;
     } else {
-        userPicName = "http://localhost:8080/static/images/title1.png"
+        chatPicName = "http://localhost:8080/static/images/title1.png"
     }
-    if(messageContent && stompClient) {
-        var chatMessage = {
-            sender: currentUsername,
-            senderId: userId,
-            content: messageInput.value,
-            userPicName: userPicName,
+    if(chatContent && stompClient) {
+        var chat = {
+            name: chatName,
+            title: chatTitle,
+            chatPic: chatPicName
         };
-        stompClient.send("/app/chat.sendMessage/" + chatId, {}, JSON.stringify(chatMessage));
-        messageInput.value = '';
+        stompClient.send("/app/chat.createChat/" + onotherUserId, {}, JSON.stringify(chatMessage));
         userPicName = '';
     }
     event.preventDefault();

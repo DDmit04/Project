@@ -1,7 +1,8 @@
 <!-- uses in postList
 			 userProfile
 			 group
-			 parts/components/profile/noAccesProfile  -->
+			 parts/components/profile/noAccesProfile
+			 searchList  -->
 
 <#import "showLists/showPost.ftl" as showPost> 
 

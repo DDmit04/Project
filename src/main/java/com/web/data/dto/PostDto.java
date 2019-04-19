@@ -8,7 +8,7 @@ import com.web.utils.DateUtil;
 import lombok.Getter;
 
 @Getter
-public class PostDto {
+public class PostDto extends SearchResultsGeneric{
 	
 	private Long id;
 	private Long likes;

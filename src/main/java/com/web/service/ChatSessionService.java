@@ -41,6 +41,12 @@ public class ChatSessionService {
 		chatSessionRepo.save(session);
 	}
 	
+	public void setLastView(Chat chat, User user) {
+		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
+		session.setLastView(LocalDateTime.now());
+		chatSessionRepo.save(session);
+	}
+	
 	public void setDisonnectionDate(Chat chat, User user) {
 		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
 		chatSessionConnectionService.closeSessionConnection(session);

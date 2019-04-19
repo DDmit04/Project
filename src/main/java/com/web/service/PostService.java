@@ -2,6 +2,7 @@ package com.web.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,11 @@ import com.web.data.Group;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
+import com.web.data.dto.SearchResultsGeneric;
+import com.web.data.dto.UserDto;
+import com.web.repository.GroupRepo;
 import com.web.repository.PostRepo;
+import com.web.repository.UserRepo;
 
 @Service
 public class PostService {
@@ -22,6 +27,12 @@ public class PostService {
 	
 	@Autowired
 	private PostRepo postRepo;
+	
+	@Autowired
+	private UserRepo userRepo;
+	
+	@Autowired
+	private GroupRepo groupRepo;
 	
 	public void addPost(String postText, String tags, MultipartFile file, User user) throws IllegalStateException, IOException {
 		postRepo.save(createPost(postText, user, tags, file));
@@ -106,12 +117,24 @@ public class PostService {
 		return postRepo.findOnePost(currentUser, post.getId());
 	}
 	
-	public Iterable<PostDto> searchPostsByTag(String search, User currentUser) {
-		Iterable<PostDto> searchResult;
+	public Iterable<? extends SearchResultsGeneric> search(User currentUser, String search, String searchType) {
+		Iterable<? extends SearchResultsGeneric> searchResult = new HashSet<>();
 		if(search != null && search != "") {
-			searchResult = postRepo.findByTag(currentUser, search);
+			if("users".equals(searchType)) {
+				searchResult = userRepo.searchUsersDto(search);
+			} else if("posts".equals(searchType)) {
+				searchResult = postRepo.findByTag(currentUser, search);
+			} else if("groups".equals(searchType)) {
+				searchResult = groupRepo.searchGroupsDto(search);
+			}
 		} else {
-			searchResult = postRepo.findAll(currentUser);
+			if("users".equals(searchType)) {
+				searchResult = userRepo.searchAllUsersDto();
+			} else if("posts".equals(searchType)) {
+				searchResult = postRepo.findAll(currentUser);
+			} else if("groups".equals(searchType)) {
+				searchResult = groupRepo.findAllGroupsDto();
+			}
 		}		
 		return searchResult;
 	}
@@ -124,8 +147,12 @@ public class PostService {
 	public Iterable<PostDto> findPostsByUser(User currentUser, User user) {
 		return postRepo.findByPostAuthor(currentUser, user);
 	}
+	
+	public Iterable<PostDto> findAllPosts(User currentUser) {
+		return postRepo.findAll(currentUser);
+	}
 
-	public Iterable<PostDto> searchSubscriptionsPosts(User currentUser) {
+	public Iterable<PostDto> findSubscriptionsPosts(User currentUser) {
 		return postRepo.findSubscriptionsPosts(currentUser);
 	}
 

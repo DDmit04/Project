@@ -5,5 +5,4 @@
 	<#include "/parts/showLists/showUserConnections.ftl">
 </div>
 
-
 </@shell.htmlPage>
