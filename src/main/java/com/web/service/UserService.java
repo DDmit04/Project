@@ -1,12 +1,15 @@
 package com.web.service;
 
 import java.io.IOException;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,12 +29,17 @@ public class UserService implements UserDetailsService{
 	
 	@Autowired
 	private FileService fileService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder; 
 
 	public void addUser(User user, MultipartFile userPic) throws UserException, IllegalStateException, IOException {
 		User userFromDb = userRepo.findByUsername(user.getUsername());
 		if (userFromDb != null) {
 			throw new UserException("user with name " + user.getUsername() + " already exists!", user, UserExceptionType.EXISTING_USERNAME);
 		} else {
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			user.setRegistrationDate(LocalDateTime.now(Clock.systemUTC()));
 			user.setUserPicName(fileService.uploadFile(userPic, UploadType.USER_PIC));
 			user.setActive(true);
 			user.setRoles(Collections.singleton(UserRoles.USER));
@@ -57,7 +65,7 @@ public class UserService implements UserDetailsService{
 	}
 
 	public void deleteUser(User currentUser, String accountDeletePassword) throws UserException {
-		if(accountDeletePassword.equals(currentUser.getPassword())) {
+		if(passwordEncoder.matches(accountDeletePassword, currentUser.getPassword())) {
 			userRepo.delete(currentUser);
 		} else {
 			throw new UserException("Wrong " + currentUser.getUsername() + "'s password!", currentUser, UserExceptionType.DELETE_USER);
@@ -65,10 +73,11 @@ public class UserService implements UserDetailsService{
 	}
 	
 	public void changePassword(User currentUser, String currentPassword, String newPassword) throws UserException {
-		if(currentPassword.equals(newPassword)) {
+		newPassword = passwordEncoder.encode(newPassword);
+		if(passwordEncoder.matches(newPassword, currentUser.getPassword())) {
 			throw new UserException("new password is " + currentUser.getUsername() + "'s current password!", currentUser, UserExceptionType.CHANGE_PASSWORD);
 		}
-		if(currentPassword.equals(currentUser.getPassword())) {
+		if(passwordEncoder.matches(currentPassword, currentUser.getPassword())) {
 			currentUser.setPassword(newPassword);
 			userRepo.save(currentUser);
 		} else {

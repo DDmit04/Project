@@ -1,6 +1,5 @@
 package com.web.controllers;
 
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +75,7 @@ public class MessageController {
     @MessageMapping("/chat.sendMessage/{chatId}")
 	@SendTo("/topic/public/{chatId}")
 	public MessageJson sendMessage(@DestinationVariable Long chatId, @Payload MessageJson jsonMessage) {
-    	messageService.createMessage(chatId, jsonMessage, LocalDateTime.now());
+    	messageService.createMessage(chatId, jsonMessage);
 		return jsonMessage;
 	}
 }

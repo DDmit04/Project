@@ -1,7 +1,7 @@
 <!-- uses in userConnections -->
 
 <#import "/parts/showLists/showListsOfUsers.ftl" as userLists> 
-<#import "/parts/showLists/showGroup.ftl" as groupList> 
+<#import "/parts/showLists/showListsOfGroups.ftl" as groupList> 
 
 <#include "/parts/security.ftl">
 

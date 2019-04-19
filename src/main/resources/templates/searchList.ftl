@@ -1,5 +1,5 @@
 <#import "parts/HTMLshell.ftl" as shell> 
-<#import "parts/showLists/showGroup.ftl" as groupList> 
+<#import "parts/showLists/showListsOfGroups.ftl" as groupList> 
 <#import "/parts/showLists/showListsOfUsers.ftl" as userLists> 
 
 <@shell.htmlPage> 
@@ -9,7 +9,7 @@
 <div class="col-md-9">
 	<#if searchType == "posts">
 		<#assign posts = searchResults> 
-		<#include "parts/postListHendle.ftl">
+		<#include "/parts/showLists/showListsOfPosts.ftl">
 	<#elseif searchType == "users">
 		<@userLists.showUsers searchResults "searchUsers" />
 	<#elseif searchType == "groups">

@@ -1,6 +1,7 @@
 package com.web.service;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class ProfileService {
 	private FileService fileService;
 	
 	public void addFriendRequest(User user, User currentUser) {
-		FriendRequest friendReqest = new FriendRequest(LocalDateTime.now(), currentUser, user);
+		FriendRequest friendReqest = new FriendRequest(LocalDateTime.now(Clock.systemUTC()), currentUser, user);
 		friendRequestRepo.save(friendReqest);		
 	}
 	

@@ -2,11 +2,7 @@ package com.web.controllers;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,11 +69,9 @@ public class PostController {
 	public String addPost(@AuthenticationPrincipal User currentUser,
 						  @RequestParam String postText, 
 						  @RequestParam String tags,
-						  @RequestParam(required = false) String search,
 						  @RequestParam("file") MultipartFile file,
 						  Model model) throws IllegalStateException, IOException {
 		postService.addPost(postText, tags, file, currentUser);
-		model.addAttribute("search", search);
 		return "redirect:/posts";
 	}
 	
@@ -87,7 +81,7 @@ public class PostController {
 			  			  Model model) {
 		PostDto editedPost = postService.findOnePost(currentUser, post);
 		model.addAttribute("post", editedPost);
-		return "postList";	
+		return "postEdit";	
 	}
 	
 	@PostMapping("{post}/edit")

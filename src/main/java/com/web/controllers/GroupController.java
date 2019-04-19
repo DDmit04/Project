@@ -159,13 +159,8 @@ public class GroupController {
 							 	 @RequestParam String password,
 							 	 @PathVariable Group group,
 							 	 @PathVariable User user) {
-		//Password encoder!!!
-		User groupOwner = group.getGroupOwner();
-		if(groupOwner.equals(currentUser) 
-				&& username.equals(groupOwner.getUsername()) 
-				&& password.equals(groupOwner.getPassword())) {
-			groupService.makeOwner(group, user);
-		}
+		
+		groupService.makeOwner(currentUser, user, group, username, password);
 		return "redirect:/groups/" + group.getId() + "/socialList/groupAdmins";
 	}
 	

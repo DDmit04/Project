@@ -44,6 +44,7 @@ function sendMessage(event) {
             senderId: userId,
             content: messageInput.value,
             userPicName: userPicName,
+            messageDate: new Date()
         };
         stompClient.send("/app/chat.sendMessage/" + chatId, {}, JSON.stringify(chatMessage));
         messageInput.value = '';

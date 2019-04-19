@@ -1,5 +1,5 @@
 <#import "parts/HTMLshell.ftl" as shell>
-<#import "parts/showLists/showGroup.ftl" as groupList> 
+<#import "parts/showLists/showListsOfGroups.ftl" as groupList> 
 <@shell.htmlPage> 
 
 <#include "parts/security.ftl">

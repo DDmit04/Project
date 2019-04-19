@@ -1,9 +1,11 @@
 package com.web.service;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,15 +26,18 @@ public class ChatService {
 	@Autowired
 	private ChatSessionService chatSessionService;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder; 
+	
 	public boolean userIsAdminOrOwner (User user, User currentUser, Chat chat) {
 		return chat.getChatOwner().equals(currentUser) || chat.getChatAdmins().contains(currentUser);
 	}
 	
 	public Chat createChat(String chatName, String chatTitle, MultipartFile file, User currentUser) throws IllegalStateException, IOException {
-		Chat chat = new Chat(chatName, LocalDateTime.now());
+		Chat chat = new Chat(chatName, LocalDateTime.now(Clock.systemUTC()));
 		chat.setChatTitle(chatTitle);
 		chat.setChatPicName(fileService.uploadFile(file, UploadType.CHAT_PIC));
-		chat.setLastMessageDate(LocalDateTime.now());
+		chat.setLastMessageDate(LocalDateTime.now(Clock.systemUTC()));
 		chatRepo.save(chat);
 		chat.setChatOwner(currentUser);
 		chat.getChatMembers().add(currentUser);
@@ -43,7 +48,7 @@ public class ChatService {
 
 	public Chat createChat(User user, User currentUser) {
 		Chat chat = new Chat(currentUser.getUsername() + " - " + user.getUsername(), LocalDateTime.now());
-		chat.setLastMessageDate(LocalDateTime.now());
+		chat.setLastMessageDate(LocalDateTime.now(Clock.systemUTC()));
 		chatRepo.save(chat);
 		chat.setChatOwner(currentUser);
 		chat.getChatMembers().add(currentUser);
@@ -134,7 +139,7 @@ public class ChatService {
 		User chatOwner = chat.getChatOwner();
 		if(chatOwner.equals(currentUser) 
 				&& username.equals(chatOwner.getUsername()) 
-				&& password.equals(chatOwner.getPassword())) {
+				&& passwordEncoder.matches(password, chatOwner.getPassword())) {
 			chat.setChatOwner(user);
 			chatRepo.save(chat);
 		}		

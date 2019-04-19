@@ -1,11 +1,12 @@
-<!-- uses in commentList -->
+<!-- uses in commentList
+			 commentEdit -->
 
 <#import "/parts/utils/showPics.ftl" as picture>
 
 <#assign commentAuthor = comment.commentAuthor
 		 commentedPost = comment.commentedPost>
 
-<ul class="list-group list-group-flush shadow border border-secondary mt-1">
+<ul class="list-group list-group-flush shadow border border-secondary mt-1 mb-2">
 	<li class="list-group-item">
 		<div class="border-secondary media">
 			<div class="mt-2">

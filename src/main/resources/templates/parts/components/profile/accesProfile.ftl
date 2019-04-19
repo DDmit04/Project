@@ -37,5 +37,5 @@
 		<#if currentUsername == user.username>
 			<#include "/parts/forms/addPostForm.ftl">
 		</#if>
-		<#include "/parts/postListHendle.ftl">
+		<#include "/parts/showLists/showListsOfPosts.ftl">
 </div> 

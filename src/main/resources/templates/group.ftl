@@ -30,7 +30,7 @@
 			<#if user.isGroupAdmin>
 				<#include "parts/forms/addPostForm.ftl">
 			</#if>
-			<#include "parts/postListHendle.ftl">
+			<#include "/parts/showLists/showListsOfPosts.ftl">
 		<#else>
 			<h4 class="display-4 ml-2 text-center">you was banned in this group</h4>
 		</#if>

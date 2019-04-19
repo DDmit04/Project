@@ -1,6 +1,7 @@
 package com.web.service;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +15,6 @@ import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.SearchResultsGeneric;
-import com.web.data.dto.UserDto;
 import com.web.repository.GroupRepo;
 import com.web.repository.PostRepo;
 import com.web.repository.UserRepo;
@@ -43,14 +43,14 @@ public class PostService {
 	}
 	
 	public Post createPost(String postText, User user, String tags, MultipartFile file) throws IllegalStateException, IOException {
-		Post post = new Post(postText, tags, LocalDateTime.now());
+		Post post = new Post(postText, tags, LocalDateTime.now(Clock.systemUTC()));
 		post.setPostAuthor(user);
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
 		return post;
 	}
 	
 	public Post createGroupPost(String postText, Group group, String tags, MultipartFile file) throws IllegalStateException, IOException {
-		Post post = new Post(postText, tags, LocalDateTime.now());
+		Post post = new Post(postText, tags, LocalDateTime.now(Clock.systemUTC()));
 		post.setPostGroup(group);
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
 		return post;
@@ -60,7 +60,7 @@ public class PostService {
 		if(userIsAuthorOrAdmin(currentUser, post)) {
 			post.setPostText(text);
 			post.setTags(tags);
-			post.setPostCreationDate(LocalDateTime.now());
+			post.setPostCreationDate(LocalDateTime.now(Clock.systemUTC()));
 			post.setFilename(fileService.uploadFile(file, UploadType.POST));
 			postRepo.save(post);
 		}

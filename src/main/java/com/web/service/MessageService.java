@@ -1,6 +1,7 @@
 package com.web.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -44,7 +45,11 @@ public class MessageService {
 		return chatRepo.findOneChat(chat.getId());
 	}
 
-	public void createMessage(Long chatId, MessageJson jsonMessage, LocalDateTime messageTime) {
+	public void createMessage(Long chatId, MessageJson jsonMessage) {
+		LocalDateTime messageTime = jsonMessage.getMessageDate();
+		ZoneOffset offset = ZoneOffset.ofHours(3);
+		messageTime.atOffset(offset);
+		System.out.println(messageTime);
 		Chat chat = chatRepo.findChatById(chatId);
 		User messageAuthor = userRepo.findByUsername(jsonMessage.getSender());
 		Message message = new Message(jsonMessage.getContent(), messageTime);

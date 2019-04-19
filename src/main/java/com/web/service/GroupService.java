@@ -1,9 +1,11 @@
 package com.web.service;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +27,9 @@ public class GroupService {
 	
 	@Autowired
 	private CommentRepo commentRepo;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder; 
 
 	public Group createGroup(String groupName, String groupInformation, String groupTitle, MultipartFile file, User currentUser) 
 			throws IllegalStateException, IOException, GroupException {
@@ -33,7 +38,7 @@ public class GroupService {
 		if(groupFromDb != null) {
 			throw new GroupException("group with name" + groupFromDb.getGroupName() + "already exists!", groupFromDb);
 		}
-		Group group = new Group (groupName, groupInformation, groupTitle, LocalDateTime.now());
+		Group group = new Group (groupName, groupInformation, groupTitle, LocalDateTime.now(Clock.systemUTC()));
 		group.setGroupPicName(fileService.uploadFile(file,UploadType.GROUP_PIC));
 		group.setGroupOwner(currentUser);
 		groupRepo.save(group);	
@@ -43,9 +48,15 @@ public class GroupService {
 		return group;
 	}
 	
-	public void makeOwner(Group group, User user) {
-		group.setGroupOwner(user);
-		groupRepo.save(group);
+	public void makeOwner(User currentUser, User user, Group group, String username, String password) {
+		// Password encoder!!!
+		User groupOwner = group.getGroupOwner();
+		if (groupOwner.equals(currentUser) 
+				&& username.equals(groupOwner.getUsername())
+				&& passwordEncoder.matches(password, groupOwner.getPassword())) {
+			group.setGroupOwner(user);
+			groupRepo.save(group);
+		}
 	}
 	
 	public void banUser(User currentUser, User user, Group group) {

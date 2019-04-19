@@ -1,5 +1,6 @@
 package com.web.service;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class ChatSessionConnectionService {
 
 	public ChatSessionConnection openNewSessionConnection(ChatSession session) {
 		ChatSessionConnection sessionConnection = new ChatSessionConnection();
-		sessionConnection.setConnectChat(LocalDateTime.now());
+		sessionConnection.setConnectChat(LocalDateTime.now(Clock.systemUTC()));
 		sessionConnection.setSession(session);
 		chatSessionConnectionRepo.save(sessionConnection);
 		return sessionConnection;
@@ -29,13 +30,13 @@ public class ChatSessionConnectionService {
 
 	public void closeSessionConnection(ChatSession session) {
 		ChatSessionConnection sessionConnection = session.getSessionConnectionDates().iterator().next();
-		sessionConnection.setDisconnectChat(LocalDateTime.now());
+		sessionConnection.setDisconnectChat(LocalDateTime.now(Clock.systemUTC()));
 		sessionConnection.setSession(session);
 		chatSessionConnectionRepo.save(sessionConnection);		
 	}
 
 	public void setLastView(ChatSession session) {
-		session.setLastView(LocalDateTime.now());
+		session.setLastView(LocalDateTime.now(Clock.systemUTC()));
 		chatSessionRepo.save(session);		
 	}
 }

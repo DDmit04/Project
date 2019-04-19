@@ -1,6 +1,7 @@
 package com.web.service;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class CommentService {
 	private FileService fileService;
 
 	public void addComment(Post post, String commentText, User currentUser, MultipartFile commentPic) throws IllegalStateException, IOException {
-		Comment comment = new Comment(commentText, LocalDateTime.now());
+		Comment comment = new Comment(commentText, LocalDateTime.now(Clock.systemUTC()));
 		comment.setCommentedPost(post);
 		comment.setCommentAuthor(currentUser);
 		comment.setCommentPicName(fileService.uploadFile(commentPic, UploadType.COMMENT));
@@ -45,7 +46,7 @@ public class CommentService {
 	public void updateComment(User currentUser, Comment comment, String commentText, MultipartFile commentPic) throws IllegalStateException, IOException {
 		if(comment.getCommentAuthor().equals(currentUser)) {
 			comment.setCommentText(commentText);
-			comment.setCommentCreationDate(LocalDateTime.now());
+			comment.setCommentCreationDate(LocalDateTime.now(Clock.systemUTC()));
 			comment.setCommentPicName(fileService.uploadFile(commentPic, UploadType.COMMENT));
 			commentRepo.save(comment);
 		}

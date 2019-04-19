@@ -70,7 +70,7 @@ public class CommentController {
 		model.addAttribute("comments", searchByCommentedPost);
 		model.addAttribute("post", commentedPost);		
 		model.addAttribute("editedComment", comment);
-		return "commentList";
+		return "commentEdit";
 	}
 	
 	@PostMapping("{post}/comments/{comment}/edit")

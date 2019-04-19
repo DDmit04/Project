@@ -1,4 +1,5 @@
 <!-- uses in commentList
+			 commentEdit
 			 parts/postHendle -->
 
 <#macro show post parentPost postType>
@@ -73,7 +74,7 @@
 	       		<img src="/img/${post.filename}" width="89" class="card-img-top">
 	    	</#if>
     	</div>
-<!--    starts recursion while post (or post in repost) have repost, build post three  -->
+<!--    starts recursion while post (or post in repost)  -->
     	<#if post.repost??>
 			<@show post.repost post "repost" />
 		</#if>
