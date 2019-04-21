@@ -2,16 +2,25 @@ package com.web.controllers;
 
 import java.io.IOException;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSendException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sun.mail.smtp.SMTPSendFailedException;
 import com.web.data.User;
 import com.web.exceptions.UserException;
+import com.web.exceptions.UserExceptionType;
+import com.web.service.UserMailService;
 import com.web.service.UserService;
 
 @Controller
@@ -20,9 +29,12 @@ public class RegistrationController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private UserMailService userMailService;
+	
 	@GetMapping("/registration")
 	public String userRegistration() {
-		return "registration";
+		return "rgistrationForm";
 	}
 	
 	@PostMapping("/registration")
@@ -32,11 +44,35 @@ public class RegistrationController {
 		try {
 			userService.addUser(user, userPic);
 		} catch (UserException e) {
-			model.addAttribute("usernameError", e.getMessage());
+			UserExceptionType exType = e.getUserExceptionType();
+			if(exType == UserExceptionType.EXISTING_USERNAME) {
+				model.addAttribute("usernameError", e.getMessage());
+			} 
+			else if(exType == UserExceptionType.EXISTING_EMAIL) {
+				model.addAttribute("userEmailError", e.getMessage());
+			}
+			model.addAttribute("registrationEmail", e.getUser().getUserEmail());
 			model.addAttribute("registrationName", e.getUser().getUsername());
-			return "registrationForm";
+			return "rgistrationForm";
+		} catch (MailSendException | SMTPSendFailedException e) {
+			model.addAttribute("registrationAttention", "something go wrong, pleace try leter");
+			return "rgistrationForm";
 		}
-		return "redirect:/posts";
+		return "redirect:/login";
+	}
+	
+	@GetMapping("/activate/{code}")
+	public String userActivate(@PathVariable String code,
+							   HttpServletRequest request,
+							   Model model) throws ServletException {
+		request.logout();
+		try {
+			userMailService.activateUser(code); 
+		} catch (Exception e) {
+			model.addAttribute("loginAttention", "confirmation code is outdated");
+		}
+		model.addAttribute("loginAttention", "mail successfully confirmed");
+		return "AttentionPage";
 	}
 
 }

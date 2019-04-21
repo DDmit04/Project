@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sun.mail.smtp.SMTPAddressFailedException;
+import com.sun.mail.smtp.SMTPSendFailedException;
 import com.web.data.Group;
 import com.web.data.User;
 import com.web.data.UserRoles;
@@ -20,6 +24,7 @@ import com.web.data.dto.UserDto;
 import com.web.exceptions.UserException;
 import com.web.exceptions.UserExceptionType;
 import com.web.repository.UserRepo;
+import com.web.utils.ServiceUtils;
 
 @Service
 public class UserService implements UserDetailsService{
@@ -31,22 +36,37 @@ public class UserService implements UserDetailsService{
 	private FileService fileService;
 	
 	@Autowired
+	private UserMailService userMailService;
+	
+	@Autowired
 	private PasswordEncoder passwordEncoder; 
+	
+    @Value("${spring.mail.username}")
+    private String username;
+    
+    @Value("${hostname}")
+	private String hostname;
 
-	public void addUser(User user, MultipartFile userPic) throws UserException, IllegalStateException, IOException {
-		User userFromDb = userRepo.findByUsername(user.getUsername());
-		if (userFromDb != null) {
+	public void addUser(User user, MultipartFile userPic) throws UserException, IllegalStateException, IOException, MailSendException, SMTPSendFailedException {
+		User userFromDbUsername = userRepo.findByUsername(user.getUsername());
+		User userFronDbEmail = userRepo.findByUserEmail(user.getUserEmail());
+		if(userFromDbUsername != null) {
 			throw new UserException("user with name " + user.getUsername() + " already exists!", user, UserExceptionType.EXISTING_USERNAME);
+		}
+		else if(userFronDbEmail != null) {
+			throw new UserException("user with email " + user.getUserEmail() + " already exists!", user, UserExceptionType.EXISTING_EMAIL);
 		} else {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			user.setRegistrationDate(LocalDateTime.now(Clock.systemUTC()));
 			user.setUserPicName(fileService.uploadFile(userPic, UploadType.USER_PIC));
 			user.setActive(true);
 			user.setRoles(Collections.singleton(UserRoles.USER));
+			user.setEmailConfirmCode(ServiceUtils.generateRandomKey(4));
+			userMailService.sendMessageToActivate(user);
 			userRepo.save(user);
 		}
 	}
-
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return userRepo.findByUsername(username);
@@ -88,4 +108,5 @@ public class UserService implements UserDetailsService{
 	public UserDto findOneToStatistic(User currentUser) {
 		return userRepo.findOneUserToStatistic(currentUser.getId());
 	}
+
 }

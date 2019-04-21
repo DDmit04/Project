@@ -28,12 +28,6 @@ public class PostService {
 	@Autowired
 	private PostRepo postRepo;
 	
-	@Autowired
-	private UserRepo userRepo;
-	
-	@Autowired
-	private GroupRepo groupRepo;
-	
 	public void addPost(String postText, String tags, MultipartFile file, User user) throws IllegalStateException, IOException {
 		postRepo.save(createPost(postText, user, tags, file));
 	}
@@ -115,28 +109,6 @@ public class PostService {
 	
 	public PostDto findOnePost(User currentUser, Post post) {
 		return postRepo.findOnePost(currentUser, post.getId());
-	}
-	
-	public Iterable<? extends SearchResultsGeneric> search(User currentUser, String search, String searchType) {
-		Iterable<? extends SearchResultsGeneric> searchResult = new HashSet<>();
-		if(search != null && search != "") {
-			if("users".equals(searchType)) {
-				searchResult = userRepo.searchUsersDto(search);
-			} else if("posts".equals(searchType)) {
-				searchResult = postRepo.findByTag(currentUser, search);
-			} else if("groups".equals(searchType)) {
-				searchResult = groupRepo.searchGroupsDto(search);
-			}
-		} else {
-			if("users".equals(searchType)) {
-				searchResult = userRepo.searchAllUsersDto();
-			} else if("posts".equals(searchType)) {
-				searchResult = postRepo.findAll(currentUser);
-			} else if("groups".equals(searchType)) {
-				searchResult = groupRepo.findAllGroupsDto();
-			}
-		}		
-		return searchResult;
 	}
 	
 	public boolean userIsAuthorOrAdmin(User currentUser, Post post) {

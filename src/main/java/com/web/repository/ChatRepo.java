@@ -10,6 +10,8 @@ import com.web.data.dto.ChatDto;
 
 public interface ChatRepo extends CrudRepository<Chat, Long>{
 	
+	Chat findByChatName(String chatName);
+	
 	@Query("from Chat ch where ch.id = :id group by ch")
 	Chat findChatById(Long id);
 	

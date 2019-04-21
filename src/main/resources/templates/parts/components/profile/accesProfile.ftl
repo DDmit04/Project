@@ -38,4 +38,5 @@
 			<#include "/parts/forms/addPostForm.ftl">
 		</#if>
 		<#include "/parts/showLists/showListsOfPosts.ftl">
-</div> 
+	</div> 
+</div>

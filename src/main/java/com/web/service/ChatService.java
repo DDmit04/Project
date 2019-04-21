@@ -47,15 +47,18 @@ public class ChatService {
 	}
 
 	public Chat createChat(User user, User currentUser) {
-		Chat chat = new Chat(currentUser.getUsername() + " - " + user.getUsername(), LocalDateTime.now());
-		chat.setLastMessageDate(LocalDateTime.now(Clock.systemUTC()));
-		chatRepo.save(chat);
-		chat.setChatOwner(currentUser);
-		chat.getChatMembers().add(currentUser);
-		chat.getChatMembers().add(user);
-		chat.getChatAdmins().add(currentUser);
-		chat.getChatAdmins().add(user);
-		chatRepo.save(chat);
+		Chat chat = chatRepo.findByChatName(currentUser.getUsername() + " - " + user.getUsername());
+		if(chat == null) {
+			chat = new Chat(currentUser.getUsername() + " - " + user.getUsername(), LocalDateTime.now());
+			chat.setLastMessageDate(LocalDateTime.now(Clock.systemUTC()));
+			chatRepo.save(chat);
+			chat.setChatOwner(currentUser);
+			chat.getChatMembers().add(currentUser);
+			chat.getChatMembers().add(user);
+			chat.getChatAdmins().add(currentUser);
+			chat.getChatAdmins().add(user);
+			chatRepo.save(chat);
+		}
 		return chat;
 	}
 	

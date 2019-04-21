@@ -1,6 +1,5 @@
 package com.web.data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
@@ -46,6 +45,10 @@ public class User implements UserDetails {
 	private boolean active;
 	private LocalDateTime registrationDate;
 	private String userPicName;
+	private String userEmail;
+	private String emailConfirmCode;
+	private String emailChangeCode;
+
 
 	@ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)
 	@CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

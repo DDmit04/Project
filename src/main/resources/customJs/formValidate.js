@@ -1,29 +1,54 @@
 function validateRegistration() {
-	var username = document.getElementById("username");
+    var username = document.getElementById("username");
+    var usernameError = document.getElementById("usernameError");
+    var email = document.getElementById("userEmail");
+    var emailError = document.getElementById("userEmailError");
 	validatePasswords();
-	if (!username.value || !(validatePasswords())) {
+	if (!username.value || !email.value ||  !(validatePasswords())) {
 		if (!username.value) {
 			username.classList.add('is-invalid');
-			var usernameError = document.getElementById("usernameError");
 			usernameError.innerHTML = 'username can not be empty!';
-		}
+        }
+        if (!email.value) {
+			email.classList.add('is-invalid');
+			emailError.innerHTML = 'email can not be empty!';
+        }
 		return false;
 	}
 	return true;
 }
 
+function validateChangeEmail() {
+    var code = document.getElementById("changeEmailCode");
+    var codeError = document.getElementById("changeEmailCodeError");
+    var newEmail = document.getElementById("changeEmai");
+    var newEmailError = document.getElementById("changeEmailError");
+    if(!code.value || !newEmail.value) {
+        if(!code.value) {
+            code.classList.add('is-invalid');
+			codeError.innerHTML = 'code is empty!';
+        }
+        if(!newEmail.value) {
+            newEmail.classList.add('is-invalid');
+			newEmailError.innerHTML = 'new email is empty!';
+        }
+        return false;
+    }
+    return true;
+}
+
 function validatePasswords() {
-	var password = document.getElementById("password");
-	var retypePassword = document.getElementById("retypePassword");
+    var password = document.getElementById("password");
+    var passwordError = document.getElementById("passwordError");
+    var retypePassword = document.getElementById("retypePassword");
+    var retypePasswordError = document.getElementById("retypePasswordError");
 	if (!password.value || password.value != retypePassword.value) {
 		if(password != retypePassword) {
 			retypePassword.classList.add('is-invalid');
-			var retypePasswordError = document.getElementById("retypePasswordError");
 			retypePasswordError.innerHTML = 'passwords are different!';
 		}
 		if (!password.value) {
 			password.classList.add('is-invalid');
-			var passwordError = document.getElementById("passwordError");
 			passwordError.innerHTML = 'password can not be empty!';
 		}
 		return false;
@@ -33,11 +58,11 @@ function validatePasswords() {
 
 function validatePost() {
 	var tags = document.getElementById("tags");
-	var postText = document.getElementById("postText");
+    var postText = document.getElementById("postText");
+    var postTextError = document.getElementById("postTextError");
 	var file = document.getElementById("postFile");
 	if(!tags.value  && !postText.value && !file.value) {
 		postText.classList.add('is-invalid');
-		var postTextError = document.getElementById("postTextError");
 		postTextError.innerHTML = 'post can not be empty!';
 		return false;
 	}
@@ -58,11 +83,11 @@ function validateLogin() {
 }
 
 function validateComment() {
-	var comment = document.getElementById("commentText");
+    var comment = document.getElementById("commentText");
+    var commentTextError = document.getElementById("commentTextError");
 	var commentPic = document.getElementById("commentPic");
 	if(!comment.value && !commentPic.value) {
 		comment.classList.add('is-invalid');
-		var commentTextError = document.getElementById("commentTextError");
 		commentTextError.innerHTML = 'comment can not be empty!';
 		return false;
 	}
@@ -70,10 +95,10 @@ function validateComment() {
 }
 
 function validateGroupCreate() {
-	var groupName = document.getElementById("groupName");
+    var groupName = document.getElementById("groupName");
+    var groupNameError = document.getElementById("groupNameError");
 	if(!groupName.value) {
 		groupName.classList.add('is-invalid');
-		var groupNameError = document.getElementById("groupNameError");
 		groupNameError.innerHTML = 'group name can not be empty!';
 		return false;
 	}
@@ -81,10 +106,10 @@ function validateGroupCreate() {
 }
 
 function validateChatCreate() {
-	var groupName = document.getElementById("chatName");
+    var groupName = document.getElementById("chatName");
+    var groupNameError = document.getElementById("chatNameError");
 	if(!groupName.value) {
 		groupName.classList.add('is-invalid');
-		var groupNameError = document.getElementById("chatNameError");
 		groupNameError.innerHTML = 'chat name can not be empty!';
 		return false;
 	}

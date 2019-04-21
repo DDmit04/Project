@@ -41,19 +41,6 @@ public class PostController {
 		return "postList";
 	}
 	
-	@GetMapping("/search")
-	public String search(@AuthenticationPrincipal User currentUser,
-						 @RequestParam String search,
-						 @RequestParam String searchType,
-						 Model model) {
-		Iterable<?> searchResults = postService.search(currentUser, search, searchType);
-		model.addAttribute("user", currentUser);
-		model.addAttribute("searchResults", searchResults);
-		model.addAttribute("search", search);
-		model.addAttribute("searchType", searchType);
-		return "searchList";
-	}
-	
 	@GetMapping("/subscriptionPosts")
 	public String getFriendPosts(@AuthenticationPrincipal User currentUser,
 							     @RequestParam(required = false) String search,

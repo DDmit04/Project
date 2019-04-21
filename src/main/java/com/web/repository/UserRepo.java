@@ -13,6 +13,15 @@ public interface UserRepo extends CrudRepository<User, Long> {
 	
 	User findByUsername(String username);
 	
+	User findByEmailConfirmCode(String code);
+	
+	User findByEmailChangeCode(String code);
+	
+	User findByUserEmail(String email);
+	
+	@Query("from User u where u.id = :id group by u")
+	User findUserById(@Param("id") Long id);
+	
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
 			"   (select count(*) from u.userFriends), " +
@@ -109,4 +118,5 @@ public interface UserRepo extends CrudRepository<User, Long> {
             " where u.id = :currentUserId " +
             " group by u")
 	UserDto findOneUserToChat(@Param("currentUserId") Long currentUserId, @Param("chat") Chat chat);
+
 }

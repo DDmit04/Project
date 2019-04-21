@@ -8,6 +8,6 @@
 		<a class="list-group-item" href="/groups"><i class="fas fa-users mr-2"></i>Groups</a>
 		<a class="list-group-item" href="/friendRequests/friendRequestsTo"><i class="fas fa-tasks mr-2"></i>Friend Requests</a>
 		<a class="list-group-item" href="/${currentUserId}/profile/socialList/friends"><i class="fas fa-user-friends mr-2"></i>Friend List</a>
-		<a class="list-group-item" href="/profile/settings"><i class="fas fa-cogs mr-2"></i>Settings</a>
+		<a class="list-group-item" href="/${currentUser.id}/profile/settings"><i class="fas fa-cogs mr-2"></i>Settings</a>
 	</div>
 </div>

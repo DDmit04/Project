@@ -47,9 +47,6 @@ public class MessageService {
 
 	public void createMessage(Long chatId, MessageJson jsonMessage) {
 		LocalDateTime messageTime = jsonMessage.getMessageDate();
-		ZoneOffset offset = ZoneOffset.ofHours(3);
-		messageTime.atOffset(offset);
-		System.out.println(messageTime);
 		Chat chat = chatRepo.findChatById(chatId);
 		User messageAuthor = userRepo.findByUsername(jsonMessage.getSender());
 		Message message = new Message(jsonMessage.getContent(), messageTime);
