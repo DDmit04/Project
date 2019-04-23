@@ -16,7 +16,7 @@ import com.web.repository.FriendRequestRepo;
 import com.web.repository.UserRepo;
 
 @Service
-public class ProfileService {
+public class UserProfileService {
 	
 	@Autowired
 	private FriendRequestRepo friendRequestRepo;
@@ -94,15 +94,19 @@ public class ProfileService {
 		commentRepo.deleteAll(commentRepo.findBannedComments(currentUser, user));	
 	}
 	
-	public void updateUserProfile(User currentUser, MultipartFile file, String userInformation, String userTitle) throws IllegalStateException, IOException {
+	public void updateUserProfile(User user, MultipartFile file, String userInformation, String userTitle) throws IllegalStateException, IOException {
 		if(userInformation != null) {
 			//
 		}
 		if(userTitle != null) {
 			//
 		}
-		currentUser.setUserPicName(fileService.uploadFile(file, UploadType.USER_PIC));
-		userRepo.save(currentUser);		
+		uploadUserPic(user, file);
+		userRepo.save(user);		
+	}
+	
+	public void uploadUserPic(User user, MultipartFile userPic) throws IllegalStateException, IOException {
+		user.setUserPicName(fileService.uploadFile(userPic, UploadType.USER_PIC));
 	}
 		
 	public void removeFromBlackList(User user, User currentUser) {

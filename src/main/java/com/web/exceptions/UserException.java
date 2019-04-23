@@ -13,6 +13,11 @@ public class UserException extends Exception {
 		this.userExceptionType = userExceptionType;
 	}
 	
+	public UserException(String message, UserExceptionType userExceptionType) {
+		super(message);
+		this.userExceptionType = userExceptionType;
+	}
+	
 	public User getUser() {
 		return user;
 	}

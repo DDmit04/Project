@@ -27,27 +27,31 @@ import com.web.repository.UserRepo;
 import com.web.utils.ServiceUtils;
 
 @Service
-public class UserService implements UserDetailsService{
+public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private UserRepo userRepo;
 	
 	@Autowired
-	private FileService fileService;
+	private MailService mailService;
 	
 	@Autowired
-	private UserMailService userMailService;
+	private UserProfileService userProfileService;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder; 
 	
-    @Value("${spring.mail.username}")
-    private String username;
-    
-    @Value("${hostname}")
-	private String hostname;
-
-	public void addUser(User user, MultipartFile userPic) throws UserException, IllegalStateException, IOException, MailSendException, SMTPSendFailedException {
+	public void createFullUser(User user, MultipartFile userPic) 
+			throws UserException, IllegalStateException, IOException, MailSendException, SMTPSendFailedException {
+		User fullUser = createUser(user);
+		String randomCode = ServiceUtils.generateRandomKey(4);
+		userProfileService.uploadUserPic(fullUser, userPic);
+		mailService.sendEmailConfirmCode(fullUser, fullUser.getUserEmail(), randomCode);
+		fullUser.setEmailConfirmCode(randomCode);
+		userRepo.save(fullUser);
+	}
+	
+	public User createUser(User user) throws UserException {
 		User userFromDbUsername = userRepo.findByUsername(user.getUsername());
 		User userFronDbEmail = userRepo.findByUserEmail(user.getUserEmail());
 		if(userFromDbUsername != null) {
@@ -58,13 +62,10 @@ public class UserService implements UserDetailsService{
 		} else {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			user.setRegistrationDate(LocalDateTime.now(Clock.systemUTC()));
-			user.setUserPicName(fileService.uploadFile(userPic, UploadType.USER_PIC));
 			user.setActive(true);
 			user.setRoles(Collections.singleton(UserRoles.USER));
-			user.setEmailConfirmCode(ServiceUtils.generateRandomKey(4));
-			userMailService.sendMessageToActivate(user);
-			userRepo.save(user);
 		}
+		return user;
 	}
 	
 	@Override
@@ -82,27 +83,6 @@ public class UserService implements UserDetailsService{
 	
 	public UserDto findOneUserToGroup(User currentUser, Group group) {
 		return userRepo.findOneUserToGroupDto(currentUser.getId(), group);
-	}
-
-	public void deleteUser(User currentUser, String accountDeletePassword) throws UserException {
-		if(passwordEncoder.matches(accountDeletePassword, currentUser.getPassword())) {
-			userRepo.delete(currentUser);
-		} else {
-			throw new UserException("Wrong " + currentUser.getUsername() + "'s password!", currentUser, UserExceptionType.DELETE_USER);
-		}
-	}
-	
-	public void changePassword(User currentUser, String currentPassword, String newPassword) throws UserException {
-		newPassword = passwordEncoder.encode(newPassword);
-		if(passwordEncoder.matches(newPassword, currentUser.getPassword())) {
-			throw new UserException("new password is " + currentUser.getUsername() + "'s current password!", currentUser, UserExceptionType.CHANGE_PASSWORD);
-		}
-		if(passwordEncoder.matches(currentPassword, currentUser.getPassword())) {
-			currentUser.setPassword(newPassword);
-			userRepo.save(currentUser);
-		} else {
-			throw new UserException("Wrong " + currentUser.getUsername() + "'s password!", currentUser, UserExceptionType.CHANGE_PASSWORD);
-		}
 	}
 
 	public UserDto findOneToStatistic(User currentUser) {

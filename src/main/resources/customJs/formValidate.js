@@ -3,8 +3,9 @@ function validateRegistration() {
     var usernameError = document.getElementById("usernameError");
     var email = document.getElementById("userEmail");
     var emailError = document.getElementById("userEmailError");
-	validatePasswords();
-	if (!username.value || !email.value ||  !(validatePasswords())) {
+    var validatePasswordsRes = validatePasswords();
+    var validateEmailRes = validateEmail();
+	if (!username.value || !email.value || !validatePasswordsRes || !validateEmailRes) {
 		if (!username.value) {
 			username.classList.add('is-invalid');
 			usernameError.innerHTML = 'username can not be empty!';
@@ -18,12 +19,25 @@ function validateRegistration() {
 	return true;
 }
 
+function validateEmail() {
+    var email = document.getElementById("userEmail");
+    var emailError = document.getElementById("userEmailError");
+    var re = /\S+@\S+\.\S+/;
+    if(!re.test(email.value)) {
+        email.classList.add('is-invalid');
+		emailError.innerHTML = 'wrong email style!';
+        return false;
+    }
+    return true;
+}
+
 function validateChangeEmail() {
     var code = document.getElementById("changeEmailCode");
     var codeError = document.getElementById("changeEmailCodeError");
-    var newEmail = document.getElementById("changeEmai");
-    var newEmailError = document.getElementById("changeEmailError");
-    if(!code.value || !newEmail.value) {
+    var newEmail = document.getElementById("userEmail");
+    var newEmailError = document.getElementById("userEmailError");
+    var validateEmailRes = validateEmail();
+    if(!code.value || !newEmail.value || !validateEmailRes) {
         if(!code.value) {
             code.classList.add('is-invalid');
 			codeError.innerHTML = 'code is empty!';

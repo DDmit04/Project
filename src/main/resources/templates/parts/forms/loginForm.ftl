@@ -15,6 +15,8 @@
       <button class="btn btn-lg btn-primary btn-block mt-3" type="submit" value="Sign in">Sign in</button>
       <h5 class="h5 mt-3 font-weight-normal">or</h5>
       <h5 class="h5 mt-3 font-weight-normal">go to <a href="/registration">registration</a></h5> 
+      <h5 class="h5 mt-3 font-weight-normal">or maybe you</h5>
+      <h5><a href="/passwordRecover">forgot the password</a></h5>
       <input type="hidden" name="_csrf" value="${_csrf.token}" />
 </form>
 

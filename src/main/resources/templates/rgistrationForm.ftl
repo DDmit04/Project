@@ -58,7 +58,6 @@
 		<div class="col-md-6"></div>
 	</div>
 </div>
-
 <script src="/customJs/checkFilename.js"></script>
 <script src="/customJs/formValidate.js"></script>
 

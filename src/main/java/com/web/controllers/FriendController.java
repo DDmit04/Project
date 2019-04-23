@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.web.data.FriendRequest;
 import com.web.data.User;
 import com.web.data.dto.FriendRequestDto;
-import com.web.service.ProfileService;
+import com.web.service.UserProfileService;
 
 @Controller
 public class FriendController {
 	
 	@Autowired
-	private ProfileService profileService;
+	private UserProfileService profileService;
 	
 	@GetMapping("/friendRequests/{listType}")
 	public String userFriendRequest(@AuthenticationPrincipal User currentUser,

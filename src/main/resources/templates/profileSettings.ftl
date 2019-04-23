@@ -31,10 +31,10 @@
     			<form method="post" action="/${currentUser.id}/profile/settings/changePassword" onsubmit="return validatePasswords();">
 					<div class="form-group mt-3">
 					    <label>Current Password:</label>
-						<input class="form-control mb-2 ${(currentPasswordError??)?string('is-invalid', '')}" type="text" 
+						<input class="form-control mb-2 ${(currentPasswordError != '')?string('is-invalid', '')}" type="text" 
 							name="currentPassword" id="currentPassword" placeholder="enter current password" 
 							onfocus="disposeAlert('currentPassword');">
-						<div id="currentPasswordError" class="invalid-feedback"><#if currentPasswordError != '' >${currentPasswordError}</#if></div>
+						<div id="currentPasswordError" class="invalid-feedback"><#if currentPasswordError != ''>${currentPasswordError}</#if></div>
 					</div>
 					<div class="form-group">
 					    <label>Passowd:</label>
@@ -57,7 +57,7 @@
     			changeEmail
    	 		</button>
 			<!-- Collapse menue -->
-			<div id="changeEmail" class="collapse <#if changeEmailCodeError != '' || changeEmailError != '' || codeSended??>show</#if> ml-2" aria-labelledby="headingOne" data-parent="#accordion">
+			<div id="changeEmail" class="collapse <#if changeEmailCodeError != '' || userEmailError != '' || codeSended??>show</#if> ml-2" aria-labelledby="headingOne" data-parent="#accordion">
 			    <form method="post" action="/${currentUser.id}/profile/settings/changeEmail" onsubmit="return validateChangeEmail();">
 			    	<div class="form-group row">
 					    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
@@ -72,17 +72,17 @@
 			 		</div>
 			    	<label>change email:</label>
 					<div class="form-group form-inline">
-						<input  class="form-control mr-2 ${(chandeEmailError??)?string('is-invalid', '')}" type="text" 
-							name="changeEmailCode" id="changeEmailCode" placeholder="enter code" 
+						<input  class="form-control mr-2 ${(changeEmailCodeError != '')?string('is-invalid', '')}" type="text" 
+							value="${changeEmailCode?ifExists}" name="changeEmailCode" id="changeEmailCode" placeholder="enter code" 
 							onfocus="disposeAlert('changeEmailCode');">
 						<a id="sendCodeButton" role="button" class="btn btn-primary" href="/${currentUser.id}/profile/settings/sendCode">get code</a>
 						<div id="changeEmailCodeError" class="invalid-feedback"><#if changeEmailCodeError != ''>${changeEmailCodeError}</#if></div>
 					</div>
 					<div class="form-group">
-						<input class="form-control mb-2 ${(newEmailError??)?string('is-invalid', '')}" type="text" 
-							value="${newEmail?ifExists}" name="newEmail" id="changeEmai" placeholder="new email" 
-						    onfocus="disposeAlert('changeEmai');">
-						<div id="changeEmailError" class="invalid-feedback"><#if changeEmailError != ''>${changeEmailError}</#if></div>
+						<input class="form-control mb-2 ${(userEmailError != '')?string('is-invalid', '')}" type="text" 
+							value="${userEmail?ifExists}" name="newEmail" id="userEmail" placeholder="new email" 
+						    onfocus="disposeAlert('userEmail');">
+						<div id="userEmailError" class="invalid-feedback"><#if userEmailError != ''>${userEmailError}</#if></div>
 					</div>
 					<button id="changeEmailButton" class="btn btn-primary" type="submit">change email</button>
 					<input type="hidden" name="_csrf" value="${_csrf.token}" />
@@ -104,7 +104,7 @@
 	  			<form method="post" action="/${currentUser.id}/profile/settings/deleteAccount">
 					<div class="form-group mt-3">
 					    <label>Current Password:</label>
-						<input class="form-control mb-2 ${(accountDeleteError??)?string('is-invalid', '')}" type="text" 
+						<input class="form-control mb-2 ${(accountDeleteError != '')?string('is-invalid', '')}" type="text" 
 							name="accountDeletePassword" id="accountDeletePassword" placeholder="enter current password" 
 							onfocus="disposeAlert('accountDeletePassword');">
 						<div id="currentPasswordError" class="invalid-feedback"><#if accountDeleteError != ''>${accountDeleteError}</#if></div>

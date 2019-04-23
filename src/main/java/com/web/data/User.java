@@ -48,6 +48,7 @@ public class User implements UserDetails {
 	private String userEmail;
 	private String emailConfirmCode;
 	private String emailChangeCode;
+	private String passwordRecoverCode;
 
 
 	@ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)

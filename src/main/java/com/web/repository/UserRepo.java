@@ -19,6 +19,12 @@ public interface UserRepo extends CrudRepository<User, Long> {
 	
 	User findByUserEmail(String email);
 	
+	User findByPasswordRecoverCode(String emailCode);
+
+	@Query("from User u where u.username = :recoverData or u.userEmail = :recoverData group by u")
+	User findByUsernameOrEmail(@Param("recoverData") String recoverData);
+
+	
 	@Query("from User u where u.id = :id group by u")
 	User findUserById(@Param("id") Long id);
 	

@@ -18,8 +18,9 @@ import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
 import com.web.service.GroupService;
 import com.web.service.PostService;
-import com.web.service.ProfileService;
+import com.web.service.UserProfileService;
 import com.web.service.UserService;
+
 
 @Controller
 public class UserProfileController {
@@ -31,10 +32,11 @@ public class UserProfileController {
 	private UserService userService;
 	
 	@Autowired
-	private ProfileService profileService;
+	private UserProfileService userProfileService;
 	
 	@Autowired
 	private GroupService groupService;
+	
 	
 	@GetMapping("{user}/profile")
 	public String getUserProfile(@AuthenticationPrincipal User currentUser,
@@ -82,7 +84,7 @@ public class UserProfileController {
 							  	@RequestParam("file") MultipartFile file,
 							  	Model model) throws IllegalStateException, IOException {
 		UserDto currentUserProfile = userService.findOneToStatistic(currentUser);
-		profileService.updateUserProfile(currentUser, file, userInformation, userTitle);
+		userProfileService.updateUserProfile(currentUser, file, userInformation, userTitle);
 		model.addAttribute("user", currentUserProfile);
 		return "redirect:/profile/redact";
 	}
@@ -90,14 +92,14 @@ public class UserProfileController {
 	@GetMapping("{user}/subscribe")
 	public String subscribe(@AuthenticationPrincipal User currentUser,
 							@PathVariable User user) {
-		profileService.addSubscription(user, currentUser);
+		userProfileService.addSubscription(user, currentUser);
 		return "redirect:/" + user.getId() + "/profile";
 	}
 	
 	@GetMapping("{user}/unsubscribe")
 	public String unsubscribe(@AuthenticationPrincipal User currentUser,
 							  @PathVariable User user) {
-		profileService.removeSubscription(user, currentUser);
+		userProfileService.removeSubscription(user, currentUser);
 		return "redirect:/" + user.getId() + "/profile";
 	}
 	
@@ -106,7 +108,7 @@ public class UserProfileController {
 								 @PathVariable User currentUser,
 								 @PathVariable("user") User bannedUser) {
 		if(usr.equals(currentUser)) {
-			profileService.addInBlackList(bannedUser, currentUser);
+			userProfileService.addInBlackList(bannedUser, currentUser);
 		}
 		return "redirect:/" + currentUser.getId() + "/profile/socialList/blackList";
 	}
@@ -116,7 +118,7 @@ public class UserProfileController {
 									  @PathVariable User currentUser,
 							  		  @PathVariable("user") User bannedUser) {
 		if(currentUser.equals(usr)) {
-			profileService.removeFromBlackList(bannedUser, currentUser);
+			userProfileService.removeFromBlackList(bannedUser, currentUser);
 		}
 		return "redirect:/" + currentUser.getId() + "/profile/socialList/blackList";
 	}

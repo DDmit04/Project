@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSendException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +19,8 @@ import com.sun.mail.smtp.SMTPSendFailedException;
 import com.web.data.User;
 import com.web.exceptions.UserException;
 import com.web.exceptions.UserExceptionType;
-import com.web.service.UserMailService;
 import com.web.service.UserService;
+import com.web.service.UserSettingsService;
 
 @Controller
 public class RegistrationController {
@@ -30,7 +29,7 @@ public class RegistrationController {
 	private UserService userService;
 	
 	@Autowired
-	private UserMailService userMailService;
+	private UserSettingsService userSettingsService;
 	
 	@GetMapping("/registration")
 	public String userRegistration() {
@@ -42,7 +41,7 @@ public class RegistrationController {
 							 User user,
 			   				 Model model) throws IllegalStateException, IOException {
 		try {
-			userService.addUser(user, userPic);
+			userService.createFullUser(user, userPic);
 		} catch (UserException e) {
 			UserExceptionType exType = e.getUserExceptionType();
 			if(exType == UserExceptionType.EXISTING_USERNAME) {
@@ -67,9 +66,10 @@ public class RegistrationController {
 							   Model model) throws ServletException {
 		request.logout();
 		try {
-			userMailService.activateUser(code); 
-		} catch (Exception e) {
-			model.addAttribute("loginAttention", "confirmation code is outdated");
+			userSettingsService.confirmEmail(code); 
+		} catch (UserException e) {
+			model.addAttribute("loginAttention", e.getMessage());
+			return "AttentionPage";
 		}
 		model.addAttribute("loginAttention", "mail successfully confirmed");
 		return "AttentionPage";

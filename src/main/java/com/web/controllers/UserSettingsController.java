@@ -1,8 +1,5 @@
 package com.web.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,17 +18,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.sun.mail.smtp.SMTPSendFailedException;
 import com.web.data.User;
 import com.web.exceptions.UserException;
-import com.web.service.UserMailService;
-import com.web.service.UserService;
+import com.web.service.UserSettingsService;
 
 @Controller
 public class UserSettingsController {
 	
 	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private UserMailService userMailService;
+	private UserSettingsService userSettingsService;
 	
 	@GetMapping("{user}/profile/settings")
 	public String settings(@AuthenticationPrincipal User currentUser,
@@ -40,7 +33,9 @@ public class UserSettingsController {
 						   @ModelAttribute("currentPasswordError") String currentPasswordError,
 						   @ModelAttribute("changeEmailCodeError") String changeEmailCodeError,
 						   @ModelAttribute("accountDeleteError") String accountDeleteError,
-						   @ModelAttribute("changeEmailError") String changeEmailError,
+						   @ModelAttribute("userEmailError") String changeEmailError,
+						   @ModelAttribute("changeEmailCode") String changeEmailCode,
+						   @ModelAttribute("userEmail") String userEmail,
 						   Model model) {
 		if(user.getEmailChangeCode() != null) {
 			model.addAttribute("codeSended", "sended");
@@ -59,12 +54,12 @@ public class UserSettingsController {
 								 Model model) {
 		//Password encoder!!!
 		try {
-			userService.changePassword(currentUser, currentPassword, newPassword);
+			userSettingsService.changePassword(user, currentPassword, newPassword);
 		} catch (UserException userException) {
 			redirectAttrs.addFlashAttribute("currentPasswordError", userException.getMessage());
 			return "redirect:/" + user.getId() + "/profile/settings";
 		}
-		redirectAttrs.addFlashAttribute("redirectMessage", "password seccesfuli changed!");
+		redirectAttrs.addFlashAttribute("redirectMessage", "password seccesfuly changed!");
 		return "redirect:/" + user.getId() + "/profile/settings";
 	}
 	
@@ -74,10 +69,9 @@ public class UserSettingsController {
 			 						  RedirectAttributes redirectAttrs,
 								      Model model) {
 		try {
-			userMailService.sendChangeEmailCode(currentUser);
+			userSettingsService.sendChangeEmailCode(user, user.getUserEmail());
 		} catch (MailSendException | SMTPSendFailedException a) {
 			redirectAttrs.addFlashAttribute("redirectMessage", "something go wrong with email send, pleace try leter");
-			return "redirect:/" + user.getId() + "/profile/settings";
 		}
 		return "redirect:/" + user.getId() + "/profile/settings";
 	}
@@ -90,16 +84,15 @@ public class UserSettingsController {
 							  RedirectAttributes redirectAttrs,
 							  Model model) {
 		try {
-			userMailService.changeEmail(currentUser, changeEmailCode, newEmail);
+			userSettingsService.changeEmail(user, changeEmailCode, newEmail);
+			redirectAttrs.addFlashAttribute("redirectMessage", "email seccesfuly changed!");
 		} catch (UserException e) {
-			redirectAttrs.addFlashAttribute("changeEmailError", e.getMessage());
-			return "redirect:/" + user.getId() + "/profile/settings";
+			redirectAttrs.addFlashAttribute("userEmailError", e.getMessage());
 		} catch (SMTPSendFailedException | MailSendException e) {
 			redirectAttrs.addFlashAttribute("redirectMessage", "something go wrong with email send, pleace try leter");
-			return "redirect:/" + user.getId() + "/profile/settings";
+			redirectAttrs.addFlashAttribute("changeEmailCode", changeEmailCode);
+			redirectAttrs.addFlashAttribute("userEmail", newEmail);
 		}
-		redirectAttrs.addFlashAttribute("codeSended", "sended");
-		redirectAttrs.addFlashAttribute("redirectMessage", "email seccesfuly changed!");
 		return "redirect:/" + user.getId() + "/profile/settings";
 	}
 	
@@ -111,7 +104,7 @@ public class UserSettingsController {
 								RedirectAttributes redirectAttrs,
 								Model model) throws ServletException {
 		try {
-			userService.deleteUser(currentUser, accountDeletePassword);
+			userSettingsService.deleteUser(user, accountDeletePassword);
 			request.logout();
 		} catch (UserException e) {
 			redirectAttrs.addFlashAttribute("accountDeleteError", e.getMessage());
@@ -119,5 +112,5 @@ public class UserSettingsController {
 		}
 		return "redirect:/login";
 	}
-
+	
 }
