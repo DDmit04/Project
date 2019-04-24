@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.post.FullPostService;
 import com.web.data.Group;
 import com.web.data.Post;
 import com.web.data.User;
@@ -16,20 +17,27 @@ import com.web.data.dto.PostDto;
 import com.web.repository.PostRepo;
 
 @Service
-public class PostService {
+public class PostServiceImpl implements FullPostService {
 	
 	@Autowired
-	private FileService fileService;
+	private FileServiceImpl fileService;
 	
 	@Autowired
 	private PostRepo postRepo;
 	
-	public void addUserPost(String postText, String tags, MultipartFile file, User user) throws IllegalStateException, IOException {
-		postRepo.save(createPost(postText, user, tags, file));
+	private boolean userIsAuthorOrAdmin(User currentUser, Post post) {
+		return post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser)
+			   || (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser));
 	}
 	
-	public void addGroupPost(String postText, String tags, MultipartFile file, Group group) throws IllegalStateException, IOException {
-		postRepo.save(createGroupPost(postText, group, tags, file));		
+	private void incrementAndSaveRepostsCount(Post incrementedPost) {
+		incrementedPost.setRepostsCount(incrementedPost.getRepostsCount() + 1);
+		postRepo.save(incrementedPost);
+	}
+	
+	private void decrementAndSaveRepostsCount(Post decrimentedPost) {
+		decrimentedPost.setRepostsCount(decrimentedPost.getRepostsCount() - 1);
+		postRepo.save(decrimentedPost);
 	}
 	
 	private Post createPost(String postText, User user, String tags, MultipartFile file) throws IllegalStateException, IOException {
@@ -46,6 +54,17 @@ public class PostService {
 		return post;
 	}
 	
+	@Override
+	public void addUserPost(String postText, String tags, MultipartFile file, User user) throws IllegalStateException, IOException {
+		postRepo.save(createPost(postText, user, tags, file));
+	}
+	
+	@Override
+	public void addGroupPost(String postText, String tags, MultipartFile file, Group group) throws IllegalStateException, IOException {
+		postRepo.save(createGroupPost(postText, group, tags, file));		
+	}
+	
+	@Override
 	public void updatePost(User currentUser, Post post, String text, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		if(userIsAuthorOrAdmin(currentUser, post)) {
 			post.setPostText(text);
@@ -56,6 +75,7 @@ public class PostService {
 		}
 	}
 
+	@Override
 	public void deletePost(User currentUser, Post post) {
 		if(userIsAuthorOrAdmin(currentUser, post)) {
 			if(postRepo.findCountByRepostAndAuthor(currentUser, post.getRepost()) == 1)  {
@@ -65,6 +85,7 @@ public class PostService {
 		}
 	}
 	
+	@Override
 	public void removeRepost(User currentUser, Post post) {
 		if(userIsAuthorOrAdmin(currentUser, post)) {
 			decrementAndSaveRepostsCount(post.getRepost());
@@ -73,6 +94,7 @@ public class PostService {
 		}
 	}
 	
+	@Override
 	public void addRepost(User currentUser, Post post, String repostText, String repostTags) throws IllegalStateException, IOException {
 		Post newPost = createPost(repostText, currentUser, repostTags, null);	
 		newPost.setRepost(post);
@@ -82,16 +104,7 @@ public class PostService {
 		postRepo.save(newPost);
 	}
 	
-	private void incrementAndSaveRepostsCount(Post incrementedPost) {
-		incrementedPost.setRepostsCount(incrementedPost.getRepostsCount() + 1);
-		postRepo.save(incrementedPost);
-	}
-	
-	private void decrementAndSaveRepostsCount(Post decrimentedPost) {
-		decrimentedPost.setRepostsCount(decrimentedPost.getRepostsCount() - 1);
-		postRepo.save(decrimentedPost);
-	}
-	
+	@Override
 	public void like(User currentUser, User user, Post post) {
 		if(user.equals(currentUser)) {
 			Set<User> like = post.getPostLikes();
@@ -103,23 +116,22 @@ public class PostService {
 		}
 	}
 	
-	private boolean userIsAuthorOrAdmin(User currentUser, Post post) {
-		return post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser)
-			   || (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser));
-	}
-	
+	@Override
 	public PostDto getOnePost(User currentUser, Post post) {
 		return postRepo.findOnePost(currentUser, post.getId());
 	}
 	
+	@Override
 	public Iterable<PostDto> getUserPosts(User currentUser, User user) {
 		return postRepo.findByPostAuthor(currentUser, user);
 	}
 	
+	@Override
 	public Iterable<PostDto> getAllPosts(User currentUser) {
 		return postRepo.findAll(currentUser);
 	}
 
+	@Override
 	public Iterable<PostDto> getGroupPosts(User currentUser, Group group) {
 		return postRepo.findGroupPosts(currentUser, group);
 	}

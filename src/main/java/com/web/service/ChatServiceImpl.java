@@ -9,19 +9,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.chat.ChatService;
 import com.web.data.Chat;
 import com.web.data.User;
 import com.web.data.dto.ChatDto;
 import com.web.repository.ChatRepo;
 
 @Service
-public class ChatService {
+public class ChatServiceImpl implements ChatService {
 	
 	@Autowired
 	private ChatRepo chatRepo;
 	
 	@Autowired
-	private FileService fileService;
+	private FileServiceImpl fileService;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder; 
@@ -38,6 +39,7 @@ public class ChatService {
 		return chat;
 	}
 
+	@Override
 	public Chat createChat(User user, User currentUser) {
 		Chat chat = chatRepo.findByChatName(currentUser.getUsername() + " - " + user.getUsername());
 		if(chat == null) {
@@ -54,7 +56,8 @@ public class ChatService {
 		return chat;
 	}
 	
-	public void deleteChat(User user, User currentUser, Chat chat) {
+	@Override
+	public void deleteChat(Chat chat) {
 		if (chat.getSessions().size() == 0) {
 			chat.setChatOwner(null);
 			chatRepo.delete(chat);

@@ -19,13 +19,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
-import com.web.service.PostService;
+import com.web.service.PostServiceImpl;
 
 @Controller
 public class PostController {
 	
 	@Autowired
-	private PostService postService;
+	private PostServiceImpl postService;
 	
 	@GetMapping("/")
 	public String greetingPage(Model model) {

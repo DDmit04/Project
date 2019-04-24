@@ -14,13 +14,13 @@ import com.sun.mail.smtp.SMTPSendFailedException;
 import com.web.data.User;
 import com.web.exceptions.UserException;
 import com.web.exceptions.UserExceptionType;
-import com.web.service.PasswordRecoverService;
+import com.web.service.PasswordRecoverServiceImpl;
 
 @Controller
 public class PasswordRecoverController {
 	
 	@Autowired
-	private PasswordRecoverService passwordRecoverService;
+	private PasswordRecoverServiceImpl passwordRecoverService;
 	
 	@GetMapping("/passwordRecover")
 	public String recoverPassword() {

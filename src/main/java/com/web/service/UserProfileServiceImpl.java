@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.user.UserProfileService;
 import com.web.data.FriendRequest;
 import com.web.data.User;
 import com.web.data.dto.FriendRequestDto;
@@ -16,7 +17,7 @@ import com.web.repository.FriendRequestRepo;
 import com.web.repository.UserRepo;
 
 @Service
-public class UserProfileService {
+public class UserProfileServiceImpl implements UserProfileService {
 	
 	@Autowired
 	private FriendRequestRepo friendRequestRepo;
@@ -28,17 +29,20 @@ public class UserProfileService {
 	private CommentRepo commentRepo;
 	
 	@Autowired
-	private FileService fileService;
+	private FileServiceImpl fileService;
 	
+	@Override
 	public void addFriendRequest(User user, User currentUser) {
 		FriendRequest friendReqest = new FriendRequest(LocalDateTime.now(Clock.systemUTC()), currentUser, user);
 		friendRequestRepo.save(friendReqest);		
 	}
 	
+	@Override
 	public void deleteFriendRequest(FriendRequest frendReqest) {
 		friendRequestRepo.delete(frendReqest);		
 	}
 	
+	@Override
 	public void deleteFriendRequest(User user, User currentUser, FriendRequest frendReqest) {
 		FriendRequest counterRequest = friendRequestRepo.findOneRequest(user, currentUser);
 		if(counterRequest != null) {
@@ -47,6 +51,7 @@ public class UserProfileService {
 		deleteFriendRequest(frendReqest);	
 	}
 	
+	@Override
 	public void addFriend(FriendRequest frendRequest) {
 		User receivingUser = frendRequest.getRequestTo();
 		User senderUser = frendRequest.getRequestFrom();
@@ -56,6 +61,7 @@ public class UserProfileService {
 		userRepo.save(senderUser);
 	}
 
+	@Override
 	public void deleteFriend(User user, User currentUser) {
 		user.getUserFriends().remove(currentUser);
 		userRepo.save(user);	
@@ -63,16 +69,19 @@ public class UserProfileService {
 		userRepo.save(currentUser);	
 	}
 	
+	@Override
 	public void removeSubscription(User user, User currentUser) {
 		user.getSubscribers().remove(currentUser);
 		userRepo.save(user);
 	}
 
+	@Override
 	public void addSubscription(User user, User currentUser) {
 		user.getSubscribers().add(currentUser);
 		userRepo.save(user);
 	}
 
+	@Override
 	public void addInBlackList(User user, User currentUser) {
 		currentUser.getBlackList().add(user);		
 		if(currentUser.getSubscribers().contains(user)) {
@@ -94,6 +103,7 @@ public class UserProfileService {
 		commentRepo.deleteAll(commentRepo.findBannedComments(currentUser, user));	
 	}
 	
+	@Override
 	public void updateUserProfile(User user, MultipartFile file, String userInformation, String userTitle) throws IllegalStateException, IOException {
 		if(userInformation != null) {
 			//
@@ -105,19 +115,23 @@ public class UserProfileService {
 		userRepo.save(user);		
 	}
 	
+	@Override
 	public void uploadUserPic(User user, MultipartFile userPic) throws IllegalStateException, IOException {
 		user.setUserPicName(fileService.uploadFile(userPic, UploadType.USER_PIC));
 	}
 		
+	@Override
 	public void removeFromBlackList(User user, User currentUser) {
 		currentUser.getBlackList().remove(user);
 		userRepo.save(currentUser);
 	}
 	
+	@Override
 	public Iterable<FriendRequestDto> getFriendRequestsToUser(User currentUser) {
 		return friendRequestRepo.findByRequestToId(currentUser);
 	}
 
+	@Override
 	public Iterable<FriendRequestDto> getFriendRequestsFromUser(User currentUser) {
 		return friendRequestRepo.findByRequestFromId(currentUser);
 	}

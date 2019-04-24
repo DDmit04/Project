@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.data.User;
 import com.web.data.dto.PostDto;
-import com.web.service.SearchService;
+import com.web.service.SearchServiceImpl;
 
 @Controller
 public class SearchController {
 	
 	@Autowired
-	private SearchService searchService;
+	private SearchServiceImpl searchService;
 
 	@GetMapping("/search")
 	public String search(@AuthenticationPrincipal User currentUser,

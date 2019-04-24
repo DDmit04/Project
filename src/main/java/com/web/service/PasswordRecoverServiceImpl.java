@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
+import com.web.api.PasswordRecoverService;
 import com.web.data.User;
 import com.web.exceptions.UserException;
 import com.web.exceptions.UserExceptionType;
@@ -13,17 +14,18 @@ import com.web.repository.UserRepo;
 import com.web.utils.ServiceUtils;
 
 @Service
-public class PasswordRecoverService {
+public class PasswordRecoverServiceImpl implements PasswordRecoverService {
 	
 	@Autowired
-	private UserRepo userRepo;
+	private UserRepo userRepo; 
 	
 	@Autowired
-	private MailService mailService;
+	private MailServiceImpl mailService;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder; 
 	
+	@Override
 	public User realizeSendPasswordRecoverCode(String recoverData) throws UserException, MailSendException, SMTPSendFailedException {
 		User userDb = userRepo.findByUsernameOrEmail(recoverData);
 		if (userDb != null) {
@@ -39,12 +41,14 @@ public class PasswordRecoverService {
 		return userDb;
 	}
 	
+	@Override
 	public void sendPasswordRecoverCode(User user, String email) throws MailSendException, SMTPSendFailedException {
 		String randomCode = ServiceUtils.generateRandomKey(3);
 		mailService.sendPasswordRecoverCode(user, email, randomCode);
 		user.setPasswordRecoverCode(randomCode);
 	}
 	
+	@Override
 	public void checkPasswordRecoverCode(User user, String emailCode) throws UserException {
 		User userDb = userRepo.findByPasswordRecoverCode(emailCode);
 		if (userDb != null && user.equals(userDb)) {
@@ -55,6 +59,7 @@ public class PasswordRecoverService {
 		}
 	}
 	
+	@Override
 	public void changeRecoveredPassword(User user, String newPassword) throws UserException {
 		if(passwordEncoder.matches( newPassword, user.getPassword())) {
 			throw new UserException("new password is " + user.getUsername() + "'s current password!", user, UserExceptionType.CHANGE_PASSWORD);

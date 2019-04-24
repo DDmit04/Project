@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
+import com.web.api.user.UserProfileService;
+import com.web.api.user.UserCreationService;
+import com.web.api.user.UserSettingsService;
 import com.web.data.Group;
 import com.web.data.User;
 import com.web.data.UserRoles;
@@ -24,7 +27,7 @@ import com.web.exceptions.UserExceptionType;
 import com.web.repository.UserRepo;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserServiceImpl implements UserDetailsService, UserCreationService {
 	
 	@Autowired
 	private UserRepo userRepo;
@@ -38,15 +41,7 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private PasswordEncoder passwordEncoder; 
 	
-	public void createFullUser(User user, MultipartFile userPic) 
-			throws UserException, IllegalStateException, IOException, MailSendException, SMTPSendFailedException {
-		User fullUser = createUser(user);
-		userProfileService.uploadUserPic(fullUser, userPic);
-		userSettingsService.realizeSendEmailConfirmCode(fullUser, fullUser.getUserEmail());
-		userRepo.save(fullUser);
-	}
-	
-	public User createUser(User user) throws UserException {
+	private User createUser(User user) throws UserException {
 		User userFromDbUsername = userRepo.findByUsernameOrEmail(user.getUsername());
 		User userFronDbEmail = userRepo.findByUsernameOrEmail(user.getUserEmail());
 		if(userFromDbUsername != null) {
@@ -64,22 +59,49 @@ public class UserService implements UserDetailsService {
 	}
 	
 	@Override
+	public void createFullUser(User user, MultipartFile userPic) 
+			throws UserException, IllegalStateException, IOException, MailSendException, SMTPSendFailedException {
+		User fullUser = createUser(user);
+		userProfileService.uploadUserPic(fullUser, userPic);
+		userSettingsService.realizeSendEmailConfirmCode(fullUser, fullUser.getUserEmail());
+		userRepo.save(fullUser);
+	}
+	
+	@Override
+	public void deleteUser(User currentUser, String accountDeletePassword) throws UserException {
+		if(passwordEncoder.matches(accountDeletePassword, currentUser.getPassword())) {
+			userRepo.delete(currentUser);
+		} else {
+			throw new UserException("Wrong " + currentUser.getUsername() + "'s password!", currentUser, UserExceptionType.DELETE_USER);
+		}
+	}
+	
+	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return userRepo.findByUsernameOrEmail(username);
 	}
+	
+	@Override
+	public User getUserByUsername(User currentUser) {
+		return userRepo.findByUsernameOrEmail(currentUser.getUsername());
+	}
 
-	public UserDto getOneUserToUser(User currentUser, User user) {
+	@Override
+	public UserDto getOneUserToUser(User user, User currentUser) {
 		return userRepo.findOneUserToUserDto(currentUser, currentUser.getId(), user.getId());
 	}
 	
+	@Override
 	public UserDto getOneUserToList(User user) {
 		return userRepo.findOneUserForListDto(user.getId());
 	}
 	
+	@Override
 	public UserDto getOneUserToGroup(User currentUser, Group group) {
 		return userRepo.findOneUserToGroupDto(currentUser.getId(), group);
 	}
 
+	@Override
 	public UserDto getOneUserToStatistic(User currentUser) {
 		return userRepo.findOneUserToStatistic(currentUser.getId());
 	}

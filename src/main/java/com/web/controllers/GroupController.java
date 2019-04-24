@@ -12,27 +12,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.user.UserCreationService;
 import com.web.data.Group;
 import com.web.data.User;
 import com.web.data.dto.GroupDto;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
 import com.web.exceptions.GroupException;
-import com.web.service.GroupService;
-import com.web.service.PostService;
-import com.web.service.UserService;
+import com.web.service.GroupServiceImpl;
+import com.web.service.PostServiceImpl;
 
 @Controller
 public class GroupController {
 	
 	@Autowired
-	private GroupService groupService;
+	private GroupServiceImpl groupService;
 		
 	@Autowired
-	private UserService userServive;
+	private UserCreationService userServive;
 	
 	@Autowired
-	private PostService postService;
+	private PostServiceImpl postService;
 	
 	@GetMapping("/groups")
 	public String getAllGroups(@AuthenticationPrincipal User currentUser,
@@ -49,7 +49,7 @@ public class GroupController {
 	public String getGroup(@AuthenticationPrincipal User currentUser,
 						   @PathVariable Group group,
 						   Model model) {
-		GroupDto oneGroup = groupService.getOneGroup(group, currentUser);
+		GroupDto oneGroup = groupService.getOneGroup(currentUser, group);
 		UserDto oneUser = userServive.getOneUserToGroup(currentUser, group);
 		Iterable<PostDto> groupPosts = postService.getGroupPosts(currentUser, group);
 		model.addAttribute("posts", groupPosts);
@@ -95,7 +95,7 @@ public class GroupController {
 						   @PathVariable User user,
 						   @PathVariable Group group) {
 		if(user.equals(currentUser)) {
-			groupService.addGroupSub(group, user); 
+			groupService.addGroupSub(user, group); 
 		}
 		return "redirect:/groups/" + group.getId();
 	}
@@ -167,7 +167,7 @@ public class GroupController {
 								   @PathVariable String listType,
 							 	   @PathVariable Group group,
 							 	   Model model) {
-		GroupDto currentGroup = groupService.getOneGroup(group, currentUser);
+		GroupDto currentGroup = groupService.getOneGroup(currentUser, group);
 		model.addAttribute("group", currentGroup);
 		model.addAttribute("groupSubscrabers", group.getGroupSubs());
 		model.addAttribute("groupAdmins", group.getGroupAdmins());

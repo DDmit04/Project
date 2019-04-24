@@ -5,6 +5,7 @@ import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.web.api.SearchService;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.SearchResultsGeneric;
@@ -13,7 +14,7 @@ import com.web.repository.PostRepo;
 import com.web.repository.UserRepo;
 
 @Service
-public class SearchService {
+public class SearchServiceImpl implements SearchService {
 	
 	@Autowired
 	private PostRepo postRepo;
@@ -24,6 +25,7 @@ public class SearchService {
 	@Autowired
 	private GroupRepo groupRepo;
 	
+	@Override
 	public Iterable<? extends SearchResultsGeneric> search(User currentUser, String search, String searchType) {
 		Iterable<? extends SearchResultsGeneric> searchResult = new HashSet<>();
 		if(search != null && search != "") {
@@ -46,6 +48,7 @@ public class SearchService {
 		return searchResult;
 	}
 	
+	@Override
 	public Iterable<PostDto> findSubscriptionsPosts(User currentUser) {
 		return postRepo.findSubscriptionsPosts(currentUser);
 	}

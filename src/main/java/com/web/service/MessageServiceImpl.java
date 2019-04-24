@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.web.api.MessageService;
 import com.web.data.Chat;
 import com.web.data.ChatSession;
 import com.web.data.ChatSessionConnection;
@@ -21,7 +22,7 @@ import com.web.repository.UserRepo;
 import com.web.utils.DateUtil;
 
 @Service
-public class MessageService {
+public class MessageServiceImpl implements MessageService {
 
 	@Autowired
 	private MessageRepo messageRepo;
@@ -32,18 +33,17 @@ public class MessageService {
 	@Autowired
 	private UserRepo userRepo;
 
-	public User getUserByUsername(User currentUser) {
-		return userRepo.findByUsernameOrEmail(currentUser.getUsername());
-	}
-
+	@Override
 	public UserDto getOneUserToChat(User currentUser, Chat chat) {
 		return userRepo.findOneUserToChat(currentUser.getId(), chat);
 	}
 
+	@Override
 	public ChatDto getOneChat(Chat chat) {
 		return chatRepo.findOneChat(chat.getId());
 	}
 
+	@Override
 	public void createMessage(Long chatId, MessageJson jsonMessage) {
 		LocalDateTime messageTime = jsonMessage.getMessageDate();
 		Chat chat = chatRepo.findChatById(chatId);
@@ -57,6 +57,7 @@ public class MessageService {
 		chatRepo.save(chat);
 	}
 
+	@Override
 	public LinkedList<Message> getChatMessages(ChatSession session, Chat chat) {
 		Set<Message> messages = chat.getChatMessages();
 		LinkedList<Message> chatMessages = new LinkedList<>();

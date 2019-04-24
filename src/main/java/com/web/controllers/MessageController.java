@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.web.api.user.UserCreationService;
 import com.web.data.Chat;
 import com.web.data.ChatSession;
 import com.web.data.Message;
@@ -20,18 +21,20 @@ import com.web.data.MessageJson;
 import com.web.data.User;
 import com.web.data.dto.ChatDto;
 import com.web.data.dto.UserDto;
-import com.web.service.ChatSessionConnectionService;
-import com.web.service.ChatSessionService;
-import com.web.service.MessageService;
+import com.web.service.ChatSessionServiceImpl;
+import com.web.service.MessageServiceImpl;
  
 @Controller
 public class MessageController {
  
     @Autowired
-    private MessageService messageService;
+    private MessageServiceImpl messageService;
     
     @Autowired
-   	private ChatSessionService chatSessionService;
+    private UserCreationService userService;
+    
+    @Autowired
+   	private ChatSessionServiceImpl chatSessionService;
 	    
     @GetMapping("chats/{chat}")
 	public String getMessages(@AuthenticationPrincipal User currentUser, 
@@ -39,8 +42,8 @@ public class MessageController {
 							  Model model) {
     	ChatSession session = chatSessionService.getSession(currentUser, chat);
 		if (session != null) {
-		    chatSessionService.updateLastConnectionDate(chat, currentUser);
-			User userFromDb = messageService.getUserByUsername(currentUser);
+		    chatSessionService.updateLastConnectionDate(currentUser, chat);
+			User userFromDb = userService.getUserByUsername(currentUser);
 			UserDto userDto = messageService.getOneUserToChat(currentUser, chat);
 			ChatDto chatDto = messageService.getOneChat(chat);
 			LinkedList<Message> chatMessages = messageService.getChatMessages(session, chat);
@@ -63,7 +66,7 @@ public class MessageController {
     @GetMapping("chats/{chat}/disconnectChat")
    	public String disconnectChat(@AuthenticationPrincipal User currentUser, 
    							 @PathVariable Chat chat) {
-       chatSessionService.updateLastConnectionDate(chat, currentUser);
+       chatSessionService.updateLastConnectionDate(currentUser, chat);
        return "redirect:/messages";
    	}
 	

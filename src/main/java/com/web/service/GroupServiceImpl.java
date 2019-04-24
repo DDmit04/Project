@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.GroupService;
 import com.web.data.Group;
 import com.web.data.User;
 import com.web.data.dto.GroupDto;
@@ -17,20 +18,29 @@ import com.web.repository.CommentRepo;
 import com.web.repository.GroupRepo;
 
 @Service
-public class GroupService {
+public class GroupServiceImpl implements GroupService {
 	
 	@Autowired
 	private GroupRepo groupRepo;
 	
 	@Autowired
-	private FileService fileService;
+	private FileServiceImpl fileService;
 	
 	@Autowired
 	private CommentRepo commentRepo;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder; 
+	
+	private boolean userIsGroupOwner(User currentUser, Group group) {
+		return group.getGroupOwner().equals(currentUser);
+	}
+	
+	private boolean userIsGroupAdmin(User currentUser, Group group) {
+		return group.getGroupAdmins().contains(currentUser);
+	}
 
+	@Override
 	public Group createGroup(Group group, MultipartFile file, User currentUser) 
 			throws IllegalStateException, IOException, GroupException {
 		
@@ -48,6 +58,7 @@ public class GroupService {
 		return group;
 	}
 	
+	@Override
 	public void makeOwner(User currentUser, User user, Group group, String username, String password) {
 		// Password encoder!!!
 		User groupOwner = group.getGroupOwner();
@@ -59,6 +70,7 @@ public class GroupService {
 		}
 	}
 	
+	@Override
 	public void banUser(User currentUser, User user, Group group) {
 		if(userIsGroupOwner(currentUser, group) || userIsGroupAdmin(currentUser, group)) {
 			group.getGroupBanList().add(user);
@@ -70,6 +82,7 @@ public class GroupService {
 		}
 	}
 
+	@Override
 	public void unbanUser(User currentUser, User user, Group group) {
 		if(userIsGroupOwner(currentUser, group) || userIsGroupAdmin(currentUser, group)) {
 			group.getGroupBanList().remove(user);
@@ -77,23 +90,26 @@ public class GroupService {
 		}
 	}
 	
-	public void addGroupSub(Group group, User user) {
+	@Override
+	public void addGroupSub(User user, Group group) {
 		group.getGroupSubs().add(user);
 		groupRepo.save(group);
 	}
 
+	@Override
 	public void removeGroupSub(User user, Group group) {
 		group.getGroupSubs().remove(user);
 		groupRepo.save(group);		
 	}
 
+	@Override
 	public void addGroupAdmin(User currentUser, User user, Group group) {
 		if(userIsGroupOwner(currentUser, group)) {
 			group.getGroupAdmins().add(user);
 			groupRepo.save(group);		
 		}
 	}
-
+	@Override
 	public void removeGroupAdmin(User currentUser, User user, Group group) {
 		if(userIsGroupOwner(currentUser, group) || user.equals(currentUser)) {
 			group.getGroupAdmins().remove(user);
@@ -101,23 +117,19 @@ public class GroupService {
 		}
 	}
 	
-	private boolean userIsGroupOwner(User currentUser, Group group) {
-		return group.getGroupOwner().equals(currentUser);
-	}
-	
-	private boolean userIsGroupAdmin(User currentUser, Group group) {
-		return group.getGroupAdmins().contains(currentUser);
-	}
-
-	public GroupDto getOneGroup(Group group, User currentUser) {
+	@Override
+	public GroupDto getOneGroup(User user, Group group) {
 		return groupRepo.findOneGroupDto(group.getId());
 	}
 
+	@Override
 	public Iterable<GroupDto> getUserGroups(User user) {
 		return groupRepo.findUserGroupsDto(user);
 	}
 	
+	@Override
 	public Iterable<GroupDto> getAllGroups() {
 		return groupRepo.findAllGroupsDto();
 	}
+
 }

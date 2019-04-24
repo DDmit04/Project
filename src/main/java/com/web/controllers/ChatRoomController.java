@@ -9,24 +9,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.web.data.Chat;
 import com.web.data.User;
-import com.web.service.ChatRoomService;
-import com.web.service.ChatSessionService;
+import com.web.service.ChatRoomServiceImpl;
+import com.web.service.ChatSessionServiceImpl;
 
 @Controller
 public class ChatRoomController {
 	
 	@Autowired
-	private ChatRoomService chatRoomService;
+	private ChatRoomServiceImpl chatRoomService;
 	
 	@Autowired
-	private ChatSessionService chatSessionService;
+	private ChatSessionServiceImpl chatSessionService;
 	
 	@GetMapping("/chats/{chat}/{user}/invate")
 	public String invateUser(@AuthenticationPrincipal User currentUser,
 						     @PathVariable User user,
 						     @PathVariable Chat chat) {
 		chatRoomService.invateUser(user, chat);
-		chatSessionService.createNewChatSession(chat, user);
+		chatSessionService.createNewChatSession(user, chat);
 		return "redirect:/chats/" + chat.getId();
 	}
 	
@@ -36,7 +36,7 @@ public class ChatRoomController {
 							@PathVariable User user, 
 							Model model) {
 		chatRoomService.userLeave(user, currentUser, chat);
-		chatSessionService.disconnectChatSession(chat, user);
+		chatSessionService.disconnectChatSession(user, chat);
 		return "redirect:/chats/" + chat.getId();
 	}
 	 
@@ -46,7 +46,7 @@ public class ChatRoomController {
 							 @PathVariable User user, 
 							 Model model) {
 		chatRoomService.userReturn(user, chat);
-		chatSessionService.connectChatSesion(chat, user);
+		chatSessionService.connectChatSesion(user, chat);
 		return "redirect:/chats/" + chat.getId();
 	}
 	 
@@ -55,7 +55,7 @@ public class ChatRoomController {
 							 @PathVariable Chat chat, 
 							 @PathVariable User user, 
 							 Model model) {
-		chatSessionService.deleteChatSession(chat, currentUser);
+		chatSessionService.deleteChatSession(currentUser, chat);
 		chatRoomService.deleteChatHistory(user, currentUser, chat);
 		return "redirect:/messages";
 	}

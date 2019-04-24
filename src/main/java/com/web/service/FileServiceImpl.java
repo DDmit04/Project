@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.FileService;
+
 @Service
-public class FileService {
+public class FileServiceImpl implements FileService {
 	
 	@Value("${upload.path.posts}")
 	private String uploadPathPosts;
@@ -28,6 +30,7 @@ public class FileService {
 	
 	private String uploadPath;
 	
+	@Override
 	public String uploadFile(MultipartFile file, UploadType type) throws IllegalStateException, IOException {
 		String resultFilename = null;
 		if(type == UploadType.POST) {

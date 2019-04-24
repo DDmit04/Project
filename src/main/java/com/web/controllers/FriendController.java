@@ -7,10 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.web.api.user.UserProfileService;
 import com.web.data.FriendRequest;
 import com.web.data.User;
 import com.web.data.dto.FriendRequestDto;
-import com.web.service.UserProfileService;
 
 @Controller
 public class FriendController {

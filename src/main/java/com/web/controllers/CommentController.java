@@ -17,17 +17,17 @@ import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.CommentDto;
 import com.web.data.dto.PostDto;
-import com.web.service.CommentService;
-import com.web.service.PostService;
+import com.web.service.CommentServiceImpl;
+import com.web.service.PostServiceImpl;
 
 @Controller
 public class CommentController {
 	
 	@Autowired
-	private CommentService commentService;
+	private CommentServiceImpl commentService;
 	
 	@Autowired
-	private PostService postService;
+	private PostServiceImpl postService;
 	
 	@GetMapping("{post}/comments")
 	public String getComments(@AuthenticationPrincipal User currentUser,
@@ -46,7 +46,7 @@ public class CommentController {
 							 @RequestParam("commentPic") MultipartFile commentPic,
 							 Comment comment,
 			  				 Model model) throws IllegalStateException, IOException {
-		commentService.addComment(comment, post, currentUser, commentPic);
+		commentService.addComment(currentUser, comment, post, commentPic);
 		return "redirect:/" + post.getId() + "/comments";
 	}
 	
@@ -79,7 +79,7 @@ public class CommentController {
 							  @RequestParam("commentPic") MultipartFile commentPic,
 							  @RequestParam String commentText,
 							  Model model) throws IllegalStateException, IOException {
-		commentService.updateComment(currentUser, comment, commentText, commentPic);
+		commentService.editComment(currentUser, comment, commentText, commentPic);
 		return "redirect:/" + post.getId() + "/comments";
 	}
 

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.web.api.chat.ChatSessionService;
 import com.web.data.Chat;
 import com.web.data.ChatSession;
 import com.web.data.ChatSessionConnection;
@@ -13,48 +14,58 @@ import com.web.data.User;
 import com.web.repository.ChatSessionRepo;
 
 @Service
-public class ChatSessionService extends ChatSessionConnectionService {
+public class ChatSessionServiceImpl implements ChatSessionService {
 	
 	@Autowired
 	private ChatSessionRepo chatSessionRepo;
 	
-	public void createNewChatSession(Chat chat, User currentUser) {
-		ChatSession session = new ChatSession(chat, currentUser);
+	@Autowired
+	private ChatSessionConnectionServiceImpl сhatSessionConnectionService;
+	
+	@Override
+	public void createNewChatSession(User user, Chat chat) {
+		ChatSession session = new ChatSession(chat, user);
 		session.setLastConnectionDate(LocalDateTime.now(Clock.systemUTC()));
 		chatSessionRepo.save(session);
-		ChatSessionConnection sessionConnection = openNewSessionConnection(session);
+		ChatSessionConnection sessionConnection = сhatSessionConnectionService.openNewSessionConnection(session);
 		session.setLastConnectionId(sessionConnection.getId());
 		chatSessionRepo.save(session);
 	}
 	
-	public void deleteChatSession(Chat chat, User currentUser) {
-		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, currentUser);
+	@Override
+	public void deleteChatSession(User user, Chat chat) {
+		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
 		chatSessionRepo.delete(session);
 	}
 	
-	public void connectChatSesion(Chat chat, User user) {
+	@Override
+	public void connectChatSesion(User user, Chat chat) {
 		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
-		ChatSessionConnection sessionConnection = openNewSessionConnection(session);
+		ChatSessionConnection sessionConnection = сhatSessionConnectionService.openNewSessionConnection(session);
 		session.setLastConnectionId(sessionConnection.getId());
 		chatSessionRepo.save(session);
 	}
 	
-	public void disconnectChatSession(Chat chat, User user) {
+	@Override
+	public void disconnectChatSession(User user, Chat chat) {
 		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
-		closeSessionConnection(session);
+		сhatSessionConnectionService.closeSessionConnection(session);
 		chatSessionRepo.save(session);
 	}
 	
-	public void updateLastConnectionDate(Chat chat, User user) {
+	@Override
+	public void updateLastConnectionDate(User user, Chat chat) {
 		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
 		session.setLastConnectionDate(LocalDateTime.now(Clock.systemUTC()));
 		chatSessionRepo.save(session);
 	}
 
+	@Override
 	public ChatSession getSession(User currentUser, Chat chat) {
 		return chatSessionRepo.findSessionByChatAndUser(chat, currentUser);
 	}
 
+	@Override
 	public Iterable<ChatSession> getUserChatSessions(User currentUser) {
 		return chatSessionRepo.findSessionsByUser(currentUser);
 	}

@@ -16,15 +16,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
+import com.web.api.user.UserCreationService;
+import com.web.api.user.UserSettingsService;
 import com.web.data.User;
 import com.web.exceptions.UserException;
-import com.web.service.UserSettingsService;
 
 @Controller
 public class UserSettingsController {
 	
 	@Autowired
 	private UserSettingsService userSettingsService;
+	
+	@Autowired
+	private UserCreationService userService;
 	
 	@GetMapping("{user}/profile/settings")
 	public String settings(@AuthenticationPrincipal User currentUser,
@@ -104,7 +108,7 @@ public class UserSettingsController {
 								RedirectAttributes redirectAttrs,
 								Model model) throws ServletException {
 		try {
-			userSettingsService.deleteUser(user, accountDeletePassword);
+			userService.deleteUser(user, accountDeletePassword);
 			request.logout();
 		} catch (UserException e) {
 			redirectAttrs.addFlashAttribute("accountDeleteError", e.getMessage());

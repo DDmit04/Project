@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
+import com.web.api.user.UserCreationService;
+import com.web.api.user.UserSettingsService;
 import com.web.data.User;
 import com.web.exceptions.UserException;
 import com.web.exceptions.UserExceptionType;
-import com.web.service.UserService;
-import com.web.service.UserSettingsService;
 
 @Controller
 public class RegistrationController {
 	
 	@Autowired
-	private UserService userService;
+	private UserCreationService userService;
 	
 	@Autowired
 	private UserSettingsService userSettingsService;

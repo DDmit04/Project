@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.CommentService;
 import com.web.data.Comment;
 import com.web.data.Post;
 import com.web.data.User;
@@ -15,15 +16,16 @@ import com.web.data.dto.CommentDto;
 import com.web.repository.CommentRepo;
 
 @Service
-public class CommentService {
+public class CommentServiceImpl implements CommentService{
 	
 	@Autowired
 	private CommentRepo commentRepo;
 	
 	@Autowired
-	private FileService fileService;
+	private FileServiceImpl fileService;
 
-	public void addComment(Comment comment, Post post, User currentUser, MultipartFile commentPic) throws IllegalStateException, IOException {
+	@Override
+	public void addComment(User currentUser, Comment comment, Post post, MultipartFile commentPic) throws IllegalStateException, IOException {
 		comment.setCommentCreationDate(LocalDateTime.now(Clock.systemUTC()));
 		comment.setCommentedPost(post);
 		comment.setCommentAuthor(currentUser);
@@ -31,6 +33,7 @@ public class CommentService {
 		commentRepo.save(comment);		
 	}
 	
+	@Override
 	public void deleteComment(User currentUser, Post post, Comment comment) {
 		if(((comment.getCommentAuthor().equals(currentUser)))
 			|| (post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser))
@@ -39,7 +42,8 @@ public class CommentService {
 		}
 	}
 
-	public void updateComment(User currentUser, Comment comment, String commentText, MultipartFile commentPic) throws IllegalStateException, IOException {
+	@Override
+	public void editComment(User currentUser, Comment comment, String commentText, MultipartFile commentPic) throws IllegalStateException, IOException {
 		if(comment.getCommentAuthor().equals(currentUser)) {
 			comment.setCommentText(commentText);
 			comment.setCommentCreationDate(LocalDateTime.now(Clock.systemUTC()));
@@ -48,6 +52,7 @@ public class CommentService {
 		}
 	}
 
+	@Override
 	public Iterable<CommentDto> getCommentsByCommentedPost(Post post) {
 		return commentRepo.findByCommentedPost(post);
 	}

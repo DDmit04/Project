@@ -12,30 +12,41 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.user.UserProfileService;
+import com.web.api.user.UserService;
+import com.web.api.user.UserCreationService;
 import com.web.data.User;
 import com.web.data.dto.GroupDto;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
-import com.web.service.GroupService;
-import com.web.service.PostService;
-import com.web.service.UserProfileService;
-import com.web.service.UserService;
+import com.web.service.GroupServiceImpl;
+import com.web.service.PostServiceImpl;
+import com.web.service.UserServiceImpl;
 
 
 @Controller
 public class UserProfileController {
 	
 	@Autowired
-	private PostService postService;
+	private PostServiceImpl postService;
 	
-	@Autowired
-	private UserService userService;
+//	@Autowired
+//	private UserDbSearchService userService;
 	
 	@Autowired
 	private UserProfileService userProfileService;
 	
 	@Autowired
-	private GroupService groupService;
+	private GroupServiceImpl groupService;
+	
+	UserServiceImpl userServiceImpl;
+	
+	UserCreationService userService;
+	
+	@Autowired
+	public UserProfileController(UserServiceImpl userServiceImpl) {
+		this.userService = userServiceImpl;
+	}
 	
 	
 	@GetMapping("{user}/profile")
@@ -59,7 +70,7 @@ public class UserProfileController {
 							  		 Model model) throws IllegalStateException, IOException {
 		Iterable<PostDto> searchByPostAuthor = postService.getUserPosts(currentUser, user);
 		postService.addUserPost(postText, tags, file, currentUser);
-		UserDto userProfile = userService.getOneUserToUser(currentUser, user);
+		UserDto userProfile = userService.getOneUserToUser(user, currentUser);
 		model.addAttribute("user", userProfile);
 		model.addAttribute("posts", searchByPostAuthor);		
 		return "redirect:/" + user.getId() + "/profile";

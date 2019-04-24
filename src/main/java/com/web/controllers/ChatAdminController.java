@@ -9,17 +9,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.web.data.Chat;
 import com.web.data.User;
-import com.web.service.ChatRoomService;
-import com.web.service.ChatSessionService;
+import com.web.service.ChatRoomServiceImpl;
+import com.web.service.ChatSessionServiceImpl;
 
 @Controller
 public class ChatAdminController {
 	
 	@Autowired
-	private ChatRoomService chatRoomService;
+	private ChatRoomServiceImpl chatRoomService;
 	
 	@Autowired
-	private ChatSessionService chatSessionService;
+	private ChatSessionServiceImpl chatSessionService;
 	
 	@GetMapping("chats/{chat}/{user}/chaseOut")
 	public String chaseOutUser(@AuthenticationPrincipal User currentUser, 
@@ -27,7 +27,7 @@ public class ChatAdminController {
 							   @PathVariable User user, 
 							   Model model) {
 		chatRoomService.chaseOutUser(user, currentUser, chat);
-		chatSessionService.disconnectChatSession(chat, user);
+		chatSessionService.disconnectChatSession(user, chat);
 		return "redirect:/chats/" + chat.getId();
 	}
 	 
@@ -52,7 +52,7 @@ public class ChatAdminController {
 								@PathVariable Chat chat,
 								@PathVariable User user) {
 		chatRoomService.banUser(user, currentUser, chat);
-		chatSessionService.disconnectChatSession(chat, user);
+		chatSessionService.disconnectChatSession(user, chat);
 		return "redirect:/chats/" + chat.getId();
 	}
 

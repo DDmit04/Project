@@ -8,10 +8,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
+import com.web.api.MailService;
 import com.web.data.User;
 
 @Service
-public class MailService {
+public class MailServiceImpl implements MailService {
 	
 	@Autowired
     private JavaMailSender mailSender;
@@ -22,6 +23,7 @@ public class MailService {
     @Value("${hostname}")
 	private String hostname;
 
+    @Override
     public void send(String emailTo, String subject, String message) throws MailSendException, SMTPSendFailedException{
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(username);
@@ -31,6 +33,7 @@ public class MailService {
         mailSender.send(mailMessage);
     }
     
+    @Override
     public void sendPasswordRecoverCode(User user, String email, String randomCode) throws MailSendException, SMTPSendFailedException {
     	if (user.getUserEmail() != null) {
 			String message = String.format(
@@ -40,6 +43,7 @@ public class MailService {
 		}
 	}
 	
+    @Override
     public void sendEmailConfirmCode(User user, String email, String randomCode) throws MailSendException, SMTPSendFailedException {
 		if (user.getUserEmail() != null) {
 			String message = String.format(
@@ -49,6 +53,7 @@ public class MailService {
 		}
 	}
 	
+    @Override
     public void sendChangeEmailCode(User user, String email, String randomCode) throws MailSendException, SMTPSendFailedException {
 		String message = String.format("Hello, %s! \n" + " this is your change email code %s use it in: http://%s/"
 				+ user.getId() + "/profile/settings", user.getUsername(), randomCode, hostname);
