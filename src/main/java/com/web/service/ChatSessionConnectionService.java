@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.web.data.ChatSession;
 import com.web.data.ChatSessionConnection;
 import com.web.repository.ChatSessionConnectionRepo;
-import com.web.repository.ChatSessionRepo;
 
 @Service
 public class ChatSessionConnectionService {
@@ -17,12 +16,9 @@ public class ChatSessionConnectionService {
 	@Autowired
 	private ChatSessionConnectionRepo chatSessionConnectionRepo;
 	
-	@Autowired
-	private ChatSessionRepo chatSessionRepo;
-
 	public ChatSessionConnection openNewSessionConnection(ChatSession session) {
 		ChatSessionConnection sessionConnection = new ChatSessionConnection();
-		sessionConnection.setConnectChat(LocalDateTime.now(Clock.systemUTC()));
+		sessionConnection.setConnectChatDate(LocalDateTime.now(Clock.systemUTC()));
 		sessionConnection.setSession(session);
 		chatSessionConnectionRepo.save(sessionConnection);
 		return sessionConnection;
@@ -30,13 +26,8 @@ public class ChatSessionConnectionService {
 
 	public void closeSessionConnection(ChatSession session) {
 		ChatSessionConnection sessionConnection = session.getSessionConnectionDates().iterator().next();
-		sessionConnection.setDisconnectChat(LocalDateTime.now(Clock.systemUTC()));
+		sessionConnection.setDisconnectChatDate(LocalDateTime.now(Clock.systemUTC()));
 		sessionConnection.setSession(session);
 		chatSessionConnectionRepo.save(sessionConnection);		
-	}
-
-	public void setLastView(ChatSession session) {
-		session.setLastView(LocalDateTime.now(Clock.systemUTC()));
-		chatSessionRepo.save(session);		
 	}
 }

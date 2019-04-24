@@ -29,7 +29,7 @@ public class ChatSession {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
     private Long lastConnectionId;
-	private LocalDateTime lastView;
+	private LocalDateTime lastConnectionDate;
 	
 	@OrderBy("id desc")
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

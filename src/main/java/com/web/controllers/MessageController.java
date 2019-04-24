@@ -31,22 +31,19 @@ public class MessageController {
     private MessageService messageService;
     
     @Autowired
-   	private ChatSessionConnectionService chatSessionConnectionService;
-    
-    @Autowired
    	private ChatSessionService chatSessionService;
 	    
     @GetMapping("chats/{chat}")
 	public String getMessages(@AuthenticationPrincipal User currentUser, 
 							  @PathVariable Chat chat, 
 							  Model model) {
-    	ChatSession session = chatSessionService.findSession(currentUser, chat);
+    	ChatSession session = chatSessionService.getSession(currentUser, chat);
 		if (session != null) {
-			chatSessionConnectionService.setLastView(session);
-			User userFromDb = messageService.findUserByUsername(currentUser);
-			UserDto userDto = messageService.findOneUserToChat(currentUser, chat);
-			ChatDto chatDto = messageService.findOneChat(chat);
-			LinkedList<Message> chatMessages = messageService.findChatMessages(session, chat);
+		    chatSessionService.updateLastConnectionDate(chat, currentUser);
+			User userFromDb = messageService.getUserByUsername(currentUser);
+			UserDto userDto = messageService.getOneUserToChat(currentUser, chat);
+			ChatDto chatDto = messageService.getOneChat(chat);
+			LinkedList<Message> chatMessages = messageService.getChatMessages(session, chat);
 			model.addAttribute("user", userDto);
 			model.addAttribute("chat", chatDto);
 			model.addAttribute("session", session);
@@ -57,8 +54,6 @@ public class MessageController {
 			model.addAttribute("chatMembers", chat.getChatMembers());
 			model.addAttribute("chatAdmins", chat.getChatAdmins());
 			model.addAttribute("chatBanList", chat.getChatBanList());
-//			Important
-			model.addAttribute("listType", " ");
 			return "chat";
 		} else {
 			return "noAccessChat";
@@ -66,9 +61,9 @@ public class MessageController {
 	}
     
     @GetMapping("chats/{chat}/disconnectChat")
-   	public String disconnect(@AuthenticationPrincipal User currentUser, 
+   	public String disconnectChat(@AuthenticationPrincipal User currentUser, 
    							 @PathVariable Chat chat) {
-       chatSessionService.setLastView(chat, currentUser);
+       chatSessionService.updateLastConnectionDate(chat, currentUser);
        return "redirect:/messages";
    	}
 	

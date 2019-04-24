@@ -3,7 +3,6 @@ package com.web.service;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,7 @@ import com.web.data.Group;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
-import com.web.data.dto.SearchResultsGeneric;
-import com.web.repository.GroupRepo;
 import com.web.repository.PostRepo;
-import com.web.repository.UserRepo;
 
 @Service
 public class PostService {
@@ -28,22 +24,22 @@ public class PostService {
 	@Autowired
 	private PostRepo postRepo;
 	
-	public void addPost(String postText, String tags, MultipartFile file, User user) throws IllegalStateException, IOException {
+	public void addUserPost(String postText, String tags, MultipartFile file, User user) throws IllegalStateException, IOException {
 		postRepo.save(createPost(postText, user, tags, file));
 	}
 	
-	public void addPost(String postText, String tags, MultipartFile file, Group group) throws IllegalStateException, IOException {
+	public void addGroupPost(String postText, String tags, MultipartFile file, Group group) throws IllegalStateException, IOException {
 		postRepo.save(createGroupPost(postText, group, tags, file));		
 	}
 	
-	public Post createPost(String postText, User user, String tags, MultipartFile file) throws IllegalStateException, IOException {
+	private Post createPost(String postText, User user, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		Post post = new Post(postText, tags, LocalDateTime.now(Clock.systemUTC()));
 		post.setPostAuthor(user);
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
 		return post;
 	}
 	
-	public Post createGroupPost(String postText, Group group, String tags, MultipartFile file) throws IllegalStateException, IOException {
+	private Post createGroupPost(String postText, Group group, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		Post post = new Post(postText, tags, LocalDateTime.now(Clock.systemUTC()));
 		post.setPostGroup(group);
 		post.setFilename(fileService.uploadFile(file,UploadType.POST));
@@ -86,12 +82,12 @@ public class PostService {
 		postRepo.save(newPost);
 	}
 	
-	public void incrementAndSaveRepostsCount(Post incrementedPost) {
+	private void incrementAndSaveRepostsCount(Post incrementedPost) {
 		incrementedPost.setRepostsCount(incrementedPost.getRepostsCount() + 1);
 		postRepo.save(incrementedPost);
 	}
 	
-	public void decrementAndSaveRepostsCount(Post decrimentedPost) {
+	private void decrementAndSaveRepostsCount(Post decrimentedPost) {
 		decrimentedPost.setRepostsCount(decrimentedPost.getRepostsCount() - 1);
 		postRepo.save(decrimentedPost);
 	}
@@ -107,28 +103,24 @@ public class PostService {
 		}
 	}
 	
-	public PostDto findOnePost(User currentUser, Post post) {
-		return postRepo.findOnePost(currentUser, post.getId());
-	}
-	
-	public boolean userIsAuthorOrAdmin(User currentUser, Post post) {
+	private boolean userIsAuthorOrAdmin(User currentUser, Post post) {
 		return post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser)
 			   || (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser));
 	}
 	
-	public Iterable<PostDto> findPostsByUser(User currentUser, User user) {
+	public PostDto getOnePost(User currentUser, Post post) {
+		return postRepo.findOnePost(currentUser, post.getId());
+	}
+	
+	public Iterable<PostDto> getUserPosts(User currentUser, User user) {
 		return postRepo.findByPostAuthor(currentUser, user);
 	}
 	
-	public Iterable<PostDto> findAllPosts(User currentUser) {
+	public Iterable<PostDto> getAllPosts(User currentUser) {
 		return postRepo.findAll(currentUser);
 	}
 
-	public Iterable<PostDto> findSubscriptionsPosts(User currentUser) {
-		return postRepo.findSubscriptionsPosts(currentUser);
-	}
-
-	public Iterable<PostDto> findGroupPosts(User currentUser, Group group) {
+	public Iterable<PostDto> getGroupPosts(User currentUser, Group group) {
 		return postRepo.findGroupPosts(currentUser, group);
 	}
 }

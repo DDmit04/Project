@@ -42,8 +42,8 @@ public class UserProfileController {
 	public String getUserProfile(@AuthenticationPrincipal User currentUser,
 								 @PathVariable User user,
 								 Model model) {
-		Iterable<PostDto> searchByPostAuthor = postService.findPostsByUser(currentUser, user);
-		UserDto userProfile = userService.findOneToUser(currentUser, user);
+		Iterable<PostDto> searchByPostAuthor = postService.getUserPosts(currentUser, user);
+		UserDto userProfile = userService.getOneUserToUser(currentUser, user);
 		model.addAttribute("user", userProfile);
 		model.addAttribute("posts", searchByPostAuthor);
 		model.addAttribute("userGroups", user.getSubedGroups());		
@@ -57,9 +57,9 @@ public class UserProfileController {
 							  		 @RequestParam String tags,
 							  		 @RequestParam("file") MultipartFile file,
 							  		 Model model) throws IllegalStateException, IOException {
-		Iterable<PostDto> searchByPostAuthor = postService.findPostsByUser(currentUser, user);
-		postService.addPost(postText, tags, file, currentUser);
-		UserDto userProfile = userService.findOneToUser(currentUser, user);
+		Iterable<PostDto> searchByPostAuthor = postService.getUserPosts(currentUser, user);
+		postService.addUserPost(postText, tags, file, currentUser);
+		UserDto userProfile = userService.getOneUserToUser(currentUser, user);
 		model.addAttribute("user", userProfile);
 		model.addAttribute("posts", searchByPostAuthor);		
 		return "redirect:/" + user.getId() + "/profile";
@@ -70,7 +70,7 @@ public class UserProfileController {
 	public String redactProfile(@AuthenticationPrincipal User currentUser,
 								@PathVariable User user,
 								Model model) {
-		UserDto currentUserProfile = userService.findOneToStatistic(currentUser);
+		UserDto currentUserProfile = userService.getOneUserToStatistic(currentUser);
 		model.addAttribute("user", currentUserProfile);
 		model.addAttribute("blackList", currentUser.getBlackList());
 		return "userRedaction";
@@ -83,7 +83,7 @@ public class UserProfileController {
 							  	@RequestParam(required = false) String userInformation, 
 							  	@RequestParam("file") MultipartFile file,
 							  	Model model) throws IllegalStateException, IOException {
-		UserDto currentUserProfile = userService.findOneToStatistic(currentUser);
+		UserDto currentUserProfile = userService.getOneUserToStatistic(currentUser);
 		userProfileService.updateUserProfile(currentUser, file, userInformation, userTitle);
 		model.addAttribute("user", currentUserProfile);
 		return "redirect:/profile/redact";
@@ -127,8 +127,8 @@ public class UserProfileController {
 	public String subList(@PathVariable User user,
 					      @PathVariable String listType,
 						  Model model) {
-		Iterable<GroupDto> groups = groupService.findUserGroupsDto(user);
-		UserDto usr = userService.findOneUserToList(user);
+		Iterable<GroupDto> groups = groupService.getUserGroups(user);
+		UserDto usr = userService.getOneUserToList(user);
 		model.addAttribute("user", usr);
 		model.addAttribute("friends", user.getUserFriends());
 		model.addAttribute("subscriptions", user.getSubscriptions());

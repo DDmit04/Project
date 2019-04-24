@@ -23,18 +23,14 @@ public class CommentService {
 	@Autowired
 	private FileService fileService;
 
-	public void addComment(Post post, String commentText, User currentUser, MultipartFile commentPic) throws IllegalStateException, IOException {
-		Comment comment = new Comment(commentText, LocalDateTime.now(Clock.systemUTC()));
+	public void addComment(Comment comment, Post post, User currentUser, MultipartFile commentPic) throws IllegalStateException, IOException {
+		comment.setCommentCreationDate(LocalDateTime.now(Clock.systemUTC()));
 		comment.setCommentedPost(post);
 		comment.setCommentAuthor(currentUser);
 		comment.setCommentPicName(fileService.uploadFile(commentPic, UploadType.COMMENT));
 		commentRepo.save(comment);		
 	}
-
-	public Iterable<CommentDto> findCommentsByCommentedPost(Post post) {
-		return commentRepo.findByCommentedPost(post);
-	}
-
+	
 	public void deleteComment(User currentUser, Post post, Comment comment) {
 		if(((comment.getCommentAuthor().equals(currentUser)))
 			|| (post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser))
@@ -50,6 +46,10 @@ public class CommentService {
 			comment.setCommentPicName(fileService.uploadFile(commentPic, UploadType.COMMENT));
 			commentRepo.save(comment);
 		}
+	}
+
+	public Iterable<CommentDto> getCommentsByCommentedPost(Post post) {
+		return commentRepo.findByCommentedPost(post);
 	}
 
 }

@@ -114,11 +114,11 @@ public class UserProfileService {
 		userRepo.save(currentUser);
 	}
 	
-	public Iterable<FriendRequestDto> findRequestTo(User currentUser) {
+	public Iterable<FriendRequestDto> getFriendRequestsToUser(User currentUser) {
 		return friendRequestRepo.findByRequestToId(currentUser);
 	}
 
-	public Iterable<FriendRequestDto> findRequestFrom(User currentUser) {
+	public Iterable<FriendRequestDto> getFriendRequestsFromUser(User currentUser) {
 		return friendRequestRepo.findByRequestFromId(currentUser);
 	}
 

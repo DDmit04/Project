@@ -14,13 +14,13 @@ import com.sun.mail.smtp.SMTPSendFailedException;
 import com.web.data.User;
 import com.web.exceptions.UserException;
 import com.web.exceptions.UserExceptionType;
-import com.web.service.UserSettingsService;
+import com.web.service.PasswordRecoverService;
 
 @Controller
 public class PasswordRecoverController {
 	
 	@Autowired
-	private UserSettingsService userSettingsService;
+	private PasswordRecoverService passwordRecoverService;
 	
 	@GetMapping("/passwordRecover")
 	public String recoverPassword() {
@@ -33,7 +33,7 @@ public class PasswordRecoverController {
 								  Model model) {
 		User user;
 		try {
-			user = userSettingsService.sendPasswordRecoverCode(recoverData);
+			user = passwordRecoverService.realizeSendPasswordRecoverCode(recoverData);
 			request.getSession().setAttribute("user", user);
 			request.getSession().setAttribute("recoverData", recoverData);
 			model.addAttribute("user", user);
@@ -54,7 +54,7 @@ public class PasswordRecoverController {
 		model.addAttribute("user", user);
 		model.addAttribute("recoverData", recoverData);
 		try {
-			userSettingsService.sendPasswordRecoverCode(user, user.getUserEmail());
+			passwordRecoverService.sendPasswordRecoverCode(user, user.getUserEmail());
 		} catch (MailSendException | SMTPSendFailedException e) {
 			model.addAttribute("passwordRecoverAttention", "something go wrong, pleace try leter");
 		}
@@ -71,8 +71,8 @@ public class PasswordRecoverController {
 		model.addAttribute("user", user);
 		model.addAttribute("recoverData", recoverData);
 		try {
-			userSettingsService.checkPasswordRecoverCode(user, emailCode);
-			userSettingsService.changeRecoveredPassword(user, password);
+			passwordRecoverService.checkPasswordRecoverCode(user, emailCode);
+			passwordRecoverService.changeRecoveredPassword(user, password);
 		} catch (UserException e) {
 			UserExceptionType exType = e.getUserExceptionType();
 			if(exType == UserExceptionType.WRONG_PASSWORD_RECOVER_CODE) {

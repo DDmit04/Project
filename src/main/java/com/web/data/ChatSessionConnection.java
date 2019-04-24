@@ -21,8 +21,8 @@ public class ChatSessionConnection {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private LocalDateTime connectChat;
-	private LocalDateTime disconnectChat;
+	private LocalDateTime connectChatDate;
+	private LocalDateTime disconnectChatDate;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "chat_session_id")

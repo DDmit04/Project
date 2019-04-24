@@ -31,14 +31,14 @@ public class GroupService {
 	@Autowired
 	private PasswordEncoder passwordEncoder; 
 
-	public Group createGroup(String groupName, String groupInformation, String groupTitle, MultipartFile file, User currentUser) 
+	public Group createGroup(Group group, MultipartFile file, User currentUser) 
 			throws IllegalStateException, IOException, GroupException {
 		
-		Group groupFromDb = groupRepo.findByGroupName(groupName);
+		Group groupFromDb = groupRepo.findByGroupName(group.getGroupName());
 		if(groupFromDb != null) {
 			throw new GroupException("group with name" + groupFromDb.getGroupName() + "already exists!", groupFromDb);
 		}
-		Group group = new Group (groupName, groupInformation, groupTitle, LocalDateTime.now(Clock.systemUTC()));
+		group.setGroupCreationDate(LocalDateTime.now(Clock.systemUTC()));
 		group.setGroupPicName(fileService.uploadFile(file,UploadType.GROUP_PIC));
 		group.setGroupOwner(currentUser);
 		groupRepo.save(group);	
@@ -101,23 +101,23 @@ public class GroupService {
 		}
 	}
 	
-	public boolean userIsGroupOwner(User currentUser, Group group) {
+	private boolean userIsGroupOwner(User currentUser, Group group) {
 		return group.getGroupOwner().equals(currentUser);
 	}
 	
-	public boolean userIsGroupAdmin(User currentUser, Group group) {
+	private boolean userIsGroupAdmin(User currentUser, Group group) {
 		return group.getGroupAdmins().contains(currentUser);
 	}
 
-	public GroupDto findOneGroup(Group group, User currentUser) {
+	public GroupDto getOneGroup(Group group, User currentUser) {
 		return groupRepo.findOneGroupDto(group.getId());
 	}
 
-	public Iterable<GroupDto> findUserGroupsDto(User user) {
+	public Iterable<GroupDto> getUserGroups(User user) {
 		return groupRepo.findUserGroupsDto(user);
 	}
 	
-	public Iterable<GroupDto> findAllGroupsDto() {
+	public Iterable<GroupDto> getAllGroups() {
 		return groupRepo.findAllGroupsDto();
 	}
 }

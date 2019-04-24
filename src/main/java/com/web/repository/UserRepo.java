@@ -11,13 +11,9 @@ import com.web.data.dto.UserDto;
 
 public interface UserRepo extends CrudRepository<User, Long> {
 	
-	User findByUsername(String username);
-	
 	User findByEmailConfirmCode(String code);
 	
 	User findByEmailChangeCode(String code);
-	
-	User findByUserEmail(String email);
 	
 	User findByPasswordRecoverCode(String emailCode);
 

@@ -5,9 +5,12 @@
 
 <#include "/parts/security.ftl">
 
-    <noscript>
-      <h2>Sorry! Your browser doesn't support Javascript</h2>
-    </noscript>
+<noscript>
+	<h2>Sorry! Your browser doesn't support Javascript</h2>
+</noscript>
+<#if !listType??>
+	<#assign listType = "">
+</#if>
 <#assign currentUserIsChatMember = chatMembers?seq_contains(currentUser)>
 <div class="col-9">
     <div id="chat-page" class="hidden">

@@ -8,7 +8,7 @@
 	<a href="/createChat" class="btn btn-primary btn-block" role="button">create new chat</a>
 	<#list chatSessions as session>
 		<#assign chat = session.connectedChat
-				 newMessagesCount = DateUtills.calculateNewMessages(chat.chatMessages, session.lastView)>
+				 newMessagesCount = DateUtills.calculateNewMessages(chat.chatMessages, session.lastConnectionDate)>
 		<ul class="list-group">
 		  <li class="list-group-item d-flex justify-content-between align-items-center mt-2 shadow" style="border-left: none;
 																								 		   border-right: none;

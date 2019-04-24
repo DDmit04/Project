@@ -1,7 +1,6 @@
 package com.web.service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -33,22 +32,22 @@ public class MessageService {
 	@Autowired
 	private UserRepo userRepo;
 
-	public User findUserByUsername(User currentUser) {
-		return userRepo.findByUsername(currentUser.getUsername());
+	public User getUserByUsername(User currentUser) {
+		return userRepo.findByUsernameOrEmail(currentUser.getUsername());
 	}
 
-	public UserDto findOneUserToChat(User currentUser, Chat chat) {
+	public UserDto getOneUserToChat(User currentUser, Chat chat) {
 		return userRepo.findOneUserToChat(currentUser.getId(), chat);
 	}
 
-	public ChatDto findOneChat(Chat chat) {
+	public ChatDto getOneChat(Chat chat) {
 		return chatRepo.findOneChat(chat.getId());
 	}
 
 	public void createMessage(Long chatId, MessageJson jsonMessage) {
 		LocalDateTime messageTime = jsonMessage.getMessageDate();
 		Chat chat = chatRepo.findChatById(chatId);
-		User messageAuthor = userRepo.findByUsername(jsonMessage.getSender());
+		User messageAuthor = userRepo.findByUsernameOrEmail(jsonMessage.getSender());
 		Message message = new Message(jsonMessage.getContent(), messageTime);
 		message.setMessageAuthor(messageAuthor);
 		message.setMessageChat(chat);
@@ -58,14 +57,14 @@ public class MessageService {
 		chatRepo.save(chat);
 	}
 
-	public LinkedList<Message> findChatMessages(ChatSession session, Chat chat) {
+	public LinkedList<Message> getChatMessages(ChatSession session, Chat chat) {
 		Set<Message> messages = chat.getChatMessages();
 		LinkedList<Message> chatMessages = new LinkedList<>();
 		for(Message message : messages) {
 			for(ChatSessionConnection connection : session.getSessionConnectionDates()) {
 				LocalDateTime messageDate = message.getMessageDate();
-				LocalDateTime connectionDate = connection.getConnectChat();
-				LocalDateTime disconnectionDate = connection.getDisconnectChat();
+				LocalDateTime connectionDate = connection.getConnectChatDate();
+				LocalDateTime disconnectionDate = connection.getDisconnectChatDate();
 				if(disconnectionDate == null && !DateUtil.isLater(connectionDate, messageDate) 
 						|| (disconnectionDate != null && DateUtil.dateInRange(messageDate, connectionDate, disconnectionDate))) {
 					chatMessages.add(message);

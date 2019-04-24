@@ -33,8 +33,8 @@ public class CommentController {
 	public String getComments(@AuthenticationPrincipal User currentUser,
 							  @PathVariable Post post,
 							  Model model) {
-		Iterable<CommentDto> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
-		PostDto commentedPost = postService.findOnePost(currentUser, post);
+		Iterable<CommentDto> searchByCommentedPost = commentService.getCommentsByCommentedPost(post);
+		PostDto commentedPost = postService.getOnePost(currentUser, post);
 		model.addAttribute("comments", searchByCommentedPost);
 		model.addAttribute("post", commentedPost);
 		return "commentList";
@@ -43,11 +43,10 @@ public class CommentController {
 	@PostMapping("{post}/comments")
 	public String addComment(@AuthenticationPrincipal User currentUser,
 							 @PathVariable Post post,
-							 @RequestParam String commentText,
 							 @RequestParam("commentPic") MultipartFile commentPic,
 							 Comment comment,
 			  				 Model model) throws IllegalStateException, IOException {
-		commentService.addComment(post, commentText, currentUser, commentPic);
+		commentService.addComment(comment, post, currentUser, commentPic);
 		return "redirect:/" + post.getId() + "/comments";
 	}
 	
@@ -65,8 +64,8 @@ public class CommentController {
 								 @PathVariable Post post,
 							     @PathVariable Comment comment,
 							     Model model) {
-		Iterable<CommentDto> searchByCommentedPost = commentService.findCommentsByCommentedPost(post);
-		PostDto commentedPost = postService.findOnePost(currentUser, post);
+		Iterable<CommentDto> searchByCommentedPost = commentService.getCommentsByCommentedPost(post);
+		PostDto commentedPost = postService.getOnePost(currentUser, post);
 		model.addAttribute("comments", searchByCommentedPost);
 		model.addAttribute("post", commentedPost);		
 		model.addAttribute("editedComment", comment);

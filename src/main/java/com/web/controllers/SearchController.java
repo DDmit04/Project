@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.data.User;
+import com.web.data.dto.PostDto;
 import com.web.service.SearchService;
 
 @Controller
@@ -27,6 +28,17 @@ public class SearchController {
 		model.addAttribute("search", search);
 		model.addAttribute("searchType", searchType);
 		return "searchList";
+	}
+	
+	@GetMapping("/subscriptionPosts")
+	public String getSubscriptionPosts(@AuthenticationPrincipal User currentUser,
+									   @RequestParam(required = false) String search,
+									   Model model) {
+		Iterable<PostDto> searchFriendPosts = searchService.findSubscriptionsPosts(currentUser);
+		model.addAttribute("user", currentUser);
+		model.addAttribute("posts", searchFriendPosts);
+		model.addAttribute("search", search);
+		return "postList";
 	}
 	
 }

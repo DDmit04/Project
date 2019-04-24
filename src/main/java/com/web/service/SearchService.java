@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.data.User;
+import com.web.data.dto.PostDto;
 import com.web.data.dto.SearchResultsGeneric;
 import com.web.repository.GroupRepo;
 import com.web.repository.PostRepo;
@@ -43,6 +44,10 @@ public class SearchService {
 			}
 		}		
 		return searchResult;
+	}
+	
+	public Iterable<PostDto> findSubscriptionsPosts(User currentUser) {
+		return postRepo.findSubscriptionsPosts(currentUser);
 	}
 
 }

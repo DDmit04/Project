@@ -35,20 +35,9 @@ public class PostController {
 	@GetMapping("/posts")
 	public String getPosts(@AuthenticationPrincipal User currentUser,
 						   Model model) {
-		Iterable<PostDto> searchByTag = postService.findAllPosts(currentUser);
+		Iterable<PostDto> searchByTag = postService.getAllPosts(currentUser);
 		model.addAttribute("user", currentUser);
 		model.addAttribute("posts", searchByTag);
-		return "postList";
-	}
-	
-	@GetMapping("/subscriptionPosts")
-	public String getFriendPosts(@AuthenticationPrincipal User currentUser,
-							     @RequestParam(required = false) String search,
-							     Model model) {
-		Iterable<PostDto> searchFriendPosts = postService.findSubscriptionsPosts(currentUser);
-		model.addAttribute("user", currentUser);
-		model.addAttribute("posts", searchFriendPosts);
-		model.addAttribute("search", search);
 		return "postList";
 	}
 	
@@ -58,15 +47,15 @@ public class PostController {
 						  @RequestParam String tags,
 						  @RequestParam("file") MultipartFile file,
 						  Model model) throws IllegalStateException, IOException {
-		postService.addPost(postText, tags, file, currentUser);
+		postService.addUserPost(postText, tags, file, currentUser);
 		return "redirect:/posts";
 	}
 	
 	@GetMapping("{post}/edit")
-	public String getPost(@AuthenticationPrincipal User currentUser,
+	public String getEditedPost(@AuthenticationPrincipal User currentUser,
 						  @PathVariable Post post, 
 			  			  Model model) {
-		PostDto editedPost = postService.findOnePost(currentUser, post);
+		PostDto editedPost = postService.getOnePost(currentUser, post);
 		model.addAttribute("post", editedPost);
 		return "postEdit";	
 	}

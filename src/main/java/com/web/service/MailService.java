@@ -22,7 +22,7 @@ public class MailService {
     @Value("${hostname}")
 	private String hostname;
 
-    private void send(String emailTo, String subject, String message) throws MailSendException, SMTPSendFailedException{
+    public void send(String emailTo, String subject, String message) throws MailSendException, SMTPSendFailedException{
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(username);
         mailMessage.setTo(emailTo);
@@ -31,7 +31,7 @@ public class MailService {
         mailSender.send(mailMessage);
     }
     
-    protected void sendPasswordRecoverCode(User user, String email, String randomCode) throws MailSendException, SMTPSendFailedException {
+    public void sendPasswordRecoverCode(User user, String email, String randomCode) throws MailSendException, SMTPSendFailedException {
     	if (user.getUserEmail() != null) {
 			String message = String.format(
 					"Hello, %s! \n" + "this is your passwordRecover code %s",
@@ -40,7 +40,7 @@ public class MailService {
 		}
 	}
 	
-    protected void sendEmailConfirmCode(User user, String email, String randomCode) throws MailSendException, SMTPSendFailedException {
+    public void sendEmailConfirmCode(User user, String email, String randomCode) throws MailSendException, SMTPSendFailedException {
 		if (user.getUserEmail() != null) {
 			String message = String.format(
 					"Hello, %s! \n" + "Welcome to my app. Please, visit next link: http://%s/activate/%s",
@@ -49,7 +49,7 @@ public class MailService {
 		}
 	}
 	
-    protected void sendChangeEmailCode(User user, String email, String randomCode) throws MailSendException, SMTPSendFailedException {
+    public void sendChangeEmailCode(User user, String email, String randomCode) throws MailSendException, SMTPSendFailedException {
 		String message = String.format("Hello, %s! \n" + " this is your change email code %s use it in: http://%s/"
 				+ user.getId() + "/profile/settings", user.getUsername(), randomCode, hostname);
 		send(email, "Change email code", message);

@@ -37,8 +37,8 @@ public class GroupController {
 	@GetMapping("/groups")
 	public String getAllGroups(@AuthenticationPrincipal User currentUser,
 							   Model model) {
-		Iterable<GroupDto> allGroups = groupService.findAllGroupsDto();
-		Iterable<GroupDto> userGroups = groupService.findUserGroupsDto(currentUser);
+		Iterable<GroupDto> allGroups = groupService.getAllGroups();
+		Iterable<GroupDto> userGroups = groupService.getUserGroups(currentUser);
 		model.addAttribute("allGroups", allGroups);
 		model.addAttribute("userGroups", userGroups);
 		model.addAttribute("userGroupsCount", userGroups.spliterator().getExactSizeIfKnown());
@@ -49,9 +49,9 @@ public class GroupController {
 	public String getGroup(@AuthenticationPrincipal User currentUser,
 						   @PathVariable Group group,
 						   Model model) {
-		GroupDto oneGroup = groupService.findOneGroup(group, currentUser);
-		UserDto oneUser = userServive.findOneUserToGroup(currentUser, group);
-		Iterable<PostDto> groupPosts = postService.findGroupPosts(currentUser, group);
+		GroupDto oneGroup = groupService.getOneGroup(group, currentUser);
+		UserDto oneUser = userServive.getOneUserToGroup(currentUser, group);
+		Iterable<PostDto> groupPosts = postService.getGroupPosts(currentUser, group);
 		model.addAttribute("posts", groupPosts);
 		model.addAttribute("group", oneGroup);
 		model.addAttribute("groupSubs", group.getGroupSubs());
@@ -66,7 +66,7 @@ public class GroupController {
 							   @RequestParam String tags,
 							   @RequestParam("file") MultipartFile file,
 							   Model model) throws IllegalStateException, IOException {
-		postService.addPost(postText, tags, file, group);
+		postService.addGroupPost(postText, tags, file, group);
 		return "redirect:/groups/" + group.getId();
 	}
 	
@@ -77,14 +77,11 @@ public class GroupController {
 	
 	@PostMapping("{user}/groups/create")
 	public String createGroup(@AuthenticationPrincipal User currentUser,
-							  @RequestParam String groupName,
-							  @RequestParam (required = false)String groupTitle,
-							  @RequestParam (required = false)String groupInformation,
+							  Group group,
 							  @RequestParam("file") MultipartFile file,
 							  Model model) throws IllegalStateException, IOException {
-		Group group;
 		try {
-			group = groupService.createGroup(groupName, groupInformation, groupTitle, file, currentUser);
+			group = groupService.createGroup(group, file, currentUser);
 		} catch (GroupException e) {
 			model.addAttribute("groupNameError", e.getMessage());
 			model.addAttribute("registrationName", e.getGroup().getGroupName());
@@ -160,6 +157,7 @@ public class GroupController {
 							 	 @PathVariable Group group,
 							 	 @PathVariable User user) {
 		
+		//password encoder
 		groupService.makeOwner(currentUser, user, group, username, password);
 		return "redirect:/groups/" + group.getId() + "/socialList/groupAdmins";
 	}
@@ -169,7 +167,7 @@ public class GroupController {
 								   @PathVariable String listType,
 							 	   @PathVariable Group group,
 							 	   Model model) {
-		GroupDto currentGroup = groupService.findOneGroup(group, currentUser);
+		GroupDto currentGroup = groupService.getOneGroup(group, currentUser);
 		model.addAttribute("group", currentGroup);
 		model.addAttribute("groupSubscrabers", group.getGroupSubs());
 		model.addAttribute("groupAdmins", group.getGroupAdmins());

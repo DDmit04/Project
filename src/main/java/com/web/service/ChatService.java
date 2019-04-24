@@ -24,18 +24,10 @@ public class ChatService {
 	private FileService fileService;
 	
 	@Autowired
-	private ChatSessionService chatSessionService;
-	
-	@Autowired
 	private PasswordEncoder passwordEncoder; 
 	
-	public boolean userIsAdminOrOwner (User user, User currentUser, Chat chat) {
-		return chat.getChatOwner().equals(currentUser) || chat.getChatAdmins().contains(currentUser);
-	}
-	
-	public Chat createChat(String chatName, String chatTitle, MultipartFile file, User currentUser) throws IllegalStateException, IOException {
-		Chat chat = new Chat(chatName, LocalDateTime.now(Clock.systemUTC()));
-		chat.setChatTitle(chatTitle);
+	public Chat createChat(Chat chat, MultipartFile file, User currentUser) throws IllegalStateException, IOException {
+		chat.setChatCreationDate(LocalDateTime.now(Clock.systemUTC()));
 		chat.setChatPicName(fileService.uploadFile(file, UploadType.CHAT_PIC));
 		chat.setLastMessageDate(LocalDateTime.now(Clock.systemUTC()));
 		chatRepo.save(chat);
@@ -62,79 +54,11 @@ public class ChatService {
 		return chat;
 	}
 	
-	public void geleteChatHitory(User user, User currentUser, Chat chat) {
-		if (currentUser.equals(user)) {
-			if (chat.getSessions().size() != 0) {
-				if (chat.getChatAdmins().contains(user)) {
-					chat.getChatAdmins().remove(user);
-				}
-				if (chat.getChatMembers().contains(user)) {
-					chat.getChatMembers().remove(user);
-				}
-				chatRepo.save(chat);
-			} else {
-				chat.setChatOwner(null);
-				chatRepo.delete(chat);
-			}
+	public void deleteChat(User user, User currentUser, Chat chat) {
+		if (chat.getSessions().size() == 0) {
+			chat.setChatOwner(null);
+			chatRepo.delete(chat);
 		}
-	}
-
-	public void invateUser(User user, Chat chat) {
-		chat.getChatMembers().add(user);
-		chatRepo.save(chat);		
-	}
-
-	public void userLeave(User user, User currentUser, Chat chat) {
-		if (currentUser.equals(user)) {
-			chat.getChatMembers().remove(user);
-			chatRepo.save(chat);
-			chatSessionService.setDisonnectionDate(chat, user);
-		}
-	}
-
-	public void userReturn(User user, Chat chat) {
-		 if(chatSessionService.findSession(user, chat) != null) {
-			 chat.getChatMembers().add(user);
-		 }
-		 chatRepo.save(chat);
-	}
-
-	public void chaseOutUser(User user, User currentUser, Chat chat) {
-		if (userIsAdminOrOwner(user, currentUser, chat)) {
-			chat.getChatMembers().remove(user);
-			chatRepo.save(chat);
-			chatSessionService.setDisonnectionDate(chat, user);
-		}		
-	}
-
-	public void giveAdmin(User user, User currentUser, Chat chat) {
-		if(chat.getChatOwner().equals(currentUser)) {
-			chat.getChatAdmins().add(user);
-			chatRepo.save(chat);
-		}		
-	}
-
-	public void removeAdmin(User user, User currentUser, Chat chat) {
-		if(user.equals(currentUser) || chat.getChatOwner().equals(currentUser)) {
-			chat.getChatAdmins().remove(user);
-			chatRepo.save(chat);
-		}		
-	}
-
-	public void banUser(User user, User currentUser, Chat chat) {
-		if(userIsAdminOrOwner(user, currentUser, chat)) {
-			chat.getChatBanList().add(user);
-			chat.getChatMembers().remove(user);
-			chatRepo.save(chat);
-			chatSessionService.setDisonnectionDate(chat, user);
-		}
-	}
-
-	public void unbanUser(User user, User currentUser, Chat chat) {
-		if(userIsAdminOrOwner(user, currentUser, chat)) {
-			chat.getChatBanList().remove(user);
-			chatRepo.save(chat);
-		}		
 	}
 
 	public void changeChatOwner(User user, User currentUser, Chat chat, String username, String password) {

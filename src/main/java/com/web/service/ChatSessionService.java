@@ -13,19 +13,16 @@ import com.web.data.User;
 import com.web.repository.ChatSessionRepo;
 
 @Service
-public class ChatSessionService {
+public class ChatSessionService extends ChatSessionConnectionService {
 	
 	@Autowired
 	private ChatSessionRepo chatSessionRepo;
 	
-	@Autowired
-	private ChatSessionConnectionService chatSessionConnectionService;
-	
-	public void createChatSession(Chat chat, User currentUser) {
+	public void createNewChatSession(Chat chat, User currentUser) {
 		ChatSession session = new ChatSession(chat, currentUser);
-		session.setLastView(LocalDateTime.now(Clock.systemUTC()));
+		session.setLastConnectionDate(LocalDateTime.now(Clock.systemUTC()));
 		chatSessionRepo.save(session);
-		ChatSessionConnection sessionConnection = chatSessionConnectionService.openNewSessionConnection(session);
+		ChatSessionConnection sessionConnection = openNewSessionConnection(session);
 		session.setLastConnectionId(sessionConnection.getId());
 		chatSessionRepo.save(session);
 	}
@@ -35,27 +32,31 @@ public class ChatSessionService {
 		chatSessionRepo.delete(session);
 	}
 	
-	public void setConnectionDate(Chat chat, User user) {
+	public void connectChatSesion(Chat chat, User user) {
 		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
-		ChatSessionConnection sessionConnection = chatSessionConnectionService.openNewSessionConnection(session);
+		ChatSessionConnection sessionConnection = openNewSessionConnection(session);
 		session.setLastConnectionId(sessionConnection.getId());
 		chatSessionRepo.save(session);
 	}
 	
-	public void setLastView(Chat chat, User user) {
+	public void disconnectChatSession(Chat chat, User user) {
 		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
-		session.setLastView(LocalDateTime.now(Clock.systemUTC()));
+		closeSessionConnection(session);
 		chatSessionRepo.save(session);
 	}
 	
-	public void setDisonnectionDate(Chat chat, User user) {
+	public void updateLastConnectionDate(Chat chat, User user) {
 		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
-		chatSessionConnectionService.closeSessionConnection(session);
+		session.setLastConnectionDate(LocalDateTime.now(Clock.systemUTC()));
 		chatSessionRepo.save(session);
 	}
 
-	public ChatSession findSession(User currentUser, Chat chat) {
+	public ChatSession getSession(User currentUser, Chat chat) {
 		return chatSessionRepo.findSessionByChatAndUser(chat, currentUser);
+	}
+
+	public Iterable<ChatSession> getUserChatSessions(User currentUser) {
+		return chatSessionRepo.findSessionsByUser(currentUser);
 	}
 
 }
