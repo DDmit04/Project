@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.web.api.SearchService;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
 import com.web.service.SearchServiceImpl;
@@ -14,8 +15,12 @@ import com.web.service.SearchServiceImpl;
 @Controller
 public class SearchController {
 	
+	private SearchService searchService;
+	
 	@Autowired
-	private SearchServiceImpl searchService;
+	public SearchController(SearchServiceImpl searchService) {
+		this.searchService = searchService;
+	}
 
 	@GetMapping("/search")
 	public String search(@AuthenticationPrincipal User currentUser,

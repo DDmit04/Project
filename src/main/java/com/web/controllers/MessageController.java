@@ -13,7 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.web.api.user.UserCreationService;
+import com.web.api.MessageService;
+import com.web.api.chat.ChatSessionService;
+import com.web.api.user.UserService;
 import com.web.data.Chat;
 import com.web.data.ChatSession;
 import com.web.data.Message;
@@ -27,16 +29,18 @@ import com.web.service.MessageServiceImpl;
 @Controller
 public class MessageController {
  
-    @Autowired
-    private MessageServiceImpl messageService;
+    private MessageService messageService;
+    private UserService userService;
+   	private ChatSessionService chatSessionService;
     
-    @Autowired
-    private UserCreationService userService;
-    
-    @Autowired
-   	private ChatSessionServiceImpl chatSessionService;
-	    
-    @GetMapping("chats/{chat}")
+   	@Autowired
+    public MessageController(MessageServiceImpl messageService, UserService userService, ChatSessionServiceImpl chatSessionService) {
+		this.messageService = messageService;
+		this.userService = userService;
+		this.chatSessionService = chatSessionService;
+	}
+
+	@GetMapping("chats/{chat}")
 	public String getMessages(@AuthenticationPrincipal User currentUser, 
 							  @PathVariable Chat chat, 
 							  Model model) {
@@ -65,14 +69,15 @@ public class MessageController {
     
     @GetMapping("chats/{chat}/disconnectChat")
    	public String disconnectChat(@AuthenticationPrincipal User currentUser, 
-   							 @PathVariable Chat chat) {
+   							     @PathVariable Chat chat) {
        chatSessionService.updateLastConnectionDate(currentUser, chat);
        return "redirect:/messages";
    	}
 	
     @MessageMapping("/chat.sendMessage/{chatId}")
 	@SendTo("/topic/public/{chatId}")
-	public MessageJson sendMessage(@DestinationVariable Long chatId, @Payload MessageJson jsonMessage) {
+	public MessageJson sendMessage(@DestinationVariable Long chatId, 
+								   @Payload MessageJson jsonMessage) {
     	messageService.createMessage(chatId, jsonMessage);
 		return jsonMessage;
 	}

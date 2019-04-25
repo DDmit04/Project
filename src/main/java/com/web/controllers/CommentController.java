@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.CommentService;
+import com.web.api.post.PostService;
 import com.web.data.Comment;
 import com.web.data.Post;
 import com.web.data.User;
@@ -23,12 +25,15 @@ import com.web.service.PostServiceImpl;
 @Controller
 public class CommentController {
 	
-	@Autowired
-	private CommentServiceImpl commentService;
+	private CommentService commentService;
+	private PostService postService;
 	
 	@Autowired
-	private PostServiceImpl postService;
-	
+	public CommentController(CommentServiceImpl commentService, PostServiceImpl postService) {
+		this.commentService = commentService;
+		this.postService = postService;
+	}
+
 	@GetMapping("{post}/comments")
 	public String getComments(@AuthenticationPrincipal User currentUser,
 							  @PathVariable Post post,

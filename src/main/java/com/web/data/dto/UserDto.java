@@ -35,13 +35,7 @@ public class UserDto extends SearchResultsGeneric{
 				   boolean isFriend, boolean isRequested, boolean isSub, boolean isBloking, boolean isBloked) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		
-		if(user.getRegistrationDate() == null) {
-			this.registrationDate = "test";
-		} else {
-			this.registrationDate = DateUtil.formatDate(user.getRegistrationDate()); 
-		}
-		
+		this.registrationDate = DateUtil.formatDate(user.getRegistrationDate()); 
 		this.userPicName = user.getUserPicName();
 		this.friendCount = frendCount;
 		this.isFriend = isFriend;

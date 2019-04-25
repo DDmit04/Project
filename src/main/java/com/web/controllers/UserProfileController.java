@@ -12,40 +12,36 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.web.api.user.UserProfileService;
+import com.web.api.GroupService;
+import com.web.api.post.PostService;
 import com.web.api.user.UserService;
-import com.web.api.user.UserCreationService;
+import com.web.api.user.UserProfileService;
+import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.GroupDto;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
 import com.web.service.GroupServiceImpl;
 import com.web.service.PostServiceImpl;
+import com.web.service.UserProfileServiceImpl;
 import com.web.service.UserServiceImpl;
 
 
 @Controller
 public class UserProfileController {
 	
-	@Autowired
-	private PostServiceImpl postService;
-	
-//	@Autowired
-//	private UserDbSearchService userService;
-	
-	@Autowired
+	private PostService postService;
+	private GroupService groupService;
+	private UserService userService;
 	private UserProfileService userProfileService;
 	
 	@Autowired
-	private GroupServiceImpl groupService;
-	
-	UserServiceImpl userServiceImpl;
-	
-	UserCreationService userService;
-	
-	@Autowired
-	public UserProfileController(UserServiceImpl userServiceImpl) {
+	public UserProfileController(UserServiceImpl userServiceImpl, UserProfileServiceImpl userProfileServiceImpl, 
+			GroupServiceImpl groupService, PostServiceImpl postService) {
 		this.userService = userServiceImpl;
+		this.userProfileService = userProfileServiceImpl;
+		this.groupService = groupService;
+		this.postService = postService;
 	}
 	
 	
@@ -64,12 +60,11 @@ public class UserProfileController {
 	@PostMapping("{user}/profile")
 	public String addPostUserProfile(@AuthenticationPrincipal User currentUser,
 									 @PathVariable User user,
-							  		 @RequestParam String postText, 
-							  		 @RequestParam String tags,
+							  		 Post post,
 							  		 @RequestParam("file") MultipartFile file,
 							  		 Model model) throws IllegalStateException, IOException {
 		Iterable<PostDto> searchByPostAuthor = postService.getUserPosts(currentUser, user);
-		postService.addUserPost(postText, tags, file, currentUser);
+		postService.createPost(currentUser, post, file);
 		UserDto userProfile = userService.getOneUserToUser(user, currentUser);
 		model.addAttribute("user", userProfile);
 		model.addAttribute("posts", searchByPostAuthor);		

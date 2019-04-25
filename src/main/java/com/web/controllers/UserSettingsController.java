@@ -16,20 +16,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
-import com.web.api.user.UserCreationService;
+import com.web.api.user.UserService;
 import com.web.api.user.UserSettingsService;
 import com.web.data.User;
 import com.web.exceptions.UserException;
+import com.web.service.UserServiceImpl;
+import com.web.service.UserSettingsServiceImpl;
 
 @Controller
 public class UserSettingsController {
 	
-	@Autowired
 	private UserSettingsService userSettingsService;
+	private UserService userService;
 	
 	@Autowired
-	private UserCreationService userService;
-	
+	public UserSettingsController(UserSettingsServiceImpl userSettingsService, UserServiceImpl userService) {
+		this.userSettingsService = userSettingsService;
+		this.userService = userService;
+	}
+
 	@GetMapping("{user}/profile/settings")
 	public String settings(@AuthenticationPrincipal User currentUser,
 						   @PathVariable User user,

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.chat.ChatService;
+import com.web.api.chat.ChatSessionService;
 import com.web.data.Chat;
 import com.web.data.ChatSession;
 import com.web.data.User;
@@ -22,11 +24,14 @@ import com.web.utils.DateUtil;
 @Controller
 public class ChatController {
 	
-	@Autowired
-	private ChatServiceImpl chatService;
+	private ChatService chatService;
+	private ChatSessionService chatSessionService;
 	
 	@Autowired
-	private ChatSessionServiceImpl chatSessionService;
+	public ChatController(ChatServiceImpl chatService, ChatSessionServiceImpl chatSessionService) {
+		this.chatService = chatService;
+		this.chatSessionService = chatSessionService;
+	}
 	
 	@GetMapping("messages")
 	public String getUserChats(@AuthenticationPrincipal User currentUser,
@@ -44,8 +49,8 @@ public class ChatController {
 	
 	@PostMapping("/createChat")
 	public String createChat(@AuthenticationPrincipal User currentUser,
-							 Chat chat,
-							 @RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
+							 @RequestParam("file") MultipartFile file,
+							 Chat chat) throws IllegalStateException, IOException {
 		chat = chatService.createChat(chat, file, currentUser);
 		chatSessionService.createNewChatSession(currentUser, chat);
 		return "redirect:/chats/" + chat.getId();

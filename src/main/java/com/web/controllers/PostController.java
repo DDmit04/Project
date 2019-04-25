@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.web.api.post.PostService;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
@@ -24,8 +25,12 @@ import com.web.service.PostServiceImpl;
 @Controller
 public class PostController {
 	
+	private PostService postService;
+	
 	@Autowired
-	private PostServiceImpl postService;
+	public PostController(PostServiceImpl postService) {
+		this.postService = postService;
+	}
 	
 	@GetMapping("/")
 	public String greetingPage(Model model) {
@@ -43,18 +48,17 @@ public class PostController {
 	
 	@PostMapping(value= {"/posts", "/subscriptionPosts"})
 	public String addPost(@AuthenticationPrincipal User currentUser,
-						  @RequestParam String postText, 
-						  @RequestParam String tags,
-						  @RequestParam("file") MultipartFile file,
+			 			  @RequestParam("file") MultipartFile file,
+						  Post post,
 						  Model model) throws IllegalStateException, IOException {
-		postService.addUserPost(postText, tags, file, currentUser);
+		postService.createPost(currentUser, post, file);
 		return "redirect:/posts";
 	}
 	
 	@GetMapping("{post}/edit")
 	public String getEditedPost(@AuthenticationPrincipal User currentUser,
-						  @PathVariable Post post, 
-			  			  Model model) {
+							    @PathVariable Post post, 
+							    Model model) {
 		PostDto editedPost = postService.getOnePost(currentUser, post);
 		model.addAttribute("post", editedPost);
 		return "postEdit";	
@@ -81,7 +85,6 @@ public class PostController {
 	@GetMapping("{post}/removeRepost")
 	public String removeRepost(@AuthenticationPrincipal User currentUser,
 							   @PathVariable Post post,
-			 				   RedirectAttributes redirectAttributes,
 			 				   @RequestHeader(required = false) String referer) {
 		postService.removeRepost(currentUser, post);
 		return "redirect:/" + post.getId() + "/edit" ;		
@@ -91,8 +94,8 @@ public class PostController {
 	public String likePost(@AuthenticationPrincipal User currentUser,
 						   @PathVariable User user,
 						   @PathVariable Post post,
-						   RedirectAttributes redirectAttributes,
-						   @RequestHeader(required = false) String referer) {
+						   @RequestHeader(required = false) String referer,
+						   RedirectAttributes redirectAttributes) {
 		postService.like(currentUser, user, post);
 		UriComponents components = UriComponentsBuilder.fromHttpUrl(referer).build();
 		components.getQueryParams()

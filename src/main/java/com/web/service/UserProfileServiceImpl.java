@@ -32,7 +32,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	private FileServiceImpl fileService;
 	
 	@Override
-	public void addFriendRequest(User user, User currentUser) {
+	public void createFriendRequest(User user, User currentUser) {
 		FriendRequest friendReqest = new FriendRequest(LocalDateTime.now(Clock.systemUTC()), currentUser, user);
 		friendRequestRepo.save(friendReqest);		
 	}

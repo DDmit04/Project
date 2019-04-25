@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
 import com.web.api.user.UserProfileService;
-import com.web.api.user.UserCreationService;
+import com.web.api.user.UserService;
 import com.web.api.user.UserSettingsService;
 import com.web.data.Group;
 import com.web.data.User;
@@ -27,7 +27,7 @@ import com.web.exceptions.UserExceptionType;
 import com.web.repository.UserRepo;
 
 @Service
-public class UserServiceImpl implements UserDetailsService, UserCreationService {
+public class UserServiceImpl implements UserDetailsService, UserService {
 	
 	@Autowired
 	private UserRepo userRepo;
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserDetailsService, UserCreationService 
 	}
 	
 	@Override
-	public void createFullUser(User user, MultipartFile userPic) 
+	public void createUser(User user, MultipartFile userPic) 
 			throws UserException, IllegalStateException, IOException, MailSendException, SMTPSendFailedException {
 		User fullUser = createUser(user);
 		userProfileService.uploadUserPic(fullUser, userPic);

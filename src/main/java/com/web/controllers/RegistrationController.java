@@ -16,21 +16,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
-import com.web.api.user.UserCreationService;
+import com.web.api.user.UserService;
 import com.web.api.user.UserSettingsService;
 import com.web.data.User;
 import com.web.exceptions.UserException;
 import com.web.exceptions.UserExceptionType;
+import com.web.service.UserServiceImpl;
+import com.web.service.UserSettingsServiceImpl;
 
 @Controller
 public class RegistrationController {
 	
-	@Autowired
-	private UserCreationService userService;
-	
-	@Autowired
+	private UserService userService;
 	private UserSettingsService userSettingsService;
 	
+	@Autowired
+	public RegistrationController(UserServiceImpl userService, UserSettingsServiceImpl userSettingsService) {
+		this.userService = userService;
+		this.userSettingsService = userSettingsService;
+	}
+
 	@GetMapping("/registration")
 	public String userRegistration() {
 		return "rgistrationForm";
@@ -41,7 +46,7 @@ public class RegistrationController {
 							 User user,
 			   				 Model model) throws IllegalStateException, IOException {
 		try {
-			userService.createFullUser(user, userPic);
+			userService.createUser(user, userPic);
 		} catch (UserException e) {
 			UserExceptionType exType = e.getUserExceptionType();
 			if(exType == UserExceptionType.EXISTING_USERNAME) {

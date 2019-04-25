@@ -13,7 +13,7 @@ aria-expanded="false" aria-controls="collapseExample">
 	</#if>
 </a>
 <div class="collapse <#if isEdit>show</#if>" id="collapseExample">
-	<form method="post" enctype="multipart/form-data" action="" onsubmit="return validatePost()">
+	<form method="post" enctype="multipart/form-data" onsubmit="return validatePost()">
 		<input id="postText" class="form-control col-mt" type="text" name="postText" placeholder="add text" value="<#if post??>${post.postText}</#if>"
 			onfocus="disposeAlert('postText')"> 
 		<div id="postTextError" class="invalid-feedback"></div>

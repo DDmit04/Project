@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.web.api.chat.ChatRoomService;
+import com.web.api.chat.ChatSessionService;
 import com.web.data.Chat;
 import com.web.data.User;
 import com.web.service.ChatRoomServiceImpl;
@@ -15,11 +17,14 @@ import com.web.service.ChatSessionServiceImpl;
 @Controller
 public class ChatAdminController {
 	
-	@Autowired
-	private ChatRoomServiceImpl chatRoomService;
+	ChatRoomService chatRoomService;
+	ChatSessionService chatSessionService;
 	
 	@Autowired
-	private ChatSessionServiceImpl chatSessionService;
+	public ChatAdminController(ChatRoomServiceImpl chatRoomService, ChatSessionServiceImpl chatSessionService) {
+		this.chatSessionService = chatSessionService;
+		this.chatRoomService = chatRoomService;
+	}
 	
 	@GetMapping("chats/{chat}/{user}/chaseOut")
 	public String chaseOutUser(@AuthenticationPrincipal User currentUser, 

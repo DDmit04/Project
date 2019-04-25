@@ -5,7 +5,7 @@ import com.web.data.User;
 
 public interface UserProfileFriendService {
 	
-	void addFriendRequest(User user, User currentUser);
+	void createFriendRequest(User user, User currentUser);
 
 	void deleteFriendRequest(FriendRequest frendReqest);
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
+import com.web.api.PasswordRecoverService;
 import com.web.data.User;
 import com.web.exceptions.UserException;
 import com.web.exceptions.UserExceptionType;
@@ -19,9 +20,13 @@ import com.web.service.PasswordRecoverServiceImpl;
 @Controller
 public class PasswordRecoverController {
 	
+	private PasswordRecoverService passwordRecoverService;
+
 	@Autowired
-	private PasswordRecoverServiceImpl passwordRecoverService;
-	
+	public PasswordRecoverController(PasswordRecoverServiceImpl passwordRecoverService) {
+		this.passwordRecoverService = passwordRecoverService;
+	}
+
 	@GetMapping("/passwordRecover")
 	public String recoverPassword() {
 		return "passwordRecover";

@@ -15,9 +15,13 @@ import com.web.data.dto.FriendRequestDto;
 @Controller
 public class FriendController {
 	
-	@Autowired
 	private UserProfileService profileService;
 	
+	@Autowired
+	public FriendController(UserProfileService profileService) {
+		this.profileService = profileService;
+	}
+
 	@GetMapping("/friendRequests/{listType}")
 	public String userFriendRequest(@AuthenticationPrincipal User currentUser,
 									@PathVariable String listType,
@@ -36,7 +40,7 @@ public class FriendController {
 	public String addFriendRequest(@AuthenticationPrincipal User currentUser,
 			   					   @PathVariable User user,
 			   					   Model model) {
-		profileService.addFriendRequest(user, currentUser);
+		profileService.createFriendRequest(user, currentUser);
 		return "redirect:/" + user.getId() + "/profile";
 	}
 	
