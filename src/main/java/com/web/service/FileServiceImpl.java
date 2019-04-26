@@ -12,40 +12,36 @@ import com.web.api.FileService;
 
 @Service
 public class FileServiceImpl implements FileService {
-	
+
 	@Value("${upload.path.posts}")
 	private String uploadPathPosts;
-	
+
 	@Value("${upload.path.userPics}")
 	private String uploadPathUserPics;
-	
-	 @Value("${upload.path.commentPics}")
-	 private String uploadPathCommentPics;
-	 
-	 @Value("${upload.path.groupPics}")
-	 private String uploadPathGroupPics;
-	 
-	 @Value("${upload.path.chatPics}")
-	 private String uploadPathChatPics;
-	
+
+	@Value("${upload.path.commentPics}")
+	private String uploadPathCommentPics;
+
+	@Value("${upload.path.groupPics}")
+	private String uploadPathGroupPics;
+
+	@Value("${upload.path.chatPics}")
+	private String uploadPathChatPics;
+
 	private String uploadPath;
-	
+
 	@Override
 	public String uploadFile(MultipartFile file, UploadType type) throws IllegalStateException, IOException {
 		String resultFilename = null;
-		if(type == UploadType.POST) {
+		if (type == UploadType.POST) {
 			uploadPath = uploadPathPosts;
-		}
-		else if(type == UploadType.USER_PIC) {
+		} else if (type == UploadType.USER_PIC) {
 			uploadPath = uploadPathUserPics;
-		}
-		else if(type == UploadType.COMMENT) {
+		} else if (type == UploadType.COMMENT) {
 			uploadPath = uploadPathCommentPics;
-		}
-		else if(type == UploadType.GROUP_PIC) {
+		} else if (type == UploadType.GROUP_PIC) {
 			uploadPath = uploadPathGroupPics;
-		}
-		else if(type == UploadType.CHAT_PIC) {
+		} else if (type == UploadType.CHAT_PIC) {
 			uploadPath = uploadPathChatPics;
 		}
 		if (file != null && !file.getOriginalFilename().isEmpty()) {

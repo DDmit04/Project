@@ -4,10 +4,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import com.web.data.User;
 import com.web.data.Group;
+import com.web.data.User;
 import com.web.data.dto.GroupDto;
-import com.web.data.dto.SearchResultsGeneric;
 
 public interface GroupRepo extends CrudRepository<Group, Long> {
 	

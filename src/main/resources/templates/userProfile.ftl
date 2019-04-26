@@ -4,7 +4,7 @@
 
 <#include "parts/security.ftl">
 
-<#if user.isBloked>
+<#if user.bloked>
 	<#include "/parts/components/profile/noAccesProfile.ftl">
 <#else>
 	<#include "/parts/components/profile/accesProfile.ftl">

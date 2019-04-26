@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.web.api.chat.ChatSessionConnectionService;
 import com.web.api.chat.ChatSessionService;
 import com.web.data.Chat;
 import com.web.data.ChatSession;
@@ -16,12 +17,15 @@ import com.web.repository.ChatSessionRepo;
 @Service
 public class ChatSessionServiceImpl implements ChatSessionService {
 	
-	@Autowired
 	private ChatSessionRepo chatSessionRepo;
+	private ChatSessionConnectionService сhatSessionConnectionService;
 	
 	@Autowired
-	private ChatSessionConnectionServiceImpl сhatSessionConnectionService;
-	
+	public ChatSessionServiceImpl(ChatSessionRepo chatSessionRepo, ChatSessionConnectionServiceImpl сhatSessionConnectionService) {
+		this.chatSessionRepo = chatSessionRepo;
+		this.сhatSessionConnectionService = сhatSessionConnectionService;
+	}
+
 	@Override
 	public void createNewChatSession(User user, Chat chat) {
 		ChatSession session = new ChatSession(chat, user);

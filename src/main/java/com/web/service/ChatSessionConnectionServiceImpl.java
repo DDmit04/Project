@@ -14,9 +14,13 @@ import com.web.repository.ChatSessionConnectionRepo;
 @Service
 public class ChatSessionConnectionServiceImpl implements ChatSessionConnectionService {
 	
-	@Autowired
 	private ChatSessionConnectionRepo chatSessionConnectionRepo;
 	
+	@Autowired	
+	public ChatSessionConnectionServiceImpl(ChatSessionConnectionRepo chatSessionConnectionRepo) {
+		this.chatSessionConnectionRepo = chatSessionConnectionRepo;
+	}
+
 	@Override
 	public ChatSessionConnection openNewSessionConnection(ChatSession session) {
 		ChatSessionConnection sessionConnection = new ChatSessionConnection();

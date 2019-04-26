@@ -1,6 +1,6 @@
 <!-- uses in commentList
 			 commentEdit
-			 parts/postHendle -->
+			 parts/showLists/showListsOfPost -->
 
 <#macro show post parentPost postType>
 

@@ -16,21 +16,23 @@ import com.web.repository.UserRepo;
 @Service
 public class SearchServiceImpl implements SearchService {
 	
-	@Autowired
 	private PostRepo postRepo;
-	
-	@Autowired
 	private UserRepo userRepo;
-	
-	@Autowired
 	private GroupRepo groupRepo;
 	
+	@Autowired
+	public SearchServiceImpl(PostRepo postRepo, UserRepo userRepo, GroupRepo groupRepo) {
+		this.postRepo = postRepo;
+		this.userRepo = userRepo;
+		this.groupRepo = groupRepo;
+	}
+
 	@Override
 	public Iterable<? extends SearchResultsGeneric> search(User currentUser, String search, String searchType) {
 		Iterable<? extends SearchResultsGeneric> searchResult = new HashSet<>();
 		if(search != null && search != "") {
 			if("users".equals(searchType)) {
-				searchResult = userRepo.searchUsersDto(search);
+				searchResult = userRepo.searchUsers(search);
 			} else if("posts".equals(searchType)) {
 				searchResult = postRepo.findByTag(currentUser, search);
 			} else if("groups".equals(searchType)) {
@@ -38,7 +40,7 @@ public class SearchServiceImpl implements SearchService {
 			}
 		} else {
 			if("users".equals(searchType)) {
-				searchResult = userRepo.searchAllUsersDto();
+				searchResult = userRepo.searchAllUsers();
 			} else if("posts".equals(searchType)) {
 				searchResult = postRepo.findAll(currentUser);
 			} else if("groups".equals(searchType)) {

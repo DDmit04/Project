@@ -19,6 +19,8 @@ public class UserDto extends SearchResultsGeneric{
     private String username;
 	private String registrationDate;
 	private String userPicName;
+	private String userInformation;
+	private String userStatus;
 	private boolean isFriend;
 	private boolean isBloking;
 	private boolean isBloked;
@@ -37,6 +39,8 @@ public class UserDto extends SearchResultsGeneric{
 		this.username = user.getUsername();
 		this.registrationDate = DateUtil.formatDate(user.getRegistrationDate()); 
 		this.userPicName = user.getUserPicName();
+		this.userInformation = user.getUserInformation();
+		this.userStatus = user.getUserStatus();
 		this.friendCount = frendCount;
 		this.isFriend = isFriend;
 		this.isRequested = isRequested;
@@ -79,6 +83,8 @@ public class UserDto extends SearchResultsGeneric{
 		this.username = user.getUsername();
 		this.registrationDate = DateUtil.formatDate(user.getRegistrationDate());
 		this.userPicName = user.getUserPicName();
+		this.userInformation = user.getUserInformation();
+		this.userStatus = user.getUserStatus();
 		this.friendCount = frendCount;
 		this.subscriptionsCount = subscriptionsCount;
 		this.subscribersCount = subscribersCount;
@@ -96,28 +102,28 @@ public class UserDto extends SearchResultsGeneric{
 		this.subscribersCount = subscribersCount;
 	}
 	
-	public boolean getIsBloked() {
-		return isBloked;
-	}
-	public boolean getIsBloking() {
-		return isBloking;
-	}
-	public boolean getIsBannedInGroup() {
-		return isBannedInGroup;
-	}
-	public boolean getIsGroupSub() {
-		return isGroupSub;
-	}
-	public boolean getIsRequested() {
-		return isRequested;
-	}
-	public boolean getIsFriend() {
-		return isFriend;
-	}
-	public boolean getIsSub() {
-		return isSub;
-	}
-	public boolean getIsGroupAdmin() {
-		return isGroupAdmin;
-	}
+//	public boolean getIsBloked() {
+//		return isBloked;
+//	}
+//	public boolean getIsBloking() {
+//		return isBloking;
+//	}
+//	public boolean getIsBannedInGroup() {
+//		return isBannedInGroup;
+//	}
+//	public boolean getIsGroupSub() {
+//		return isGroupSub;
+//	}
+//	public boolean getIsRequested() {
+//		return isRequested;
+//	}
+//	public boolean getIsFriend() {
+//		return isFriend;
+//	}
+//	public boolean getIsSub() {
+//		return isSub;
+//	}
+//	public boolean getIsGroupAdmin() {
+//		return isGroupAdmin;
+//	}
 }

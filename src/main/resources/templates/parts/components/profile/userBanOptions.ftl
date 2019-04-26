@@ -4,7 +4,7 @@
 	<i class="fas fa-ellipsis-v"></i>
 </button>
 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-	<#if user.isBloking>
+	<#if user.bloking>
 		<a class="dropdown-item" href="/${user.id}/${currentUser.id}/fromBlackList">unblock</a>
 	<#else>
 		<a class="dropdown-item" href="/${user.id}/${currentUser.id}/inBlackList">block</a>

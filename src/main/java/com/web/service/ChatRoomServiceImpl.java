@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.api.chat.ChatRoomService;
+import com.web.api.chat.ChatSessionService;
 import com.web.data.Chat;
 import com.web.data.User;
 import com.web.repository.ChatRepo;
@@ -11,12 +12,15 @@ import com.web.repository.ChatRepo;
 @Service
 public class ChatRoomServiceImpl implements ChatRoomService {
 	
-	@Autowired
 	private ChatRepo chatRepo;
+	private ChatSessionService chatSessionService;
 	
-	@Autowired
-	private ChatSessionServiceImpl chatSessionService;
-	
+	@Autowired	
+	public ChatRoomServiceImpl(ChatRepo chatRepo, ChatSessionServiceImpl chatSessionService) {
+		this.chatRepo = chatRepo;
+		this.chatSessionService = chatSessionService;
+	}
+
 	private boolean userIsAdminOrOwner (User user, User currentUser, Chat chat) {
 		return chat.getChatOwner().equals(currentUser) || chat.getChatAdmins().contains(currentUser);
 	}

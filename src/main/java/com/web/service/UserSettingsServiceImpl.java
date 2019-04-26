@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
+import com.web.api.MailService;
 import com.web.api.user.UserSettingsService;
 import com.web.data.User;
 import com.web.exceptions.UserException;
@@ -16,15 +17,17 @@ import com.web.utils.ServiceUtils;
 @Service
 public class UserSettingsServiceImpl implements UserSettingsService {
 	
-	@Autowired
 	private UserRepo userRepo;
-	
-	@Autowired
-	private MailServiceImpl mailService;
-	
-	@Autowired
+	private MailService mailService;
 	private PasswordEncoder passwordEncoder; 
-	
+
+	@Autowired
+	public UserSettingsServiceImpl(UserRepo userRepo, MailServiceImpl mailService, PasswordEncoder passwordEncoder) {
+		this.userRepo = userRepo;
+		this.mailService = mailService;
+		this.passwordEncoder = passwordEncoder;
+	}
+
 	private void sendEmailConfirmCode(User user, String email) throws MailSendException, SMTPSendFailedException {
 		String randomCode = ServiceUtils.generateRandomKey(4);
 		mailService.sendEmailConfirmCode(user, email, randomCode);

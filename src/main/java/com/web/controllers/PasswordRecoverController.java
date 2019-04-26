@@ -45,7 +45,7 @@ public class PasswordRecoverController {
 		} catch (UserException e) {
 			model.addAttribute("recoverDataError", e.getMessage());
 		} catch (MailSendException | SMTPSendFailedException e) {
-			model.addAttribute("passwordRecoverAttention", "something go wrong, pleace try leter");
+			model.addAttribute("passwordRecoverAttention", "something go wrong, pleace try later");
 		}
 		model.addAttribute("recoverData", recoverData);
 		return "passwordRecover";
@@ -61,7 +61,7 @@ public class PasswordRecoverController {
 		try {
 			passwordRecoverService.sendPasswordRecoverCode(user, user.getUserEmail());
 		} catch (MailSendException | SMTPSendFailedException e) {
-			model.addAttribute("passwordRecoverAttention", "something go wrong, pleace try leter");
+			model.addAttribute("passwordRecoverAttention", "something go wrong, pleace try later");
 		}
 		return "passwordRecover";
 	}

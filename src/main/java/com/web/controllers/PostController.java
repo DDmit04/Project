@@ -108,7 +108,7 @@ public class PostController {
 	public String addRepost(@AuthenticationPrincipal User currentUser,
 							@PathVariable Post repostedPost, 
 			 				@RequestParam(required = false) String repostText,
-			 				@RequestParam String repostTags) throws IllegalStateException, IOException {
+			 				@RequestParam(required = false) String repostTags) throws IllegalStateException, IOException {
 		postService.addRepost(currentUser, repostedPost, repostText, repostTags);
 		return "redirect:/posts";
 	}

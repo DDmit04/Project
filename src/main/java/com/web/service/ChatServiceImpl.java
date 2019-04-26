@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.FileService;
 import com.web.api.chat.ChatService;
 import com.web.data.Chat;
 import com.web.data.User;
@@ -18,15 +19,17 @@ import com.web.repository.ChatRepo;
 @Service
 public class ChatServiceImpl implements ChatService {
 	
-	@Autowired
 	private ChatRepo chatRepo;
-	
-	@Autowired
-	private FileServiceImpl fileService;
-	
-	@Autowired
+	private FileService fileService;
 	private PasswordEncoder passwordEncoder; 
 	
+	@Autowired
+	public ChatServiceImpl(ChatRepo chatRepo, PasswordEncoder passwordEncoder, FileServiceImpl fileService) {
+		this.chatRepo = chatRepo;
+		this.fileService = fileService;
+		this.passwordEncoder = passwordEncoder;
+	}
+
 	public Chat createChat(Chat chat, MultipartFile file, User currentUser) throws IllegalStateException, IOException {
 		chat.setChatCreationDate(LocalDateTime.now(Clock.systemUTC()));
 		chat.setChatPicName(fileService.uploadFile(file, UploadType.CHAT_PIC));

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.FileService;
 import com.web.api.post.PostService;
 import com.web.data.Group;
 import com.web.data.Post;
@@ -19,12 +20,15 @@ import com.web.repository.PostRepo;
 @Service
 public class PostServiceImpl implements PostService {
 	
-	@Autowired
-	private FileServiceImpl fileService;
-	
-	@Autowired
+	private FileService fileService;
 	private PostRepo postRepo;
 	
+	@Autowired
+	public PostServiceImpl(FileServiceImpl fileService, PostRepo postRepo) {
+		this.fileService = fileService;
+		this.postRepo = postRepo;
+	}
+
 	private boolean userIsAuthorOrAdmin(User currentUser, Post post) {
 		return post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser)
 			   || (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser));
@@ -89,9 +93,10 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
-	public void addRepost(User currentUser, Post post, String repostText, String repostTags) throws IllegalStateException, IOException {
+	public void addRepost(User currentUser, Post repostedPost, String repostText, String repostTags) throws IllegalStateException, IOException {
+		Post post = new Post(repostText, repostTags, LocalDateTime.now(Clock.systemUTC()));
 		Post newPost = createPost(currentUser, post, null);	
-		newPost.setRepost(post);
+		newPost.setRepost(repostedPost);
 		if(postRepo.findCountByRepostAndAuthor(currentUser, post) == 0) {
 			incrementAndSaveRepostsCount(post);
 		}

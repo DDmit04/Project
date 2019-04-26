@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.FileService;
 import com.web.api.user.UserProfileService;
 import com.web.data.FriendRequest;
 import com.web.data.User;
@@ -19,18 +20,19 @@ import com.web.repository.UserRepo;
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
 	
-	@Autowired
 	private FriendRequestRepo friendRequestRepo;
-	
-	@Autowired
 	private UserRepo userRepo;
-	
-	@Autowired
 	private CommentRepo commentRepo;
+	private FileService fileService;
 	
 	@Autowired
-	private FileServiceImpl fileService;
-	
+	public UserProfileServiceImpl(FriendRequestRepo friendRequestRepo, UserRepo userRepo, CommentRepo commentRepo, FileServiceImpl fileService) {
+		this.friendRequestRepo = friendRequestRepo;
+		this.userRepo = userRepo;
+		this.commentRepo = commentRepo;
+		this.fileService = fileService;
+	}
+
 	@Override
 	public void createFriendRequest(User user, User currentUser) {
 		FriendRequest friendReqest = new FriendRequest(LocalDateTime.now(Clock.systemUTC()), currentUser, user);
@@ -55,7 +57,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	public void addFriend(FriendRequest frendRequest) {
 		User receivingUser = frendRequest.getRequestTo();
 		User senderUser = frendRequest.getRequestFrom();
-		receivingUser.getUserFriends().add(senderUser);
+		senderUser.getUserFriends().add(senderUser);
 		userRepo.save(receivingUser);
 		senderUser.getUserFriends().add(receivingUser);
 		userRepo.save(senderUser);
@@ -65,8 +67,6 @@ public class UserProfileServiceImpl implements UserProfileService {
 	public void deleteFriend(User user, User currentUser) {
 		user.getUserFriends().remove(currentUser);
 		userRepo.save(user);	
-		currentUser.getUserFriends().remove(user);
-		userRepo.save(currentUser);	
 	}
 	
 	@Override
@@ -104,14 +104,16 @@ public class UserProfileServiceImpl implements UserProfileService {
 	}
 	
 	@Override
-	public void updateUserProfile(User user, MultipartFile file, String userInformation, String userTitle) throws IllegalStateException, IOException {
+	public void updateUserProfile(User user, MultipartFile file, String userInformation, String userStatus) throws IllegalStateException, IOException {
 		if(userInformation != null) {
-			//
+			user.setUserInformation(userInformation);
 		}
-		if(userTitle != null) {
-			//
+		if(userStatus != null) {
+			user.setUserStatus(userStatus);
 		}
-		uploadUserPic(user, file);
+		if(!file.isEmpty()) {
+			uploadUserPic(user, file);
+		}
 		userRepo.save(user);		
 	}
 	

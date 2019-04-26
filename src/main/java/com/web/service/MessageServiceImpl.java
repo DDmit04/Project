@@ -24,14 +24,16 @@ import com.web.utils.DateUtil;
 @Service
 public class MessageServiceImpl implements MessageService {
 
-	@Autowired
 	private MessageRepo messageRepo;
-
-	@Autowired
 	private ChatRepo chatRepo;
-
-	@Autowired
 	private UserRepo userRepo;
+	
+	@Autowired
+	public MessageServiceImpl(MessageRepo messageRepo, ChatRepo chatRepo, UserRepo userRepo) {
+		this.messageRepo = messageRepo;
+		this.chatRepo = chatRepo;
+		this.userRepo = userRepo;
+	}
 
 	@Override
 	public UserDto getOneUserToChat(User currentUser, Chat chat) {

@@ -5,7 +5,6 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,18 +28,19 @@ import com.web.repository.UserRepo;
 @Service
 public class UserServiceImpl implements UserDetailsService, UserService {
 	
-	@Autowired
 	private UserRepo userRepo;
-	
-	@Autowired
 	private UserSettingsService userSettingsService;
-	
-	@Autowired
 	private UserProfileService userProfileService;
-	
-	@Autowired
 	private PasswordEncoder passwordEncoder; 
 	
+	public UserServiceImpl(UserRepo userRepo,  PasswordEncoder passwordEncoder, UserSettingsServiceImpl userSettingsService,
+			UserProfileServiceImpl userProfileService) {
+		this.userRepo = userRepo;
+		this.userSettingsService = userSettingsService;
+		this.userProfileService = userProfileService;
+		this.passwordEncoder = passwordEncoder;
+	}
+
 	private User createUser(User user) throws UserException {
 		User userFromDbUsername = userRepo.findByUsernameOrEmail(user.getUsername());
 		User userFronDbEmail = userRepo.findByUsernameOrEmail(user.getUserEmail());
@@ -88,17 +88,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	public UserDto getOneUserToUser(User user, User currentUser) {
-		return userRepo.findOneUserToUserDto(currentUser, currentUser.getId(), user.getId());
+		return userRepo.findOneUserToUser(currentUser, currentUser.getId(), user.getId());
 	}
 	
 	@Override
 	public UserDto getOneUserToList(User user) {
-		return userRepo.findOneUserForListDto(user.getId());
+		return userRepo.findOneUserToList(user.getId());
 	}
 	
 	@Override
 	public UserDto getOneUserToGroup(User currentUser, Group group) {
-		return userRepo.findOneUserToGroupDto(currentUser.getId(), group);
+		return userRepo.findOneUserToGroup(currentUser.getId(), group);
 	}
 
 	@Override

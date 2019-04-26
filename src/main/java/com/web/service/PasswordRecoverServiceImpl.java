@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
+import com.web.api.MailService;
 import com.web.api.PasswordRecoverService;
 import com.web.data.User;
 import com.web.exceptions.UserException;
@@ -16,15 +17,17 @@ import com.web.utils.ServiceUtils;
 @Service
 public class PasswordRecoverServiceImpl implements PasswordRecoverService {
 	
-	@Autowired
 	private UserRepo userRepo; 
-	
-	@Autowired
-	private MailServiceImpl mailService;
-	
-	@Autowired
+	private MailService mailService;
 	private PasswordEncoder passwordEncoder; 
 	
+	@Autowired	
+	public PasswordRecoverServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder, MailServiceImpl mailService) {
+		this.userRepo = userRepo;
+		this.mailService = mailService;
+		this.passwordEncoder = passwordEncoder;
+	}
+
 	@Override
 	public User realizeSendPasswordRecoverCode(String recoverData) throws UserException, MailSendException, SMTPSendFailedException {
 		User userDb = userRepo.findByUsernameOrEmail(recoverData);

@@ -26,8 +26,8 @@
 				</a>
 			</div>
 		</div>
-		<#if !user.isBannedInGroup>
-			<#if user.isGroupAdmin>
+		<#if !user.bannedInGroup>
+			<#if user.groupAdmin>
 				<#include "parts/forms/addPostForm.ftl">
 			</#if>
 			<#include "/parts/showLists/showListsOfPosts.ftl">
@@ -41,12 +41,12 @@
 		  		<@picture.pic group "bigPic" "groupAvatar" />
 		  		<div class="container">
 			  		<div class="row mt-3">
-			  			<#if !user.isGroupSub>
-			  				<a class="<#if user.isBannedInGroup>disabled</#if> btn btn-primary btn-lg btn-block " role="button" href="/groups/${group.id}/${currentUser.id}/sub">sub</a>
+			  			<#if !user.groupSub>
+			  				<a class="<#if user.bannedInGroup>disabled</#if> btn btn-primary btn-lg btn-block " role="button" href="/groups/${group.id}/${currentUser.id}/sub">sub</a>
 						<#else>
 			  				<a class="btn btn-primary btn-lg btn-block " role="button" href="/groups/${group.id}/${currentUser.id}/unsub">unsub</a>
 						</#if>
-						<#if user.isGroupAdmin>
+						<#if user.groupAdmin>
 							<a class="btn btn-primary btn-lg btn-block" role="button" href="#">redact</a>
 						</#if>
 			  		</div>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.api.CommentService;
+import com.web.api.FileService;
 import com.web.data.Comment;
 import com.web.data.Post;
 import com.web.data.User;
@@ -18,11 +19,14 @@ import com.web.repository.CommentRepo;
 @Service
 public class CommentServiceImpl implements CommentService{
 	
-	@Autowired
 	private CommentRepo commentRepo;
+	private FileService fileService;
 	
 	@Autowired
-	private FileServiceImpl fileService;
+	public CommentServiceImpl(CommentRepo commentRepo, FileServiceImpl fileService) {
+		this.commentRepo = commentRepo;
+		this.fileService = fileService;
+	}
 
 	@Override
 	public void addComment(User currentUser, Comment comment, Post post, MultipartFile commentPic) throws IllegalStateException, IOException {

@@ -50,19 +50,20 @@ public class UserProfileController {
 								 @PathVariable User user,
 								 Model model) {
 		Iterable<PostDto> searchByPostAuthor = postService.getUserPosts(currentUser, user);
-		UserDto userProfile = userService.getOneUserToUser(currentUser, user);
+		UserDto userProfile = userService.getOneUserToUser(user, currentUser);
 		model.addAttribute("user", userProfile);
 		model.addAttribute("posts", searchByPostAuthor);
-		model.addAttribute("userGroups", user.getSubedGroups());		
+		model.addAttribute("userGroups", user.getSubedGroups());	
+		model.addAttribute("userPicName", user.getUserPicName());
 		return "userProfile";
 	}
 	
 	@PostMapping("{user}/profile")
 	public String addPostUserProfile(@AuthenticationPrincipal User currentUser,
 									 @PathVariable User user,
-							  		 Post post,
 							  		 @RequestParam("file") MultipartFile file,
-							  		 Model model) throws IllegalStateException, IOException {
+							  		 Model model,
+							  		 Post post) throws IllegalStateException, IOException {
 		Iterable<PostDto> searchByPostAuthor = postService.getUserPosts(currentUser, user);
 		postService.createPost(currentUser, post, file);
 		UserDto userProfile = userService.getOneUserToUser(user, currentUser);
@@ -76,23 +77,26 @@ public class UserProfileController {
 	public String redactProfile(@AuthenticationPrincipal User currentUser,
 								@PathVariable User user,
 								Model model) {
-		UserDto currentUserProfile = userService.getOneUserToStatistic(currentUser);
-		model.addAttribute("user", currentUserProfile);
-		model.addAttribute("blackList", currentUser.getBlackList());
-		return "userRedaction";
+		if(user.equals(currentUser)) {
+			UserDto currentUserProfile = userService.getOneUserToStatistic(currentUser);
+			model.addAttribute("user", currentUserProfile);
+			return "userRedaction";
+		} else {
+			return "redirect:/" + user.getId() + "/profile";
+		}
 	}
 	
 	@PostMapping("{user}/profile/redact")
 	public String redactProfile(@AuthenticationPrincipal User currentUser,
 								@PathVariable User user,
-							  	@RequestParam(required = false) String userTitle,
+							  	@RequestParam(required = false) String userStatus,
 							  	@RequestParam(required = false) String userInformation, 
 							  	@RequestParam("file") MultipartFile file,
 							  	Model model) throws IllegalStateException, IOException {
 		UserDto currentUserProfile = userService.getOneUserToStatistic(currentUser);
-		userProfileService.updateUserProfile(currentUser, file, userInformation, userTitle);
+		userProfileService.updateUserProfile(currentUser, file, userInformation, userStatus);
 		model.addAttribute("user", currentUserProfile);
-		return "redirect:/profile/redact";
+		return "redirect:/" + user.getId() + "/profile/redact";
 	}
 
 	@GetMapping("{user}/subscribe")

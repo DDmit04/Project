@@ -22,6 +22,9 @@
 				<div class="row h5">
 					<div class="ml-2 mt-2">
 						${user.username}
+						<div class="mt-2">
+							<span>${user.userStatus?ifExists}</span>
+						</div>
 					</div>
 					<#if currentUsername != user.username>
 						<div class="col dropdown" align="right">

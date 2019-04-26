@@ -59,7 +59,7 @@ public class RegistrationController {
 			model.addAttribute("registrationName", e.getUser().getUsername());
 			return "rgistrationForm";
 		} catch (MailSendException | SMTPSendFailedException e) {
-			model.addAttribute("registrationAttention", "something go wrong, pleace try leter");
+			model.addAttribute("registrationAttention", "something go wrong, pleace try later");
 			return "rgistrationForm";
 		}
 		return "redirect:/login";

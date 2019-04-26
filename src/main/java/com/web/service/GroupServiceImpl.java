@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.FileService;
 import com.web.api.GroupService;
 import com.web.data.Group;
 import com.web.data.User;
@@ -20,18 +21,19 @@ import com.web.repository.GroupRepo;
 @Service
 public class GroupServiceImpl implements GroupService {
 	
-	@Autowired
 	private GroupRepo groupRepo;
-	
-	@Autowired
-	private FileServiceImpl fileService;
-	
-	@Autowired
+	private FileService fileService;
 	private CommentRepo commentRepo;
-	
-	@Autowired
 	private PasswordEncoder passwordEncoder; 
 	
+	@Autowired	
+	public GroupServiceImpl(GroupRepo groupRepo, CommentRepo commentRepo, PasswordEncoder passwordEncoder, FileServiceImpl fileService) {
+		this.groupRepo = groupRepo;
+		this.fileService = fileService;
+		this.commentRepo = commentRepo;
+		this.passwordEncoder = passwordEncoder;
+	}
+
 	private boolean userIsGroupOwner(User currentUser, Group group) {
 		return group.getGroupOwner().equals(currentUser);
 	}

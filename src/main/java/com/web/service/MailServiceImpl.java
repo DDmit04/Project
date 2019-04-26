@@ -14,7 +14,6 @@ import com.web.data.User;
 @Service
 public class MailServiceImpl implements MailService {
 	
-	@Autowired
     private JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
@@ -22,8 +21,13 @@ public class MailServiceImpl implements MailService {
     
     @Value("${hostname}")
 	private String hostname;
+    
+    @Autowired
+    public MailServiceImpl(JavaMailSender mailSender) {
+		this.mailSender = mailSender;
+	}
 
-    @Override
+	@Override
     public void send(String emailTo, String subject, String message) throws MailSendException, SMTPSendFailedException{
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(username);

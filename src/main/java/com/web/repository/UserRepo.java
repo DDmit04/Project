@@ -44,7 +44,7 @@ public interface UserRepo extends CrudRepository<User, Long> {
             "             left join u.blackList bloked " +
             " where u.id = :id " +
             " group by u")
-    UserDto findOneUserToUserDto(@Param("currentUser") User currentUser, @Param("currentUserId") Long currentUserId, @Param("id") Long id);
+    UserDto findOneUserToUser(@Param("currentUser") User currentUser, @Param("currentUserId") Long currentUserId, @Param("id") Long id);
 	
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
@@ -57,7 +57,7 @@ public interface UserRepo extends CrudRepository<User, Long> {
             "             left join u.bannedInGroups bg " +
             " where u.id = :currentUserId " +
             " group by u")
-    UserDto findOneUserToGroupDto(@Param("currentUserId") Long currentUserId, @Param("group") Group group);	
+    UserDto findOneUserToGroup(@Param("currentUserId") Long currentUserId, @Param("group") Group group);	
 	
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
@@ -70,7 +70,7 @@ public interface UserRepo extends CrudRepository<User, Long> {
             " from User u " +
             " where u.id = :id " +
             " group by u")
-    UserDto findOneUserForListDto(@Param("id") Long id);
+    UserDto findOneUserToList(@Param("id") Long id);
 	
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
@@ -83,7 +83,7 @@ public interface UserRepo extends CrudRepository<User, Long> {
             " from User u " +
             " where u.username like concat('%',:search,'%')" +
             " group by u")
-    Iterable<UserDto> searchUsersDto(@Param("search") String search);
+    Iterable<UserDto> searchUsers(@Param("search") String search);
 	
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
@@ -95,7 +95,7 @@ public interface UserRepo extends CrudRepository<User, Long> {
             ") " +
             " from User u " +
             " group by u")
-    Iterable<UserDto> searchAllUsersDto();
+    Iterable<UserDto> searchAllUsers();
 
 	@Query("select new com.web.data.dto.UserDto(" +
             "   u, " +
