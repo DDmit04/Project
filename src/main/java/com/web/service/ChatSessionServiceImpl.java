@@ -27,13 +27,14 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 	}
 
 	@Override
-	public void createNewChatSession(User user, Chat chat) {
+	public ChatSession createNewChatSession(User user, Chat chat) {
 		ChatSession session = new ChatSession(chat, user);
 		session.setLastConnectionDate(LocalDateTime.now(Clock.systemUTC()));
 		chatSessionRepo.save(session);
 		ChatSessionConnection sessionConnection = сhatSessionConnectionService.openNewSessionConnection(session);
 		session.setLastConnectionId(sessionConnection.getId());
 		chatSessionRepo.save(session);
+		return session;
 	}
 	
 	@Override
@@ -43,25 +44,28 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 	}
 	
 	@Override
-	public void connectChatSesion(User user, Chat chat) {
+	public ChatSession connectChatSesion(User user, Chat chat) {
 		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
 		ChatSessionConnection sessionConnection = сhatSessionConnectionService.openNewSessionConnection(session);
 		session.setLastConnectionId(sessionConnection.getId());
 		chatSessionRepo.save(session);
+		return session;
 	}
 	
 	@Override
-	public void disconnectChatSession(User user, Chat chat) {
+	public ChatSession disconnectChatSession(User user, Chat chat) {
 		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
 		сhatSessionConnectionService.closeSessionConnection(session);
 		chatSessionRepo.save(session);
+		return session;
 	}
 	
 	@Override
-	public void updateLastConnectionDate(User user, Chat chat) {
+	public ChatSession updateLastConnectionDate(User user, Chat chat) {
 		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
 		session.setLastConnectionDate(LocalDateTime.now(Clock.systemUTC()));
 		chatSessionRepo.save(session);
+		return session;
 	}
 
 	@Override

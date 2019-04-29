@@ -27,5 +27,6 @@ public class ChatSessionConnection {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "chat_session_id")
 	private ChatSession session;
-
+	
+	
 }

@@ -51,7 +51,7 @@ public class CommentController {
 							 @RequestParam("commentPic") MultipartFile commentPic,
 							 Comment comment,
 			  				 Model model) throws IllegalStateException, IOException {
-		commentService.addComment(currentUser, comment, post, commentPic);
+		commentService.createComment(currentUser, comment, post, commentPic);
 		return "redirect:/" + post.getId() + "/comments";
 	}
 	

@@ -17,7 +17,7 @@ import com.web.data.dto.CommentDto;
 import com.web.repository.CommentRepo;
 
 @Service
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
 	
 	private CommentRepo commentRepo;
 	private FileService fileService;
@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService{
 	}
 
 	@Override
-	public void addComment(User currentUser, Comment comment, Post post, MultipartFile commentPic) throws IllegalStateException, IOException {
+	public void createComment(User currentUser, Comment comment, Post post, MultipartFile commentPic) throws IllegalStateException, IOException {
 		comment.setCommentCreationDate(LocalDateTime.now(Clock.systemUTC()));
 		comment.setCommentedPost(post);
 		comment.setCommentAuthor(currentUser);

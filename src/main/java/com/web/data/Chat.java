@@ -41,7 +41,7 @@ public class Chat {
 	private User chatOwner;
 	
 	@OneToMany(mappedBy = "connectedChat", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	private Set<ChatSession> sessions;
+	private Set<ChatSession> sessions = new HashSet<>();
 	
 	@OrderBy("id")	
 	@OneToMany(mappedBy = "messageChat", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)

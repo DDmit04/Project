@@ -7,6 +7,6 @@ public interface ChatSessionConnectionService {
 
 	ChatSessionConnection openNewSessionConnection(ChatSession session);
 
-	void closeSessionConnection(ChatSession session);
+	ChatSessionConnection closeSessionConnection(ChatSession session);
 	
 }

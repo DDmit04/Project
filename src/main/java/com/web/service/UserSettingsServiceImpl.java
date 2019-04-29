@@ -61,6 +61,7 @@ public class UserSettingsServiceImpl implements UserSettingsService {
 		if (userDb != null) {
 			realizeSendEmailConfirmCode(userDb, newEmail);
 			userDb.setUserEmail(newEmail);
+			userDb.setEmailChangeCode(null);
 			userRepo.save(userDb);
 		} else {
 			throw new UserException("wrong email change code!", userDb, UserExceptionType.EMAIL_CHANGE_CODE);
@@ -78,9 +79,9 @@ public class UserSettingsServiceImpl implements UserSettingsService {
 	}
 	
 	@Override
-	public void realizeSendEmailChangeCode(User user, String email) throws MailSendException, SMTPSendFailedException {
+	public void realizeSendEmailChangeCode(User user) throws MailSendException, SMTPSendFailedException {
 		//add timeout maybe
-		sendChangeEmailCode(user, email);
+		sendChangeEmailCode(user, user.getUserEmail());
 	}
 	
 	@Override

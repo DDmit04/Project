@@ -12,7 +12,7 @@ public interface ChatService {
 
 	Chat createChat(User user, User currentUser);
 	
-	Chat createChat(Chat chat, MultipartFile file, User currentUser) throws IllegalStateException, IOException;
+	Chat createChat(Chat chat, User currentUser, MultipartFile file) throws IllegalStateException, IOException;
 	
 	void deleteChat(Chat chat);
 	

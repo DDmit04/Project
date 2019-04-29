@@ -54,17 +54,14 @@ public class PasswordRecoverServiceImpl implements PasswordRecoverService {
 	@Override
 	public void checkPasswordRecoverCode(User user, String emailCode) throws UserException {
 		User userDb = userRepo.findByPasswordRecoverCode(emailCode);
-		if (userDb != null && user.equals(userDb)) {
-			userDb.setPasswordRecoverCode(null);
-			userRepo.save(userDb);
-		} else {
+		if (userDb == null && !user.equals(userDb)) {
 			throw new UserException("wrong password recover code!", user, UserExceptionType.WRONG_PASSWORD_RECOVER_CODE);
 		}
 	}
 	
 	@Override
 	public void changeRecoveredPassword(User user, String newPassword) throws UserException {
-		if(passwordEncoder.matches( newPassword, user.getPassword())) {
+		if(passwordEncoder.matches(newPassword, user.getPassword())) {
 			throw new UserException("new password is " + user.getUsername() + "'s current password!", user, UserExceptionType.CHANGE_PASSWORD);
 		} else {
 			newPassword = passwordEncoder.encode(newPassword);

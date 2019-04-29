@@ -102,28 +102,4 @@ public class UserDto extends SearchResultsGeneric{
 		this.subscribersCount = subscribersCount;
 	}
 	
-//	public boolean getIsBloked() {
-//		return isBloked;
-//	}
-//	public boolean getIsBloking() {
-//		return isBloking;
-//	}
-//	public boolean getIsBannedInGroup() {
-//		return isBannedInGroup;
-//	}
-//	public boolean getIsGroupSub() {
-//		return isGroupSub;
-//	}
-//	public boolean getIsRequested() {
-//		return isRequested;
-//	}
-//	public boolean getIsFriend() {
-//		return isFriend;
-//	}
-//	public boolean getIsSub() {
-//		return isSub;
-//	}
-//	public boolean getIsGroupAdmin() {
-//		return isGroupAdmin;
-//	}
 }

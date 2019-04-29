@@ -31,11 +31,12 @@ public class ChatSessionConnectionServiceImpl implements ChatSessionConnectionSe
 	}
 
 	@Override
-	public void closeSessionConnection(ChatSession session) {
+	public ChatSessionConnection closeSessionConnection(ChatSession session) {
 		ChatSessionConnection sessionConnection = session.getSessionConnectionDates().iterator().next();
 		sessionConnection.setDisconnectChatDate(LocalDateTime.now(Clock.systemUTC()));
 		sessionConnection.setSession(session);
-		chatSessionConnectionRepo.save(sessionConnection);		
+		chatSessionConnectionRepo.save(sessionConnection);
+		return sessionConnection;
 	}
 
 }

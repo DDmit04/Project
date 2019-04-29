@@ -11,7 +11,7 @@ public interface PostService extends BasePostService {
 	
 	void removeRepost(User user, Post post);
 	
-	void addRepost(User user, Post post, String repostText, String repostTags) throws IllegalStateException, IOException;
+	Post addRepost(User user, Post post, String repostText, String repostTags) throws IllegalStateException, IOException;
 	
 	
 	

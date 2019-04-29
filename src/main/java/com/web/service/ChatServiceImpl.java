@@ -30,10 +30,10 @@ public class ChatServiceImpl implements ChatService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public Chat createChat(Chat chat, MultipartFile file, User currentUser) throws IllegalStateException, IOException {
+	public Chat createChat(Chat chat, User currentUser, MultipartFile file) throws IllegalStateException, IOException {
 		chat.setChatCreationDate(LocalDateTime.now(Clock.systemUTC()));
-		chat.setChatPicName(fileService.uploadFile(file, UploadType.CHAT_PIC));
 		chat.setLastMessageDate(LocalDateTime.now(Clock.systemUTC()));
+		chat.setChatPicName(fileService.uploadFile(file, UploadType.CHAT_PIC));
 		chatRepo.save(chat);
 		chat.setChatOwner(currentUser);
 		chat.getChatMembers().add(currentUser);
@@ -46,7 +46,7 @@ public class ChatServiceImpl implements ChatService {
 	public Chat createChat(User user, User currentUser) {
 		Chat chat = chatRepo.findByChatName(currentUser.getUsername() + " - " + user.getUsername());
 		if(chat == null) {
-			chat = new Chat(currentUser.getUsername() + " - " + user.getUsername(), LocalDateTime.now());
+			chat = new Chat(currentUser.getUsername() + " - " + user.getUsername(), LocalDateTime.now(Clock.systemUTC()));
 			chat.setLastMessageDate(LocalDateTime.now(Clock.systemUTC()));
 			chatRepo.save(chat);
 			chat.setChatOwner(currentUser);

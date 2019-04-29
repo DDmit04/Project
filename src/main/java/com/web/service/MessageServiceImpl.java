@@ -1,5 +1,6 @@
 package com.web.service;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.Set;
@@ -46,17 +47,19 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public void createMessage(Long chatId, MessageJson jsonMessage) {
+	public Message createMessage(Long chatId, MessageJson jsonMessage) {
 		LocalDateTime messageTime = jsonMessage.getMessageDate();
 		Chat chat = chatRepo.findChatById(chatId);
 		User messageAuthor = userRepo.findByUsernameOrEmail(jsonMessage.getSender());
 		Message message = new Message(jsonMessage.getContent(), messageTime);
 		message.setMessageAuthor(messageAuthor);
 		message.setMessageChat(chat);
+		message.setMessageDate(LocalDateTime.now(Clock.systemUTC()));
 		messageRepo.save(message);
 
 		chat.setLastMessageDate(messageTime);
 		chatRepo.save(chat);
+		return message;
 	}
 
 	@Override

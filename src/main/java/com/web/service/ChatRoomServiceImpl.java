@@ -21,7 +21,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 		this.chatSessionService = chatSessionService;
 	}
 
-	private boolean userIsAdminOrOwner (User user, User currentUser, Chat chat) {
+	private boolean userIsAdminOrOwner (User currentUser, Chat chat) {
 		return chat.getChatOwner().equals(currentUser) || chat.getChatAdmins().contains(currentUser);
 	}
 	
@@ -62,7 +62,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
 	@Override
 	public void chaseOutUser(User user, User currentUser, Chat chat) {
-		if (userIsAdminOrOwner(user, currentUser, chat)) {
+		if (userIsAdminOrOwner(currentUser, chat)) {
 			chat.getChatMembers().remove(user);
 			chatRepo.save(chat);
 		}		
@@ -86,7 +86,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
 	@Override
 	public void banUser(User user, User currentUser, Chat chat) {
-		if(userIsAdminOrOwner(user, currentUser, chat)) {
+		if(userIsAdminOrOwner(currentUser, chat)) {
 			chat.getChatBanList().add(user);
 			chat.getChatMembers().remove(user);
 			chatRepo.save(chat);
@@ -95,7 +95,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
 	@Override
 	public void unbanUser(User user, User currentUser, Chat chat) {
-		if(userIsAdminOrOwner(user, currentUser, chat)) {
+		if(userIsAdminOrOwner(currentUser, chat)) {
 			chat.getChatBanList().remove(user);
 			chatRepo.save(chat);
 		}		

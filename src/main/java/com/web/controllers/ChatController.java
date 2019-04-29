@@ -51,7 +51,7 @@ public class ChatController {
 	public String createChat(@AuthenticationPrincipal User currentUser,
 							 @RequestParam("file") MultipartFile file,
 							 Chat chat) throws IllegalStateException, IOException {
-		chat = chatService.createChat(chat, file, currentUser);
+		chat = chatService.createChat(chat, currentUser, file);
 		chatSessionService.createNewChatSession(currentUser, chat);
 		return "redirect:/chats/" + chat.getId();
 	}

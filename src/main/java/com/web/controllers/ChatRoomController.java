@@ -60,8 +60,10 @@ public class ChatRoomController {
 							 @PathVariable Chat chat, 
 							 @PathVariable User user, 
 							 Model model) {
-		chatSessionService.deleteChatSession(currentUser, chat);
-		chatRoomService.deleteChatHistory(user, currentUser, chat);
+		if(user.equals(currentUser)) {
+			chatSessionService.deleteChatSession(currentUser, chat);
+			chatRoomService.deleteChatHistory(user, currentUser, chat);
+		}
 		return "redirect:/messages";
 	}
 

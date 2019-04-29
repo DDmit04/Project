@@ -11,6 +11,7 @@ import com.web.api.user.UserProfileService;
 import com.web.data.FriendRequest;
 import com.web.data.User;
 import com.web.data.dto.FriendRequestDto;
+import com.web.service.UserProfileServiceImpl;
 
 @Controller
 public class FriendController {
@@ -18,7 +19,7 @@ public class FriendController {
 	private UserProfileService profileService;
 	
 	@Autowired
-	public FriendController(UserProfileService profileService) {
+	public FriendController(UserProfileServiceImpl profileService) {
 		this.profileService = profileService;
 	}
 

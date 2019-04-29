@@ -14,7 +14,7 @@ public interface UserSettingsService {
 
 	void realizeSendEmailConfirmCode(User user, String email)throws MailSendException, SMTPSendFailedException, UserException;
 
-	void realizeSendEmailChangeCode(User user, String email) throws MailSendException, SMTPSendFailedException;
+	void realizeSendEmailChangeCode(User user) throws MailSendException, SMTPSendFailedException;
 
 	void confirmEmail(String code) throws UserException;
 

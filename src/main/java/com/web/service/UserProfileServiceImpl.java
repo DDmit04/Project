@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.api.FileService;
 import com.web.api.user.UserProfileService;
+import com.web.data.Comment;
 import com.web.data.FriendRequest;
 import com.web.data.User;
 import com.web.data.dto.FriendRequestDto;
@@ -57,7 +58,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	public void addFriend(FriendRequest frendRequest) {
 		User receivingUser = frendRequest.getRequestTo();
 		User senderUser = frendRequest.getRequestFrom();
-		senderUser.getUserFriends().add(senderUser);
+		receivingUser.getUserFriends().add(senderUser);
 		userRepo.save(receivingUser);
 		senderUser.getUserFriends().add(receivingUser);
 		userRepo.save(senderUser);
@@ -65,8 +66,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Override
 	public void deleteFriend(User user, User currentUser) {
-		user.getUserFriends().remove(currentUser);
-		userRepo.save(user);	
+		currentUser.getUserFriends().remove(user);
+		userRepo.save(currentUser);	
 	}
 	
 	@Override
@@ -86,12 +87,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 		currentUser.getBlackList().add(user);		
 		if(currentUser.getSubscribers().contains(user)) {
 			removeSubscription(user, currentUser);
-			removeSubscription(currentUser, user);
 		}
 		if(currentUser.getUserFriends().contains(user)) {
 			deleteFriend(user, currentUser);
 		}
-		userRepo.save(currentUser);
 		FriendRequest counterRequestTo = friendRequestRepo.findOneRequest(user, currentUser);
 		FriendRequest counterRequestFrom = friendRequestRepo.findOneRequest(currentUser, user);
 		if(counterRequestFrom != null) {
@@ -100,7 +99,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 		if(counterRequestTo != null) {
 			friendRequestRepo.delete(counterRequestTo);
 		}
-		commentRepo.deleteAll(commentRepo.findBannedComments(currentUser, user));	
+		Iterable<Comment> bannedCommrnts = commentRepo.findBannedComments(currentUser, user);
+		commentRepo.deleteAll(bannedCommrnts);	
 	}
 	
 	@Override
@@ -111,7 +111,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 		if(userStatus != null) {
 			user.setUserStatus(userStatus);
 		}
-		if(!file.isEmpty()) {
+		if(file != null && !file.isEmpty()) {
 			uploadUserPic(user, file);
 		}
 		userRepo.save(user);		
@@ -130,12 +130,12 @@ public class UserProfileServiceImpl implements UserProfileService {
 	
 	@Override
 	public Iterable<FriendRequestDto> getFriendRequestsToUser(User currentUser) {
-		return friendRequestRepo.findByRequestToId(currentUser);
+		return friendRequestRepo.findByRequestToId(currentUser.getId());
 	}
 
 	@Override
 	public Iterable<FriendRequestDto> getFriendRequestsFromUser(User currentUser) {
-		return friendRequestRepo.findByRequestFromId(currentUser);
+		return friendRequestRepo.findByRequestFromId(currentUser.getId());
 	}
 
 }

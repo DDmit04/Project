@@ -6,17 +6,17 @@ import com.web.data.User;
 
 public interface ChatSessionService {
 	
-	void createNewChatSession(User user, Chat chat);
+	ChatSession createNewChatSession(User user, Chat chat);
 	
 	void deleteChatSession(User user, Chat chat);
 	
-	void connectChatSesion(User user, Chat chat);
+	ChatSession connectChatSesion(User user, Chat chat);
 	
-	void disconnectChatSession(User user, Chat chat);
+	ChatSession disconnectChatSession(User user, Chat chat);
 	
 	
 	
-	void updateLastConnectionDate(User user, Chat chat);
+	ChatSession updateLastConnectionDate(User user, Chat chat);
 	
 	ChatSession getSession(User user, Chat chat);
 

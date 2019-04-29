@@ -12,7 +12,7 @@ import com.web.data.dto.UserDto;
 
 public interface MessageService {
 	
-	void createMessage(Long chatId, MessageJson jsonMessage);
+	Message createMessage(Long chatId, MessageJson jsonMessage);
 	
 	
 	

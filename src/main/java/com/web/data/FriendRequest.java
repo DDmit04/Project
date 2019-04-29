@@ -21,6 +21,7 @@ public class FriendRequest {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private Long requestFromId;
+	private Long requestToId;
 	private User requestFrom;
 	private User requestTo;
 	private LocalDateTime friendRequestCreationDate;
@@ -30,5 +31,6 @@ public class FriendRequest {
 		this.requestFrom = requestFrom;
 		this.requestTo = requestTo;
 		this.requestFromId = requestFrom.getId();
+		this.requestToId = requestTo.getId();
 	}
 }

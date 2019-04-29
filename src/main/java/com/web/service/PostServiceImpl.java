@@ -29,7 +29,7 @@ public class PostServiceImpl implements PostService {
 		this.postRepo = postRepo;
 	}
 
-	private boolean userIsAuthorOrAdmin(User currentUser, Post post) {
+	public boolean userIsAuthorOrAdmin(User currentUser, Post post) {
 		return post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser)
 			   || (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser));
 	}
@@ -76,7 +76,7 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public void deletePost(User currentUser, Post post) {
 		if(userIsAuthorOrAdmin(currentUser, post)) {
-			if(postRepo.findCountByRepostAndAuthor(currentUser, post.getRepost()) == 1)  {
+			if((postRepo.findCountByRepostAndAuthor(currentUser, post.getRepost())) == 1)  {
 				decrementAndSaveRepostsCount(post.getRepost());
 			}
 			postRepo.delete(post);
@@ -93,14 +93,15 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
-	public void addRepost(User currentUser, Post repostedPost, String repostText, String repostTags) throws IllegalStateException, IOException {
+	public Post addRepost(User currentUser, Post repostedPost, String repostText, String repostTags) throws IllegalStateException, IOException {
 		Post post = new Post(repostText, repostTags, LocalDateTime.now(Clock.systemUTC()));
 		Post newPost = createPost(currentUser, post, null);	
 		newPost.setRepost(repostedPost);
-		if(postRepo.findCountByRepostAndAuthor(currentUser, post) == 0) {
-			incrementAndSaveRepostsCount(post);
+		if((postRepo.findCountByRepostAndAuthor(currentUser, post)) == 0) {
+			incrementAndSaveRepostsCount(repostedPost);
 		}
 		postRepo.save(newPost);
+		return newPost;
 	}
 	
 	@Override

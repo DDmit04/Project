@@ -78,7 +78,7 @@ public class UserSettingsController {
 			 						  RedirectAttributes redirectAttrs,
 								      Model model) {
 		try {
-			userSettingsService.realizeSendEmailChangeCode(user, user.getUserEmail());
+			userSettingsService.realizeSendEmailChangeCode(user);
 		} catch (MailSendException | SMTPSendFailedException a) {
 			redirectAttrs.addFlashAttribute("redirectMessage", "something go wrong with email send, pleace try leter");
 		}

@@ -11,7 +11,7 @@ import com.web.data.dto.CommentDto;
 
 public interface CommentService {
 	
-	void addComment(User user, Comment comment, Post post, MultipartFile commentPic) throws IllegalStateException, IOException;
+	void createComment(User user, Comment comment, Post post, MultipartFile commentPic) throws IllegalStateException, IOException;
 	
 	void deleteComment(User user, Post post, Comment comment);
 

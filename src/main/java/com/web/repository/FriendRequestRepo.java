@@ -15,17 +15,17 @@ public interface FriendRequestRepo extends CrudRepository<FriendRequest, Long> {
 			"   fr " +
 			") " +
 			" from FriendRequest fr " +
-			" where fr.requestFrom = :userRequestFrom " +
+			" where fr.requestFromId = :userRequestFromId " +
 			" group by fr")
-	Iterable<FriendRequestDto> findByRequestFromId(@Param("userRequestFrom") User user);
+	Iterable<FriendRequestDto> findByRequestFromId(@Param("userRequestFromId") Long userRequestFromId);
 	
 	@Query("select new com.web.data.dto.FriendRequestDto(" +
 			"   fr" +
 			") " +
 			" from FriendRequest fr " +
-			" where fr.requestTo = :userRequestTo " +
+			" where fr.requestToId = :userRequestToId " +
 			" group by fr")
-	Iterable<FriendRequestDto> findByRequestToId(@Param("userRequestTo") User user);
+	Iterable<FriendRequestDto> findByRequestToId(@Param("userRequestToId") Long userRequestToId);
 
 	@Query("from FriendRequest fr " + 
 		   "  where fr.requestTo = :requestTo and fr.requestFrom = :requestFrom " +

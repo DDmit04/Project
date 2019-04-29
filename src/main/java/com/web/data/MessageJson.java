@@ -16,4 +16,13 @@ public class MessageJson {
     private String sender;
     private String userPicName;
     LocalDateTime messageDate;
+    
+	public MessageJson(Long senderId, String content, String sender, String userPicName, LocalDateTime messageDate) {
+		this.senderId = senderId;
+		this.content = content;
+		this.sender = sender;
+		this.userPicName = userPicName;
+		this.messageDate = messageDate;
+	}
+    
 }

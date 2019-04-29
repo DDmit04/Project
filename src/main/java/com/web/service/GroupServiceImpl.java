@@ -111,6 +111,7 @@ public class GroupServiceImpl implements GroupService {
 			groupRepo.save(group);		
 		}
 	}
+	
 	@Override
 	public void removeGroupAdmin(User currentUser, User user, Group group) {
 		if(userIsGroupOwner(currentUser, group) || user.equals(currentUser)) {

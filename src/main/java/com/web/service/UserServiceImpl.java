@@ -70,7 +70,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	public void deleteUser(User currentUser, String accountDeletePassword) throws UserException {
 		if(passwordEncoder.matches(accountDeletePassword, currentUser.getPassword())) {
-			userRepo.delete(currentUser);
+			currentUser.setDeleted(true);
+			userRepo.save(currentUser);
 		} else {
 			throw new UserException("Wrong " + currentUser.getUsername() + "'s password!", currentUser, UserExceptionType.DELETE_USER);
 		}
