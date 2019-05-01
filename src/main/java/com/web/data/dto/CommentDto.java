@@ -1,9 +1,10 @@
 package com.web.data.dto;
 
+import java.time.LocalDateTime;
+
 import com.web.data.Comment;
 import com.web.data.Post;
 import com.web.data.User;
-import com.web.utils.DateUtil;
 
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ public class CommentDto {
 	
 	private Long id;
 	private String commentText;
-	private String commentCreationDate;
+	private LocalDateTime commentCreationDate;
 	private String commentPicName;
 	private Post commentedPost;
 	private User commentAuthor;
@@ -20,7 +21,7 @@ public class CommentDto {
 	public CommentDto(Comment comment) {
 		this.id = comment.getId();
 		this.commentText = comment.getCommentText();
-		this.commentCreationDate = DateUtil.formatDate(comment.getCommentCreationDate());
+		this.commentCreationDate = comment.getCommentCreationDate();
 		this.commentPicName = comment.getCommentPicName();
 		this.commentedPost = comment.getCommentedPost();
 		this.commentAuthor = comment.getCommentAuthor();

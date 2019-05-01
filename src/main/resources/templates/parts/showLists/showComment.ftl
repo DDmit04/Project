@@ -20,7 +20,7 @@
 						<#if comment.commentPicName??>
 	       					<img src="/imgCommentPic/${comment.commentPicName}" width="120" height="120">
 	    				</#if>
-							<small>${comment.commentCreationDate}</small>
+							<small>${comment.commentCreationDate?datetime("yyyy-MM-dd'T'HH:mm:ss")?string("MM-dd-yy HH:mm")}</small>
 					</div>
 				</div>
 		</div>

@@ -48,7 +48,7 @@ public class GroupServiceImpl implements GroupService {
 		
 		Group groupFromDb = groupRepo.findByGroupName(group.getGroupName());
 		if(groupFromDb != null) {
-			throw new GroupException("group with name" + groupFromDb.getGroupName() + "already exists!", groupFromDb);
+			throw new GroupException("group with name " + groupFromDb.getGroupName() + " already exists!", groupFromDb);
 		}
 		group.setGroupCreationDate(LocalDateTime.now(Clock.systemUTC()));
 		group.setGroupPicName(fileService.uploadFile(file,UploadType.GROUP_PIC));
@@ -74,7 +74,7 @@ public class GroupServiceImpl implements GroupService {
 	
 	@Override
 	public void banUser(User currentUser, User user, Group group) {
-		if(userIsGroupOwner(currentUser, group) || userIsGroupAdmin(currentUser, group)) {
+		if(userIsGroupOwner(currentUser, group) || (userIsGroupAdmin(currentUser, group) && !userIsGroupAdmin(user, group))) {
 			group.getGroupBanList().add(user);
 			if(group.getGroupAdmins().contains(user)) {
 				group.getGroupAdmins().remove(user);
@@ -133,6 +133,11 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public Iterable<GroupDto> getAllGroups() {
 		return groupRepo.findAllGroupsDto();
+	}
+
+	@Override
+	public Iterable<GroupDto> getAdminedGroups(User user) {
+		return groupRepo.findAdminedGroups(user);
 	}
 
 }

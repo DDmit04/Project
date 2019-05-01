@@ -13,6 +13,8 @@ public interface PostService extends BasePostService {
 	
 	Post addRepost(User user, Post post, String repostText, String repostTags) throws IllegalStateException, IOException;
 	
+	Post addGroupRepost(Long groupId, Post repostedPost, String repostText, String repostTags) throws IllegalStateException, IOException;
+	
 	
 	
 	PostDto getOnePost(User currentUser, Post post);

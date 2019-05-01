@@ -22,7 +22,9 @@
 					<a href="/groups/${post.postGroup.id}" class="h5">${post.postGroup.groupName}</a>
 				</#if>
 			</div>
-			<small class="ml-2">${post.postCreationDate}</small>
+			<small class="ml-2">
+				${post.postCreationDate?datetime("yyyy-MM-dd'T'HH:mm:ss")?string("MM-dd-yy HH:mm")}
+			</small>
 		</div>
 		<#if post.postAuthor??>
 			<#if currentUsername == post.postAuthor.username && postType != "repost"> 
@@ -94,11 +96,23 @@
 			</a>
 			<#if !post.postAuthor?? || currentUsername != post.postAuthor.username>
 				<a class="ml-3" data-toggle="collapse" href="#repost${post.id}" role="button" aria-expanded="false" aria-controls="repost${post.id}"
-					onclick="rotateIcon();">
-		    		<i id="repostIcon" class="fas fa-sign-in-alt mr-1 "></i>${post.repostsCount}
+					onclick="rotateIcon(${post.id});">
+		    		<i id="repostIcon${post.id}" class="fas fa-sign-in-alt mr-1 "></i>${post.repostsCount}
 		  		</a>
 				<div class="collapse mt-3" id="repost${post.id}">
 		 		 	<form method="post" action="/${post.id}/repost">
+		 		 		<#if adminedGroups?size != 0>
+			 		 		<div class="custom-control custom-checkbox inline">
+								<input type="checkbox" class="custom-control-input my-1" name="groupRepostCheckbox" id="groupRepostCheckbox${post.id}"
+									onchange="activateGroupSelect(${post.id});">
+								<label class="custom-control-label my-1" for="groupRepostCheckbox${post.id}">repost to group</label>
+							</div>
+							<select class="custom-select my-2" id="groupRepostSelect${post.id}" name="groupRepostSelect" disabled="disabled">
+							   <#list adminedGroups as group>
+							   		<option value="${group.id}">${group.groupName}</option>
+							   </#list>
+	  						</select>
+  						</#if>
 						<input id="repostText" name="repostText" class="form-control col-mt" type="text"  placeholder="repost text"> 
 						<input id="repostTags" name="repostTags" class="form-control col-mt mt-2" type="text"  placeholder="repost tags"> 
 						<button class="btn btn-primary mt-2" type="submit">repost</button>
@@ -110,8 +124,19 @@
 	</#if>
 </div>
 <script>
-	function rotateIcon() {
-		var icon = document.getElementById("repostIcon");
+	function activateGroupSelect(id) {
+		var groupRepostSelect = document.getElementById('groupRepostSelect' + id);
+		groupRepostSelect.disabled = true;
+		var chbox = document.getElementById('groupRepostCheckbox' + id);
+		if (chbox.checked) {
+			groupRepostSelect.disabled = false;	
+		}
+		else {
+			groupRepostSelect.disabled = true;
+		}
+	}
+	function rotateIcon(id) {
+		var icon = document.getElementById("repostIcon" + id);
 		if(icon.classList.contains('fa-rotate-90')) {
 			setTimeout(function() {
 				icon.classList.remove('fa-rotate-90');

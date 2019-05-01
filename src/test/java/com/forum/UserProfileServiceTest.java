@@ -1,5 +1,6 @@
 package com.forum;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
@@ -96,10 +97,6 @@ public class UserProfileServiceTest {
 		user.getUserFriends().add(bannedUser);
 		bannedUser.getUserFriends().add(user);
 		userProfileService.addInBlackList(bannedUser, user);
-		assertFalse(user.getSubscriptions().contains(bannedUser));
-		assertFalse(bannedUser.getSubscriptions().contains(user));
-		assertFalse(user.getUserFriends().contains(bannedUser));
-		assertTrue(user.getBlackList().contains(bannedUser));
 		//1 to remove sub, 1 to remove friends(many to many)
 		Mockito.verify(userRepo, Mockito.times(2)).save(Mockito.any());
 		//find both counter requests
@@ -108,6 +105,10 @@ public class UserProfileServiceTest {
 		Mockito.verify(friendRequestRepo, Mockito.times(2)).delete(friendRequestRepo.findOneRequest(Mockito.any(), Mockito.any()));
 		Mockito.verify(commentRepo, Mockito.times(1)).findBannedComments(user, bannedUser);
 		Mockito.verify(commentRepo, Mockito.times(1)).deleteAll(commentRepo.findBannedComments(user, bannedUser));
+		assertFalse(user.getSubscriptions().contains(bannedUser));
+		assertFalse(bannedUser.getSubscriptions().contains(user));
+		assertFalse(user.getUserFriends().contains(bannedUser));
+		assertTrue(user.getBlackList().contains(bannedUser));
 	}
 
 	@Test
@@ -118,8 +119,8 @@ public class UserProfileServiceTest {
 		user.setUserPicName("filename");
 		userProfileService.updateUserProfile(user, Mockito.any(), "testInf", "testStat");
 		Mockito.verify(userRepo, Mockito.times(1)).save(user);
-		assertTrue(user.getUserInformation().equals("testInf"));
-		assertTrue(user.getUserStatus().equals("testStat"));
+		assertEquals(user.getUserInformation(), "testInf");
+		assertEquals(user.getUserStatus(), "testStat");
 	}
 	
 	@Test
@@ -129,7 +130,7 @@ public class UserProfileServiceTest {
 		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
 		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		userProfileService.uploadUserPic(user, (MultipartFile) file);
-		assertTrue(user.getUserPicName().equals("testFilename"));
+		assertEquals(user.getUserPicName(), "testFilename");
 	}
 
 	@Test

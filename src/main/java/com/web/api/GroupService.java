@@ -29,6 +29,7 @@ public interface GroupService {
 	
 	
 
+	Iterable<GroupDto> getAdminedGroups(User user);
 	
 	GroupDto getOneGroup(User user, Group group);
 

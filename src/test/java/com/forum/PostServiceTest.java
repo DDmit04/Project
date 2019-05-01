@@ -1,6 +1,8 @@
 package com.forum;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -74,11 +76,25 @@ public class PostServiceTest {
 		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
 		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		postService.updatePost(user, post, "testText", "testTag", file);
-		assertTrue(post.getPostText().equals("testText"));
-		assertTrue(post.getTags().equals("testTag"));
-		assertTrue(post.getFilename().equals("testFilename"));
+		assertEquals(post.getPostText(), "testText");
+		assertEquals(post.getTags(), "testTag");
+		assertEquals(post.getFilename(), "testFilename");
 		assertNotNull(post.getPostCreationDate());
 		Mockito.verify(postRepo, Mockito.times(1)).save(post);
+	}
+	
+	@Test
+	public void testUpdatePostFail() throws IllegalStateException, IOException {
+		Post post = new Post("text", "tag", null);
+		User user = new User("1", "1", null);
+		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
+		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
+		postService.updatePost(user, post, "testText", "testTag", file);
+		assertNotEquals(post.getPostText(), "testText");
+		assertNotEquals(post.getTags(), "testTag");
+		assertNotEquals(post.getFilename(), "testFilename");
+		assertNull(post.getPostCreationDate());
+		Mockito.verify(postRepo, Mockito.times(0)).save(post);
 	}
 
 	@Test
@@ -92,6 +108,18 @@ public class PostServiceTest {
 		postService.deletePost(user, post);
 		Mockito.verify(postRepo, Mockito.times(1)).delete(post);
 		Mockito.verify(postRepo, Mockito.times(1)).findCountByRepostAndAuthor(Mockito.any(), Mockito.any());
+	}
+	
+	@Test
+	public void testDeletePostFail() {
+		Post post = new Post("text", "tag", null);
+		Post repostedPost = new Post("repText", "repTag", null);
+		User user = new User("1", "1", null);
+		post.setRepost(repostedPost);
+		doReturn((long) 1).when(postRepo).findCountByRepostAndAuthor(Mockito.any(), Mockito.any());
+		postService.deletePost(user, post);
+		Mockito.verify(postRepo, Mockito.times(0)).delete(post);
+		Mockito.verify(postRepo, Mockito.times(0)).findCountByRepostAndAuthor(Mockito.any(), Mockito.any());
 	}
 
 	@Test
@@ -108,6 +136,19 @@ public class PostServiceTest {
 		//1 for decrement repost count, 1 to save changes
 		Mockito.verify(postRepo, Mockito.times(2)).save(Mockito.any());
 	}
+	
+	@Test
+	public void testRemoveRepostFail() {
+		Post post = new Post("text", "tag", null);
+		Post repostedPost = new Post("repText", "repTag", null);
+		User user = new User("1", "1", null);
+		repostedPost.setRepostsCount((long) 1);
+		post.setRepost(repostedPost);
+		postService.removeRepost(user, post);
+		assertFalse(repostedPost.getRepostsCount() == 0);
+		assertNotNull(post.getRepost());
+		Mockito.verify(postRepo, Mockito.times(0)).save(Mockito.any());
+	}
 
 	@Test
 	public void testAddRepost() throws IllegalStateException, IOException {
@@ -117,8 +158,8 @@ public class PostServiceTest {
 		post.setRepostsCount((long) 1);
 		doReturn((long) 0).when(postRepo).findCountByRepostAndAuthor(Mockito.any(), Mockito.any());
 		Post testPost = postService.addRepost(user, post, "repText", "repTag");
-		assertTrue(testPost.getPostText().equals("repText"));
-		assertTrue(testPost.getTags().equals("repTag"));
+		assertEquals(testPost.getPostText(), "repText");
+		assertEquals(testPost.getTags(), "repTag");
 		assertNull(testPost.getFilename());
 		assertNotNull(testPost.getRepost());
 		assertTrue(post.getRepostsCount() == 2);
@@ -135,12 +176,31 @@ public class PostServiceTest {
 	}
 	
 	@Test
+	public void testLikeFail() {
+		User user = new User("1", "1", null);
+		User difUser = new User("2", "1", null);
+		Post post = new Post("text", "tag", null);
+		postService.like(user, difUser, post);
+		assertFalse(post.getPostLikes().contains(user));
+	}
+	
+	@Test
 	public void testDisike() {
 		User user = new User("1", "1", null);
 		Post post = new Post("text", "tag", null);
 		post.getPostLikes().add(user);
 		postService.like(user, user, post);
 		assertFalse(post.getPostLikes().contains(user));
+	}
+	
+	@Test
+	public void testDisikeFail() {
+		User user = new User("1", "1", null);
+		User difUser = new User("2", "1", null);
+		Post post = new Post("text", "tag", null);
+		post.getPostLikes().add(user);
+		postService.like(user, difUser, post);
+		assertTrue(post.getPostLikes().contains(user));
 	}
 
 }

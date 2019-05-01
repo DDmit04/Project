@@ -1,11 +1,11 @@
 package com.web.data.dto;
 
-import com.web.data.User;
-import com.web.utils.DateUtil;
-
-import lombok.Getter;
+import java.time.LocalDateTime;
 
 import com.web.data.Group;
+import com.web.data.User;
+
+import lombok.Getter;
 
 @Getter
 public class GroupDto extends SearchResultsGeneric{
@@ -16,7 +16,7 @@ public class GroupDto extends SearchResultsGeneric{
 	private Long groupBanCount;
 	private String groupName;
 	private String groupInformation;
-	private String creationDate;
+	private LocalDateTime creationDate;
 	private String groupPicName;
 	private User groupOwner;
 	private String groupTitle;
@@ -27,7 +27,7 @@ public class GroupDto extends SearchResultsGeneric{
 		this.subCount = subCount;
 		this.groupName = userGroup.getGroupName();
 		this.groupInformation = userGroup.getGroupInformation();
-		this.creationDate = DateUtil.formatDate(userGroup.getGroupCreationDate());
+		this.creationDate = userGroup.getGroupCreationDate();
 		this.groupPicName = userGroup.getGroupPicName();
 		this.groupOwner = userGroup.getGroupOwner();
 		this.groupTitle = userGroup.getGroupTitle();
@@ -39,10 +39,16 @@ public class GroupDto extends SearchResultsGeneric{
 		this.id = userGroup.getId();
 		this.groupName = userGroup.getGroupName();
 		this.groupInformation = userGroup.getGroupInformation();
-		this.creationDate = DateUtil.formatDate(userGroup.getGroupCreationDate());
+		this.creationDate = userGroup.getGroupCreationDate();
 		this.groupPicName = userGroup.getGroupPicName();
 		this.groupOwner = userGroup.getGroupOwner();
 		this.groupTitle = userGroup.getGroupTitle();
 		this.subCount = subCount;
+	}
+	//group to user admined groups
+	public GroupDto(Group userGroup) {
+		this.id = userGroup.getId();
+		this.groupName = userGroup.getGroupName();
+		this.groupPicName = userGroup.getGroupPicName();
 	}
 }

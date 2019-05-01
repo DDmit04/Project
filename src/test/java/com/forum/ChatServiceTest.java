@@ -1,6 +1,8 @@
 package com.forum;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -52,8 +54,8 @@ public class ChatServiceTest {
 		Chat testChat = chatService.createChat(chat, user, null);
 		assertNotNull(testChat.getChatCreationDate());
 		assertNotNull(testChat.getLastMessageDate());
-		assertTrue(testChat.getChatPicName().equals("testFilename"));
-		assertTrue(testChat.getChatOwner().equals(user));
+		assertEquals(testChat.getChatPicName(), "testFilename");
+		assertEquals(testChat.getChatOwner(), user);
 		assertTrue(testChat.getChatMembers().contains(user));
 		assertTrue(testChat.getChatAdmins().contains(user));
 		Mockito.verify(chatRepo, Mockito.times(2)).save(Mockito.any());
@@ -67,7 +69,7 @@ public class ChatServiceTest {
 		Chat testChat = chatService.createChat(firstUser ,secUser);
 		assertNotNull(testChat.getChatCreationDate());
 		assertNotNull(testChat.getLastMessageDate());
-		assertTrue(testChat.getChatOwner().equals(secUser));
+		assertEquals(testChat.getChatOwner(), secUser);
 		assertTrue(testChat.getChatMembers().contains(firstUser));
 		assertTrue(testChat.getChatMembers().contains(secUser));
 		assertTrue(testChat.getChatAdmins().contains(firstUser));
@@ -109,7 +111,7 @@ public class ChatServiceTest {
 		//!!!
 		doReturn(true).when(passwordEncoder).matches(Mockito.any(), Mockito.any());
 		chatService.changeChatOwner(secUser, firstUser, chat, firstUser.getUsername(), firstUser.getPassword());
-		assertTrue(chat.getChatOwner().equals(secUser));
+		assertEquals(chat.getChatOwner(), secUser);
 		Mockito.verify(chatRepo, Mockito.times(1)).save(Mockito.any());
 	}
 	
@@ -122,7 +124,7 @@ public class ChatServiceTest {
 		//!!!
 		doReturn(false).when(passwordEncoder).matches(Mockito.any(), Mockito.any());
 		chatService.changeChatOwner(secUser, firstUser, chat, "wrongUsername", "orWrongPassword");
-		assertTrue(chat.getChatOwner().equals(secUser));
+		assertEquals(chat.getChatOwner(), secUser);
 		Mockito.verify(chatRepo, Mockito.times(0)).save(Mockito.any());
 	}
 
@@ -136,9 +138,9 @@ public class ChatServiceTest {
 		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
 		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		chatService.updateChatSettings(user, chat, "testName", "testTitle", file);
-		assertTrue(chat.getChatPicName().equals("testFilename"));
-		assertTrue(chat.getChatName().equals("testName"));
-		assertTrue(chat.getChatTitle().equals("testTitle"));
+		assertEquals(chat.getChatPicName(), "testFilename");
+		assertEquals(chat.getChatName(), "testName");
+		assertEquals(chat.getChatTitle(), "testTitle");
 		Mockito.verify(chatRepo, Mockito.times(1)).save(Mockito.any());
 	}
 	
@@ -151,8 +153,8 @@ public class ChatServiceTest {
 		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		chatService.updateChatSettings(user, chat, "testName", "testTitle", file);
 		assertNull(chat.getChatPicName());
-		assertFalse(chat.getChatName().equals("testName"));
-		assertFalse(chat.getChatTitle().equals("testTitle"));
+		assertNotEquals(chat.getChatName(), "testName");
+		assertNotEquals(chat.getChatTitle(), "testTitle");
 		Mockito.verify(chatRepo, Mockito.times(0)).save(Mockito.any());
 	}
 

@@ -1,19 +1,12 @@
 package com.web.utils;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ListIterator;
 
 import com.web.data.Message;
 
 public class DateUtil {
-	
-	public static String formatDate(LocalDateTime date) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formatDateTime = date.format(formatter);
-        return formatDateTime;
-	}
 	
 	public static boolean isLater(LocalDateTime firstDate, LocalDateTime secondDate) {
 		return firstDate.isAfter(secondDate);

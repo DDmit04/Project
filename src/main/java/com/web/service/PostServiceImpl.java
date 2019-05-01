@@ -15,6 +15,7 @@ import com.web.data.Group;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
+import com.web.repository.GroupRepo;
 import com.web.repository.PostRepo;
 
 @Service
@@ -22,14 +23,16 @@ public class PostServiceImpl implements PostService {
 	
 	private FileService fileService;
 	private PostRepo postRepo;
+	private GroupRepo groupRepo;
 	
 	@Autowired
-	public PostServiceImpl(FileServiceImpl fileService, PostRepo postRepo) {
+	public PostServiceImpl(FileServiceImpl fileService, PostRepo postRepo, GroupRepo groupRepo) {
 		this.fileService = fileService;
 		this.postRepo = postRepo;
+		this.groupRepo = groupRepo;
 	}
 
-	public boolean userIsAuthorOrAdmin(User currentUser, Post post) {
+	private boolean userIsAuthorOrAdmin(User currentUser, Post post) {
 		return post.getPostAuthor() != null && post.getPostAuthor().equals(currentUser)
 			   || (post.getPostGroup() != null && post.getPostGroup().getGroupAdmins().contains(currentUser));
 	}
@@ -98,6 +101,19 @@ public class PostServiceImpl implements PostService {
 		Post newPost = createPost(currentUser, post, null);	
 		newPost.setRepost(repostedPost);
 		if((postRepo.findCountByRepostAndAuthor(currentUser, post)) == 0) {
+			incrementAndSaveRepostsCount(repostedPost);
+		}
+		postRepo.save(newPost);
+		return newPost;
+	}
+	
+	@Override
+	public Post addGroupRepost(Long groupId, Post repostedPost, String repostText, String repostTags) throws IllegalStateException, IOException {
+		Post post = new Post(repostText, repostTags, LocalDateTime.now(Clock.systemUTC()));
+		Group group = groupRepo.findByGroupId(groupId);
+		Post newPost = createPost(group, post, null);	
+		newPost.setRepost(repostedPost);
+		if((postRepo.findCountByRepostAndGroup(group, post)) == 0) {
 			incrementAndSaveRepostsCount(repostedPost);
 		}
 		postRepo.save(newPost);

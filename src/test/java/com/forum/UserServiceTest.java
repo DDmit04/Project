@@ -61,8 +61,7 @@ public class UserServiceTest {
 		userService.deleteUser(user, "1");
 		Mockito.verify(passwordEncoder, Mockito.times(1)).matches("1", user.getPassword());
 		Mockito.verify(userRepo, Mockito.times(1)).save(user);
-		boolean isDeleted = user.isDeleted();
-		assertTrue(isDeleted);
+		assertTrue(user.isDeleted());
 	}
 
 }

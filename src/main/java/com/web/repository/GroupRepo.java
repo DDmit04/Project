@@ -12,6 +12,9 @@ public interface GroupRepo extends CrudRepository<Group, Long> {
 	
 	Group findByGroupName(String groupName);
 	
+	@Query("from Group g where g.id = :groupId group by g")
+	Group findByGroupId(Long groupId);
+	
 	@Query("select new com.web.data.dto.GroupDto(" +
 		   "   ug, " +
 		   "   (select count(*) from ug.groupSubs), " +
@@ -48,5 +51,8 @@ public interface GroupRepo extends CrudRepository<Group, Long> {
 			   "   where ug.groupName like concat('%',:search,'%')" +
 			   "   group by ug")
 	Iterable<GroupDto> searchGroupsDto(@Param("search") String search);
+
+	@Query("select new com.web.data.dto.GroupDto( g ) from Group g left join g.groupAdmins ga where ga = :user group by g")
+	Iterable<GroupDto> findAdminedGroups(@Param("user") User user);
 	
 }

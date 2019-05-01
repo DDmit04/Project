@@ -1,7 +1,8 @@
 package com.web.data.dto;
 
+import java.time.LocalDateTime;
+
 import com.web.data.User;
-import com.web.utils.DateUtil;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +18,7 @@ public class UserDto extends SearchResultsGeneric{
 	private Long groupSubscriptionsCount;
 	private Long blackListCount;
     private String username;
-	private String registrationDate;
+	private LocalDateTime registrationDate;
 	private String userPicName;
 	private String userInformation;
 	private String userStatus;
@@ -37,7 +38,7 @@ public class UserDto extends SearchResultsGeneric{
 				   boolean isFriend, boolean isRequested, boolean isSub, boolean isBloking, boolean isBloked) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.registrationDate = DateUtil.formatDate(user.getRegistrationDate()); 
+		this.registrationDate = user.getRegistrationDate(); 
 		this.userPicName = user.getUserPicName();
 		this.userInformation = user.getUserInformation();
 		this.userStatus = user.getUserStatus();
@@ -81,7 +82,7 @@ public class UserDto extends SearchResultsGeneric{
 	public UserDto(User user, Long frendCount, Long subscribersCount, Long subscriptionsCount, Long groupSubscriptionsCount) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.registrationDate = DateUtil.formatDate(user.getRegistrationDate());
+		this.registrationDate = user.getRegistrationDate();
 		this.userPicName = user.getUserPicName();
 		this.userInformation = user.getUserInformation();
 		this.userStatus = user.getUserStatus();

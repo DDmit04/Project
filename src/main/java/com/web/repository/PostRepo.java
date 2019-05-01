@@ -47,6 +47,11 @@ public interface PostRepo extends CrudRepository<Post, Long> {
 		   "where p.repost = :post and p.postAuthor = :currentUser")
 	Long findCountByRepostAndAuthor(@Param("currentUser") User currentUser, @Param("post") Post post);
 	
+	@Query("select count(*) " +
+			   "from Post p " +
+			   "where p.repost = :post and p.postGroup = :group")
+	Long findCountByRepostAndGroup(@Param("group") Group group, @Param("post") Post post);
+	
 	@Query("select new com.web.data.dto.PostDto(" +
             "   p, " +
 			"   (select count(*) from p.postLikes), " +

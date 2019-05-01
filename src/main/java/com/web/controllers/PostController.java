@@ -16,20 +16,26 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.web.api.GroupService;
 import com.web.api.post.PostService;
+import com.web.data.Group;
 import com.web.data.Post;
 import com.web.data.User;
+import com.web.data.dto.GroupDto;
 import com.web.data.dto.PostDto;
+import com.web.service.GroupServiceImpl;
 import com.web.service.PostServiceImpl;
 
 @Controller
 public class PostController {
 	
 	private PostService postService;
+	private GroupService groupService;
 	
 	@Autowired
-	public PostController(PostServiceImpl postService) {
+	public PostController(PostServiceImpl postService, GroupServiceImpl groupService) {
 		this.postService = postService;
+		this.groupService = groupService;
 	}
 	
 	@GetMapping("/")
@@ -41,7 +47,9 @@ public class PostController {
 	public String getPosts(@AuthenticationPrincipal User currentUser,
 						   Model model) {
 		Iterable<PostDto> searchByTag = postService.getAllPosts(currentUser);
+		Iterable<GroupDto> adminedGroups = groupService.getAdminedGroups(currentUser);
 		model.addAttribute("user", currentUser);
+		model.addAttribute("adminedGroups", adminedGroups);
 		model.addAttribute("posts", searchByTag);
 		return "postList";
 	}
@@ -82,6 +90,21 @@ public class PostController {
 		return "redirect:/posts";
 	}
 	
+	@PostMapping("{repostedPost}/repost")
+	public String addRepost(@AuthenticationPrincipal User currentUser,
+							@PathVariable Post repostedPost, 
+			 				@RequestParam(required = false) String repostText,
+			 				@RequestParam(required = false) String repostTags,
+			 				@RequestParam(defaultValue = "false") boolean groupRepostCheckbox,
+			 				@RequestParam(required = false) Long groupRepostSelect) throws IllegalStateException, IOException {
+		if(groupRepostCheckbox) {
+			postService.addGroupRepost(groupRepostSelect, repostedPost, repostText, repostTags);
+		} else {
+			postService.addRepost(currentUser, repostedPost, repostText, repostTags);
+		}
+		return "redirect:/posts";
+	}
+	
 	@GetMapping("{post}/removeRepost")
 	public String removeRepost(@AuthenticationPrincipal User currentUser,
 							   @PathVariable Post post,
@@ -102,15 +125,6 @@ public class PostController {
 			.entrySet()
 			.forEach(pair -> redirectAttributes.addAttribute(pair.getKey(), pair.getValue()));
 		return "redirect:" + components.getPath();	
-	}
-	
-	@PostMapping("{repostedPost}/repost")
-	public String addRepost(@AuthenticationPrincipal User currentUser,
-							@PathVariable Post repostedPost, 
-			 				@RequestParam(required = false) String repostText,
-			 				@RequestParam(required = false) String repostTags) throws IllegalStateException, IOException {
-		postService.addRepost(currentUser, repostedPost, repostText, repostTags);
-		return "redirect:/posts";
 	}
 	
 }

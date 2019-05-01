@@ -1,5 +1,7 @@
 package com.forum;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -51,6 +53,28 @@ public class PasswordRecoverServiceTest {
 		Mockito.verify(userRepo, Mockito.times(1)).findByUsernameOrEmail(Mockito.any());
 		Mockito.verify(mailService, Mockito.times(1)).sendPasswordRecoverCode(Mockito.any(), Mockito.any(), Mockito.any());
 	}
+	
+	@Test (expected = UserException.class)
+	public void testRealizeSendPasswordRecoverCodeNotActiveEmailFail() throws MailSendException, SMTPSendFailedException, UserException {
+		User user = new User("1", "1", null);
+		user.setEmailConfirmCode("321");
+		doReturn(user).when(userRepo).findByUsernameOrEmail(Mockito.any());
+		User userDb = passwordRecoverService.realizeSendPasswordRecoverCode("123");
+		assertNull(userDb.getPasswordRecoverCode());
+		assertNotNull(userDb.getEmailConfirmCode());
+		Mockito.verify(userRepo, Mockito.times(0)).save(user);
+		Mockito.verify(userRepo, Mockito.times(1)).findByUsernameOrEmail(Mockito.any());
+		Mockito.verify(mailService, Mockito.times(0)).sendPasswordRecoverCode(Mockito.any(), Mockito.any(), Mockito.any());
+	}
+	
+	@Test (expected = UserException.class)
+	public void testRealizeSendPasswordRecoverCodeUserExistFail() throws MailSendException, SMTPSendFailedException, UserException {
+		User user = new User("1", "1", null);
+		doReturn(null).when(userRepo).findByUsernameOrEmail(Mockito.any());
+		User userDb = passwordRecoverService.realizeSendPasswordRecoverCode("123");
+		Mockito.verify(userRepo, Mockito.times(0)).save(user);
+		Mockito.verify(userRepo, Mockito.times(1)).findByUsernameOrEmail(Mockito.any());
+		Mockito.verify(mailService, Mockito.times(0)).sendPasswordRecoverCode(Mockito.any(), Mockito.any(), Mockito.any());	}
 
 	@Test
 	public void testCheckPasswordRecoverCode() throws UserException {
@@ -59,19 +83,37 @@ public class PasswordRecoverServiceTest {
 		doReturn(user).when(userRepo).findByPasswordRecoverCode(Mockito.any());
 		passwordRecoverService.checkPasswordRecoverCode(user, "123");
 		Mockito.verify(userRepo, Mockito.times(1)).findByPasswordRecoverCode(Mockito.any());
-
+	}
+	
+	@Test (expected = UserException.class)
+	public void testCheckPasswordRecoverCodeFail() throws UserException {
+		User user = new User("1", "1", null);
+		user.setPasswordRecoverCode("123");
+		doReturn(null).when(userRepo).findByPasswordRecoverCode(Mockito.any());
+		passwordRecoverService.checkPasswordRecoverCode(user, "123");
+		Mockito.verify(userRepo, Mockito.times(1)).findByPasswordRecoverCode(Mockito.any());
 	}
 
 	@Test
 	public void testChangeRecoveredPassword() throws UserException {
 		User user = new User("1", "1", null);
 		user.setPassword("321");
-		doReturn(true).when(passwordEncoder).matches("321", user.getPassword());
+		doReturn(false).when(passwordEncoder).matches("123", user.getPassword());
 		doReturn("123").when(passwordEncoder).encode("123");
 		passwordRecoverService.changeRecoveredPassword(user, "123");
-		assertTrue(user.getPassword().equals("123"));
+		assertEquals(user.getPassword(), "123");
 		assertNull(user.getPasswordRecoverCode());
 		Mockito.verify(userRepo, Mockito.times(1)).save(user);
+	}
+	
+	@Test (expected = UserException.class)
+	public void testChangeRecoveredPasswordFail() throws UserException {
+		User user = new User("1", "1", null);
+		user.setPassword("321");
+		doReturn(true).when(passwordEncoder).matches("123", user.getPassword());
+		passwordRecoverService.changeRecoveredPassword(user, "123");
+		assertNotEquals(user.getPassword(), "123");
+		Mockito.verify(userRepo, Mockito.times(0)).save(user);
 	}
 
 }

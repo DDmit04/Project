@@ -1,9 +1,10 @@
 package com.web.data.dto;
 
+import java.time.LocalDateTime;
+
 import com.web.data.Group;
 import com.web.data.Post;
 import com.web.data.User;
-import com.web.utils.DateUtil;
 
 import lombok.Getter;
 
@@ -16,7 +17,7 @@ public class PostDto extends SearchResultsGeneric{
 	private Long repostsCount;
 	private String postText;
 	private String tags;
-	private String postCreationDate;
+	private LocalDateTime postCreationDate;
 	private String filename;
 	private boolean liked;
 	private Post repost;
@@ -28,7 +29,7 @@ public class PostDto extends SearchResultsGeneric{
 		this.postText = post.getPostText();
 		this.tags = post.getTags();
 		this.postAuthor = post.getPostAuthor();
-		this.postCreationDate = DateUtil.formatDate(post.getPostCreationDate());
+		this.postCreationDate = post.getPostCreationDate();
 		this.filename = post.getFilename();
 		this.liked = liked;
 		this.commentsCount = (long) post.getPostComments().size();

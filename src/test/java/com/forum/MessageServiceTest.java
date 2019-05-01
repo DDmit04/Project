@@ -1,7 +1,7 @@
 package com.forum;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 
 import org.junit.Test;
@@ -49,8 +49,8 @@ public class MessageServiceTest {
 		doReturn(chat).when(chatRepo).findChatById(Mockito.any());
 		Message message = messageService.createMessage((long) 1, Jmessage);
 		assertNotNull(message.getMessageDate());
-		assertTrue(message.getMessageAuthor().equals(user));
-		assertTrue(message.getMessageChat().equals(chat));
+		assertEquals(message.getMessageAuthor(), user);
+		assertEquals(message.getMessageChat(), chat);
 		Mockito.verify(chatRepo, Mockito.times(1)).findChatById(Mockito.any());
 		Mockito.verify(userRepo, Mockito.times(1)).findByUsernameOrEmail(Mockito.any());
 		Mockito.verify(chatRepo, Mockito.times(1)).save(Mockito.any());

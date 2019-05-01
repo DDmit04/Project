@@ -1,7 +1,9 @@
 package com.forum;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doReturn;
 
 import org.junit.Test;
@@ -53,10 +55,41 @@ public class UserSettingsServiceTest {
 		doReturn(true).when(passwordEncoder).matches("1", user.getPassword());
 		doReturn("2").when(passwordEncoder).encode("2");
 		userSettingsService.changePassword(user, "1", "2");
+		assertEquals("2", user.getPassword());
 		Mockito.verify(userRepo, Mockito.times(1)).save(user);
 		Mockito.verify(passwordEncoder, Mockito.times(2)).matches(Mockito.any(), Mockito.any());
 		Mockito.verify(passwordEncoder, Mockito.times(1)).encode("2");
-		assertEquals("2", user.getPassword());
+	}
+	
+	@Test (expected = UserException.class)
+	public void testChangePasswordWrongPasswordFail() throws UserException {
+		User user = new User("1", "1", null);
+		//is new password is current password
+		doReturn(false).when(passwordEncoder).matches("2", user.getPassword());
+		//check current password
+		doReturn(false).when(passwordEncoder).matches("1", user.getPassword());
+		doReturn("2").when(passwordEncoder).encode("2");
+		userSettingsService.changePassword(user, "1", "2");
+		assertEquals("1", user.getPassword());
+		userSettingsService.changePassword(user, "1", "2");
+		Mockito.verify(userRepo, Mockito.times(0)).save(user);
+		Mockito.verify(passwordEncoder, Mockito.times(2)).matches(Mockito.any(), Mockito.any());
+		Mockito.verify(passwordEncoder, Mockito.times(0)).encode("2");
+	}
+	
+	@Test (expected = UserException.class)
+	public void testChangePasswordSamePasswordFail() throws UserException {
+		User user = new User("1", "1", null);
+		//is new password is current password
+		doReturn(true).when(passwordEncoder).matches("2", user.getPassword());
+		//check current password
+		doReturn(false).when(passwordEncoder).matches("1", user.getPassword());
+		doReturn("2").when(passwordEncoder).encode("2");
+		userSettingsService.changePassword(user, "1", "2");
+		assertEquals("1", user.getPassword());
+		Mockito.verify(userRepo, Mockito.times(0)).save(user);
+		Mockito.verify(passwordEncoder, Mockito.times(2)).matches(Mockito.any(), Mockito.any());
+		Mockito.verify(passwordEncoder, Mockito.times(0)).encode("2");
 	}
 
 	@Test
@@ -67,8 +100,19 @@ public class UserSettingsServiceTest {
 		userSettingsService.changeEmail(user, user.getEmailChangeCode(), "some@some.some");
 		Mockito.verify(userRepo, Mockito.times(1)).findByEmailChangeCode("123");
 		Mockito.verify(userRepo, Mockito.times(1)).save(user);
-		assertEquals(user.getEmailChangeCode(), null);
+		assertNull(user.getEmailChangeCode());
 		assertEquals(user.getUserEmail(), "some@some.some");
+	}
+	
+	@Test (expected = UserException.class)
+	public void testChangeEmailFail() throws MailSendException, SMTPSendFailedException, UserException {
+		User user = new User("1", "1", null);
+		user.setEmailChangeCode("123");
+		doReturn(null).when(userRepo).findByEmailChangeCode("123");
+		userSettingsService.changeEmail(user, user.getEmailChangeCode(), "some@some.some");
+		Mockito.verify(userRepo, Mockito.times(1)).findByEmailChangeCode("123");
+		assertNotNull(user.getEmailChangeCode());
+		assertNotEquals(user.getUserEmail(), "some@some.some");
 	}
 
 	@Test
@@ -78,9 +122,21 @@ public class UserSettingsServiceTest {
 		//user email is unique at registration
 		doReturn(null).when(userRepo).findByUsernameOrEmail("some@some.some");
 		userSettingsService.realizeSendEmailConfirmCode(user, "some@some.some");
+		assertNotNull(user.getEmailConfirmCode());
 		Mockito.verify(mailService, Mockito.times(1)).sendEmailConfirmCode(Mockito.any(), Mockito.any(), Mockito.any());
 		Mockito.verify(userRepo, Mockito.times(1)).findByUsernameOrEmail("some@some.some");
-		assertNotNull(user.getEmailConfirmCode());
+	}
+	
+	@Test (expected = UserException.class)
+	public void testRealizeSendEmailConfirmCodeFail() throws MailSendException, SMTPSendFailedException, UserException {
+		User user = new User("1", "1", null);
+		user.setEmailConfirmCode("123");
+		//user email is unique at registration
+		doReturn(user).when(userRepo).findByUsernameOrEmail("some@some.some");
+		userSettingsService.realizeSendEmailConfirmCode(user, "some@some.some");
+		assertNull(user.getEmailConfirmCode());
+		Mockito.verify(mailService, Mockito.times(0)).sendEmailConfirmCode(Mockito.any(), Mockito.any(), Mockito.any());
+		Mockito.verify(userRepo, Mockito.times(1)).findByUsernameOrEmail("some@some.some");
 	}
 
 	@Test
@@ -88,19 +144,30 @@ public class UserSettingsServiceTest {
 		User user = new User("1", "1", null);
 		user.setUserEmail("some@some.some");
 		userSettingsService.realizeSendEmailChangeCode(user);
-		Mockito.verify(mailService, Mockito.times(1)).sendChangeEmailCode(Mockito.any(), Mockito.any(), Mockito.any());
 		assertNotNull(user.getEmailChangeCode());
+		Mockito.verify(mailService, Mockito.times(1)).sendChangeEmailCode(Mockito.any(), Mockito.any(), Mockito.any());
 	}
-
+	
 	@Test
 	public void testConfirmEmail() throws UserException {
 		User user = new User("1", "1", null);
 		user.setEmailConfirmCode("123");
 		doReturn(user).when(userRepo).findByEmailConfirmCode("123");
 		userSettingsService.confirmEmail("123");
+		assertNull(user.getEmailConfirmCode());
 		Mockito.verify(userRepo, Mockito.times(1)).save(user);
 		Mockito.verify(userRepo, Mockito.times(1)).findByEmailConfirmCode("123");
-		assertEquals(user.getEmailConfirmCode(), null);
+	}
+	
+	@Test (expected = UserException.class)
+	public void testConfirmEmailFail() throws UserException {
+		User user = new User("1", "1", null);
+		user.setEmailConfirmCode("123");
+		doReturn(null).when(userRepo).findByEmailConfirmCode("123");
+		userSettingsService.confirmEmail("123");
+		assertNotNull(user.getEmailConfirmCode());
+		Mockito.verify(userRepo, Mockito.times(1)).findByEmailConfirmCode("123");
+		Mockito.verify(userRepo, Mockito.times(0)).save(user);
 	}
 
 }

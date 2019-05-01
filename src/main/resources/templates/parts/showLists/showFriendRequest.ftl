@@ -25,7 +25,7 @@
 						<a href="/${requesting.id}/profile" class="h6 ml-2">${requesting.username}</a>
 						<div class="ml-2">
 							<div class="my-2">
-								<small>${request.friendRequestCreationDate}</small>
+								<small>${request.friendRequestCreationDate?datetime("yyyy-MM-dd'T'HH:mm:ss")?string("MM-dd-yy HH:mm")}</small>
 							</div>
 							<div class="mt-2">
 								<#if requestsType == "to">

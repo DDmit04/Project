@@ -90,7 +90,7 @@ public class GroupController {
 		} catch (GroupException e) {
 			model.addAttribute("groupNameError", e.getMessage());
 			model.addAttribute("registrationName", e.getGroup().getGroupName());
-			return "createGroupForm";
+			return "createGroup";
 		}
 		return "redirect:/groups/" + group.getId();
 	}

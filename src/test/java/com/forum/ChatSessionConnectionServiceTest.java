@@ -40,7 +40,7 @@ public class ChatSessionConnectionServiceTest {
 		ChatSession session = new ChatSession(chat, user);
 		ChatSessionConnection testSessionConnection = chatSessionConnectionService.openNewSessionConnection(session);
 		assertNotNull(testSessionConnection.getConnectChatDate());
-		assertTrue(testSessionConnection.getSession().equals(session));
+		assertEquals(testSessionConnection.getSession(), session);
 		Mockito.verify(chatSessionConnectionRepo, Mockito.times(1)).save(Mockito.any());
 	}
 
@@ -55,7 +55,7 @@ public class ChatSessionConnectionServiceTest {
 		session.getSessionConnectionDates().add(chatSessionConnection);
 		ChatSessionConnection testSessionConnection = chatSessionConnectionService.closeSessionConnection(session);
 		assertNotNull(testSessionConnection.getConnectChatDate());
-		assertTrue(testSessionConnection.getSession().equals(session));
+		assertEquals(testSessionConnection.getSession(), session);
 		Mockito.verify(chatSessionConnectionRepo, Mockito.times(1)).save(Mockito.any());
 	}
 

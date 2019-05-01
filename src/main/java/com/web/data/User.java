@@ -142,19 +142,6 @@ public class User implements UserDetails {
 		this.password = password;
 		this.registrationDate = registrationDate;
 	}
-//	@Override
-//	public boolean equals(Object obj) {
-//    	if(this == obj) 
-//    		return true;
-//    	if(obj == null || getClass() != obj.getClass()) 
-//    		return false;
-//    	User user = (User) obj;
-//		return Objects.equals(id, user.id);
-//	}
-//	@Override
-//	public int hashCode() {
-//		return Objects.hashCode(id);
-//	}
 	public String getUsername() {
 		return username;
 	}	

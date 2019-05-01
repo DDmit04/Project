@@ -1,8 +1,9 @@
 package com.web.data.dto;
 
+import java.time.LocalDateTime;
+
 import com.web.data.FriendRequest;
 import com.web.data.User;
-import com.web.utils.DateUtil;
 
 import lombok.Getter;
 
@@ -14,11 +15,11 @@ public class FriendRequestDto {
 	private User requestTo;
 	private Long requestFromId;
 	private Long requestToId;
-	private String friendRequestCreationDate;
+	private LocalDateTime friendRequestCreationDate;
 	
 	public FriendRequestDto(FriendRequest request) {
 		this.id = request.getId();
-		this.friendRequestCreationDate = DateUtil.formatDate(request.getFriendRequestCreationDate());
+		this.friendRequestCreationDate = request.getFriendRequestCreationDate();
 		this.requestFrom = request.getRequestFrom();
 		this.requestTo = request.getRequestTo();
 		this.requestToId = request.getRequestTo().getId();

@@ -1,7 +1,9 @@
 package com.forum;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doReturn;
 
 import java.io.IOException;
@@ -45,9 +47,9 @@ public class CommentServiceTest {
 		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		commentService.createComment(user, comment, post, null);
 		assertNotNull(comment.getCommentCreationDate());
-		assertTrue(comment.getCommentedPost().equals(post));
-		assertTrue(comment.getCommentPicName().equals("testFilename"));
-		assertTrue(comment.getCommentAuthor().equals(user));
+		assertEquals(comment.getCommentedPost(), post);
+		assertEquals(comment.getCommentPicName(), "testFilename");
+		assertEquals(comment.getCommentAuthor(), user);
 		Mockito.verify(commentRepo, Mockito.times(1)).save(Mockito.any());
 	}
 
@@ -58,10 +60,45 @@ public class CommentServiceTest {
 		comment.setCommentAuthor(user);
 		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		commentService.editComment(user, comment, "testText", null);
-		assertTrue(comment.getCommentText().equals("testText"));
+		assertEquals(comment.getCommentText(), "testText");
+		assertEquals(comment.getCommentPicName(), "testFilename");
 		assertNotNull(comment.getCommentCreationDate());
-		assertTrue(comment.getCommentPicName().equals("testFilename"));
 		Mockito.verify(commentRepo, Mockito.times(1)).save(Mockito.any());
+	}
+	
+	@Test
+	public void testEditCommentFail() throws IllegalStateException, IOException {
+		User user = new User("1", "1", null);
+		User difUser = new User("2", "1", null);
+		Comment comment = new Comment("text", null);
+		comment.setCommentAuthor(difUser);
+		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
+		commentService.editComment(user, comment, "testText", null);
+		assertNotEquals(comment.getCommentText(), "testText");
+		assertNotEquals(comment.getCommentPicName(), "testFilename");
+		assertNull(comment.getCommentCreationDate());
+		Mockito.verify(commentRepo, Mockito.times(0)).save(Mockito.any());
+	}
+	
+	@Test
+	public void testDeleteComment() throws IllegalStateException, IOException {
+		User user = new User("1", "1", null);
+		Comment comment = new Comment("text", null);
+		Post post = new Post("text", "tags", null);
+		comment.setCommentAuthor(user);
+		commentService.deleteComment(user, post, comment);
+		Mockito.verify(commentRepo, Mockito.times(1)).delete(Mockito.any());
+	}
+	
+	@Test
+	public void testDeleteCommentFail() throws IllegalStateException, IOException {
+		User user = new User("1", "1", null);
+		User difUser = new User("2", "1", null);
+		Comment comment = new Comment("text", null);
+		Post post = new Post("text", "tags", null);
+		comment.setCommentAuthor(difUser);
+		commentService.deleteComment(user, post, comment);
+		Mockito.verify(commentRepo, Mockito.times(0)).delete(Mockito.any());
 	}
 
 }
