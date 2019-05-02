@@ -140,4 +140,18 @@ public class GroupServiceImpl implements GroupService {
 		return groupRepo.findAdminedGroups(user);
 	}
 
+	@Override
+	public void updateGroupInformation(Group group, MultipartFile file, String groupInformation, String groupTitle) throws IllegalStateException, IOException {
+		if(groupInformation != null) {
+			group.setGroupInformation(groupInformation);
+		}
+		if(groupTitle != null) {
+			group.setGroupTitle(groupTitle);
+		}
+		if(file != null && !file.isEmpty()) {
+			group.setGroupPicName(fileService.uploadFile(file,UploadType.GROUP_PIC));
+		}
+		groupRepo.save(group);		
+	}
+
 }

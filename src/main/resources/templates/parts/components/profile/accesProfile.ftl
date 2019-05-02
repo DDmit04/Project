@@ -19,9 +19,11 @@
 	<div class="col-8 ml-4">
 		<div class="card border-secondary shadow mb-3">
 			<div class="card-header">
-				<div class="row h5">
+				<div class="row">
 					<div class="ml-2 mt-2">
-						${user.username}
+						<div class="h5">
+							${user.username}
+						</div>
 						<div class="mt-2">
 							<span>${user.userStatus?ifExists}</span>
 						</div>
@@ -34,6 +36,20 @@
 				</div>
 			</div>
 			<div class="card-body">
+				<#if user.userInformation??>
+					<h5>
+				        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" 
+				        		onclick="rotateIcon('userInformationIcon', 1);" aria-expanded="true" aria-controls="collapseOne">
+							user information <i id="userInformationIcon1" class="fas fa-caret-right ml-2"></i>
+				        </button>
+				    </h5>
+				    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+				    	<div class="card-body">
+				    		${user.userInformation?ifExists}
+				        </div>
+				    </div>
+				    <hr>
+				</#if>
 				<#include "/parts/components/profile/userConnectionsBlock.ftl">
 			</div>
 		</div>
@@ -43,3 +59,4 @@
 		<#include "/parts/showLists/showListsOfPosts.ftl">
 	</div> 
 </div>
+<script src="/customJs/animations.js"></script>

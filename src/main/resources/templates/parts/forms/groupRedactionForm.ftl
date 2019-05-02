@@ -5,16 +5,16 @@
 		<div class="input-group mt-2">
 	  		<div class="custom-file">
 	    		<input type="file" name="file" class="custom-file-input" id="postFile" 
-	    			aria-describedby="inputGroupFileAddon03" value="${user.userPicName?ifExists}" >
+	    			aria-describedby="inputGroupFileAddon03" value="${group.groupPicName?ifExists}" >
 	    		<label class="custom-file-label text-left" for="postFile">change pic</label>
 	  		</div>
 		</div>
-		<label class="mt-2">status:</label>
-		<input id="userStatus" name="userStatus" class="form-control col-mt" type="text" 
-			   placeholder="your status" value="${user.userStatus?ifExists}"> 
-		<label class="mt-2">about you:</label>
-		<input id="userInformation" name="userInformation" class="form-control" type="text" 
-			placeholder="tell about yourself" rows="3" value="${user.userInformation?ifExists}">
+		<label class="mt-2">group title:</label>
+		<input id="groupTitle" name="groupTitle" class="form-control col-mt" type="text" 
+			   placeholder="group title" value="${group.groupTitle?ifExists}"> 
+		<label class="mt-2">group infirmation:</label>
+		<input id="groupInformation" name="groupInformation" class="form-control" type="text" 
+			placeholder="group information" rows="3" value="${group.groupInformation?ifExists}">
 	</div>
 	<input type="hidden" name="_csrf" value="${_csrf.token}" />
 	<button class="btn btn-primary mt-2" type="submit">save changes</button>

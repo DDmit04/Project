@@ -27,6 +27,8 @@ public interface GroupService {
 
 	void removeGroupAdmin(User currentUser, User user, Group group);
 	
+	void updateGroupInformation(Group group, MultipartFile file, String groupInformation, String groupTitle) throws IllegalStateException, IOException;
+	
 	
 
 	Iterable<GroupDto> getAdminedGroups(User user);

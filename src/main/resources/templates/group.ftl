@@ -9,12 +9,23 @@
 		<div class="card border-secondary shadow mb-3">
 			<div class="card-header">
 				<h5>${group.groupName}</h5>
-				${group.groupTitle?ifExists}
+				${group.groupTitle!"no title"}
 			</div>
 			<div class="card-body">
-				<div class="mb-2">
-					${group.groupInformation!"no title"}
-				</div>
+				<#if group.groupInformation != "">
+					<h5>
+				        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" 
+				        		onclick="rotateIcon('groupInformationIcon', 1);" aria-expanded="true" aria-controls="collapseOne">
+							group information <i id="groupInformationIcon1" class="fas fa-caret-right ml-2"></i>
+				        </button>
+				    </h5>
+				    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+				    	<div class="card-body">
+				    		${group.groupInformation!"no title"}
+				        </div>
+				    </div>
+				    <hr class="my-2">
+			    </#if>
 				<a href="/groups/${group.id}/socialList/groupSubscrabers" role="button" class="btn btn-primary">
  					subs: <span class="badge badge-light">${group.subCount}</span>
 				</a>
@@ -47,7 +58,7 @@
 			  				<a class="btn btn-primary btn-lg btn-block " role="button" href="/groups/${group.id}/${currentUser.id}/unsub">unsub</a>
 						</#if>
 						<#if user.groupAdmin>
-							<a class="btn btn-primary btn-lg btn-block" role="button" href="#">redact</a>
+							<a class="btn btn-primary btn-lg btn-block" role="button" href="/groups/${group.id}/redact">redact</a>
 						</#if>
 			  		</div>
 		  		</div>
@@ -60,19 +71,15 @@
 					<#assign i = 0>
 					<#list groupSubs as sub>
 						<#assign i += 1>
-						<a href="/${sub.id}/profile">
-							<#if sub.userPicName??>
-								<img class="mx-1 mt-4 rounded-circle border border-secondary" src="/imgUserPic/${sub.userPicName}" width="50" height="50" alt="...">
-							<#else>
-				  				<img class="mx-1 mt-4 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="50" height="50" alt="...">
-				  			</#if>	
-			  			</a>
-			  			<#if i == 9> <#break> </#if>
+						<@picture.pic sub "sideBlockPic" "userAvatar" />
+			  			<#if i == 9> 
+			  				<#break> 
+			  			</#if>
 					</#list>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
+<script src="/customJs/animations.js"></script>
 </@shell.htmlPage> 

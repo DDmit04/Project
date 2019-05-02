@@ -18,7 +18,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.web.api.GroupService;
 import com.web.api.post.PostService;
-import com.web.data.Group;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.GroupDto;

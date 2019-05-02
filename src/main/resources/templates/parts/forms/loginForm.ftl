@@ -1,7 +1,7 @@
 <!-- uses in login -->
 
 <form class="form-signin" method="post" action="">
-      <img class="mb-4" src="http://localhost:8080/static/images/title1.png" alt="" width="72" height="72">
+      <img class="mb-4" src="http://localhost:8080/static/images/title.png" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
       
 	  <input name="username" id="username" type="text" class="form-control" placeholder="Username" 

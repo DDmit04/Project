@@ -20,7 +20,7 @@
 					<#if group.groupPicName??>
 						<img class="mx-1 mt-4 rounded-circle border border-secondary" src="/imgGroupPic/${group.groupPicName}" width="50" height="50" alt="...">
 					<#else>
-					  	<img class="mx-1 mt-4 rounded-circle border border-secondary" src="http://localhost:8080/static/images/title1.png" width="50" height="50" alt="...">
+					  	<img class="mx-1 mt-4 rounded-circle border border-secondary" src="http://localhost:8080/static/images/defaultGroupPic.png" width="50" height="50" alt="...">
 					 </#if>	
 				</a>
 				<#if i == 9> <#break> </#if>

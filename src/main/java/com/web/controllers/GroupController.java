@@ -57,11 +57,13 @@ public class GroupController {
 						   Model model) {
 		GroupDto oneGroup = groupService.getOneGroup(currentUser, group);
 		UserDto oneUser = userService.getOneUserToGroup(currentUser, group);
+		Iterable<GroupDto> adminedGroups = groupService.getAdminedGroups(currentUser);
 		Iterable<PostDto> groupPosts = postService.getGroupPosts(currentUser, group);
 		model.addAttribute("posts", groupPosts);
 		model.addAttribute("group", oneGroup);
 		model.addAttribute("groupSubs", group.getGroupSubs());
 		model.addAttribute("user", oneUser);
+		model.addAttribute("adminedGroups", adminedGroups);
 		return "group";
 	}
 	
@@ -93,6 +95,30 @@ public class GroupController {
 			return "createGroup";
 		}
 		return "redirect:/groups/" + group.getId();
+	}
+	
+	@GetMapping("/groups/{group}/redact")
+	public String redactProfile(@AuthenticationPrincipal User currentUser,
+								@PathVariable Group group,
+								Model model) {
+		if(group.getGroupOwner().equals(currentUser) || group.getGroupAdmins().contains(currentUser)) {
+			model.addAttribute("group", group);
+			return "groupRedaction";
+		} else {
+			return "redirect:/groups/" + group.getId();
+		}
+	}
+	
+	@PostMapping("/groups/{group}/redact")
+	public String redactProfile(@AuthenticationPrincipal User currentUser,
+								@PathVariable Group group,
+							  	@RequestParam(required = false) String groupTitle,
+							  	@RequestParam(required = false) String groupInformation, 
+							  	@RequestParam("file") MultipartFile file,
+							  	Model model) throws IllegalStateException, IOException {
+		groupService.updateGroupInformation(group, file, groupInformation, groupTitle);
+		model.addAttribute("group", group);
+		return "redirect:/groups/" + group.getId() + "/redact";
 	}
 	
 	@GetMapping("/groups/{group}/{user}/sub")

@@ -96,7 +96,7 @@
 			</a>
 			<#if !post.postAuthor?? || currentUsername != post.postAuthor.username>
 				<a class="ml-3" data-toggle="collapse" href="#repost${post.id}" role="button" aria-expanded="false" aria-controls="repost${post.id}"
-					onclick="rotateIcon(${post.id});">
+					onclick="rotateIcon('repostIcon', ${post.id});">
 		    		<i id="repostIcon${post.id}" class="fas fa-sign-in-alt mr-1 "></i>${post.repostsCount}
 		  		</a>
 				<div class="collapse mt-3" id="repost${post.id}">
@@ -135,19 +135,8 @@
 			groupRepostSelect.disabled = true;
 		}
 	}
-	function rotateIcon(id) {
-		var icon = document.getElementById("repostIcon" + id);
-		if(icon.classList.contains('fa-rotate-90')) {
-			setTimeout(function() {
-				icon.classList.remove('fa-rotate-90');
-			}, 350);
-		} else {
-			setTimeout(function() {
-				icon.classList.add('fa-rotate-90');	
-			}, 350);
-		}
-	}
 </script>
+<script src="/customJs/animations.js"></script>
 <script src="/customJs/formValidate.js"></script>
 
 </#macro>

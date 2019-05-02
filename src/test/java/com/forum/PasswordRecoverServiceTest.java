@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 
 import org.junit.Test;
@@ -71,7 +70,7 @@ public class PasswordRecoverServiceTest {
 	public void testRealizeSendPasswordRecoverCodeUserExistFail() throws MailSendException, SMTPSendFailedException, UserException {
 		User user = new User("1", "1", null);
 		doReturn(null).when(userRepo).findByUsernameOrEmail(Mockito.any());
-		User userDb = passwordRecoverService.realizeSendPasswordRecoverCode("123");
+		passwordRecoverService.realizeSendPasswordRecoverCode("123");
 		Mockito.verify(userRepo, Mockito.times(0)).save(user);
 		Mockito.verify(userRepo, Mockito.times(1)).findByUsernameOrEmail(Mockito.any());
 		Mockito.verify(mailService, Mockito.times(0)).sendPasswordRecoverCode(Mockito.any(), Mockito.any(), Mockito.any());	}
