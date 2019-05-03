@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.web.api.GroupService;
+import com.web.api.SearchService;
 import com.web.api.post.PostService;
 import com.web.data.Post;
 import com.web.data.User;
@@ -24,25 +25,28 @@ import com.web.data.dto.GroupDto;
 import com.web.data.dto.PostDto;
 import com.web.service.GroupServiceImpl;
 import com.web.service.PostServiceImpl;
+import com.web.service.SearchServiceImpl;
 
 @Controller
 public class PostController {
 	
 	private PostService postService;
 	private GroupService groupService;
+	private SearchService searchService;
 	
 	@Autowired
-	public PostController(PostServiceImpl postService, GroupServiceImpl groupService) {
+	public PostController(PostServiceImpl postService, GroupServiceImpl groupService, SearchServiceImpl searchService) {
 		this.postService = postService;
 		this.groupService = groupService;
+		this.searchService = searchService;
 	}
 	
 	@GetMapping("/")
 	public String greetingPage(Model model) {
-		return "redirect:/posts";
+		return "redirect:/posts/all";
 	}
 	
-	@GetMapping("/posts")
+	@GetMapping("/posts/all")
 	public String getPosts(@AuthenticationPrincipal User currentUser,
 						   Model model) {
 		Iterable<PostDto> searchByTag = postService.getAllPosts(currentUser);
@@ -53,13 +57,24 @@ public class PostController {
 		return "postList";
 	}
 	
-	@PostMapping(value= {"/posts", "/subscriptionPosts"})
+	@GetMapping("/posts/subs")
+	public String getSubscriptionPosts(@AuthenticationPrincipal User currentUser,
+									   Model model) {
+		Iterable<PostDto> searchFriendPosts = searchService.findSubscriptionsPosts(currentUser);
+		Iterable<GroupDto> adminedGroups = groupService.getAdminedGroups(currentUser);
+		model.addAttribute("adminedGroups", adminedGroups);
+		model.addAttribute("user", currentUser);
+		model.addAttribute("posts", searchFriendPosts);
+		return "postList";
+	}
+	
+	@PostMapping(value= {"/posts/all", "/posts/subs"})
 	public String addPost(@AuthenticationPrincipal User currentUser,
 			 			  @RequestParam("file") MultipartFile file,
 						  Post post,
 						  Model model) throws IllegalStateException, IOException {
 		postService.createPost(currentUser, post, file);
-		return "redirect:/posts";
+		return "redirect:/posts/all";
 	}
 	
 	@GetMapping("{post}/edit")
@@ -79,14 +94,14 @@ public class PostController {
 						   @RequestParam("file") MultipartFile file,
 						   Model model) throws IllegalStateException, IOException {
 		postService.updatePost(currentUser, post, postText, tags, file);
-		return "redirect:/posts";
+		return "redirect:/posts/all";
 	}
 	
 	@GetMapping("{post}/delete")
 	public String deletePost(@AuthenticationPrincipal User currentUser,
 							 @PathVariable Post post) {
 		postService.deletePost(currentUser, post);
-		return "redirect:/posts";
+		return "redirect:/posts/all";
 	}
 	
 	@PostMapping("{repostedPost}/repost")
@@ -101,7 +116,7 @@ public class PostController {
 		} else {
 			postService.addRepost(currentUser, repostedPost, repostText, repostTags);
 		}
-		return "redirect:/posts";
+		return "redirect:/posts/all";
 	}
 	
 	@GetMapping("{post}/removeRepost")

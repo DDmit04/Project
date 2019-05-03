@@ -13,13 +13,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.api.CommentService;
+import com.web.api.GroupService;
 import com.web.api.post.PostService;
 import com.web.data.Comment;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.CommentDto;
+import com.web.data.dto.GroupDto;
 import com.web.data.dto.PostDto;
 import com.web.service.CommentServiceImpl;
+import com.web.service.GroupServiceImpl;
 import com.web.service.PostServiceImpl;
 
 @Controller
@@ -27,11 +30,13 @@ public class CommentController {
 	
 	private CommentService commentService;
 	private PostService postService;
+	private GroupService groupService;
 	
 	@Autowired
-	public CommentController(CommentServiceImpl commentService, PostServiceImpl postService) {
+	public CommentController(CommentServiceImpl commentService, PostServiceImpl postService, GroupServiceImpl groupService) {
 		this.commentService = commentService;
 		this.postService = postService;
+		this.groupService = groupService;
 	}
 
 	@GetMapping("{post}/comments")
@@ -40,6 +45,8 @@ public class CommentController {
 							  Model model) {
 		Iterable<CommentDto> searchByCommentedPost = commentService.getCommentsByCommentedPost(post);
 		PostDto commentedPost = postService.getOnePost(currentUser, post);
+		Iterable<GroupDto> adminedGroups = groupService.getAdminedGroups(currentUser);
+		model.addAttribute("adminedGroups", adminedGroups);
 		model.addAttribute("comments", searchByCommentedPost);
 		model.addAttribute("post", commentedPost);
 		return "commentList";
@@ -71,6 +78,8 @@ public class CommentController {
 							     Model model) {
 		Iterable<CommentDto> searchByCommentedPost = commentService.getCommentsByCommentedPost(post);
 		PostDto commentedPost = postService.getOnePost(currentUser, post);
+		Iterable<GroupDto> adminedGroups = groupService.getAdminedGroups(currentUser);
+		model.addAttribute("adminedGroups", adminedGroups);
 		model.addAttribute("comments", searchByCommentedPost);
 		model.addAttribute("post", commentedPost);		
 		model.addAttribute("editedComment", comment);
