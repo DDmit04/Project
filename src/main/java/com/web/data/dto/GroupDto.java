@@ -3,6 +3,7 @@ package com.web.data.dto;
 import java.time.LocalDateTime;
 
 import com.web.data.Group;
+import com.web.data.Image;
 import com.web.data.User;
 
 import lombok.Getter;
@@ -17,9 +18,9 @@ public class GroupDto extends SearchResultsGeneric{
 	private String groupName;
 	private String groupInformation;
 	private LocalDateTime creationDate;
-	private String groupPicName;
 	private User groupOwner;
 	private String groupTitle;
+	private Image groupImage;
 	
 //	group to user
 	public GroupDto(Group userGroup, Long subCount, Long adminCount, Long groupBanCount) {
@@ -28,9 +29,9 @@ public class GroupDto extends SearchResultsGeneric{
 		this.groupName = userGroup.getGroupName();
 		this.groupInformation = userGroup.getGroupInformation();
 		this.creationDate = userGroup.getGroupCreationDate();
-		this.groupPicName = userGroup.getGroupPicName();
 		this.groupOwner = userGroup.getGroupOwner();
 		this.groupTitle = userGroup.getGroupTitle();
+		this.groupImage = userGroup.getGroupImage();
 		this.adminCount = adminCount;
 		this.groupBanCount = groupBanCount;
 	}
@@ -40,15 +41,14 @@ public class GroupDto extends SearchResultsGeneric{
 		this.groupName = userGroup.getGroupName();
 		this.groupInformation = userGroup.getGroupInformation();
 		this.creationDate = userGroup.getGroupCreationDate();
-		this.groupPicName = userGroup.getGroupPicName();
 		this.groupOwner = userGroup.getGroupOwner();
 		this.groupTitle = userGroup.getGroupTitle();
+		this.groupImage = userGroup.getGroupImage();
 		this.subCount = subCount;
 	}
 	//group to user admined groups
 	public GroupDto(Group userGroup) {
 		this.id = userGroup.getId();
 		this.groupName = userGroup.getGroupName();
-		this.groupPicName = userGroup.getGroupPicName();
 	}
 }

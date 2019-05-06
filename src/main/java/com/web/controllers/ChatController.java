@@ -12,13 +12,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.web.api.ImageService;
 import com.web.api.chat.ChatService;
 import com.web.api.chat.ChatSessionService;
+import com.web.api.user.UserService;
 import com.web.data.Chat;
 import com.web.data.ChatSession;
 import com.web.data.User;
+import com.web.data.dto.ChatDto;
+import com.web.data.dto.ImageDto;
+import com.web.data.dto.UserDto;
 import com.web.service.ChatServiceImpl;
 import com.web.service.ChatSessionServiceImpl;
+import com.web.service.ImageServiceImpl;
+import com.web.service.UserServiceImpl;
 import com.web.utils.DateUtil;
 
 @Controller
@@ -26,11 +33,16 @@ public class ChatController {
 	
 	private ChatService chatService;
 	private ChatSessionService chatSessionService;
+	private ImageService imageService;
+	private UserService userService;
 	
 	@Autowired
-	public ChatController(ChatServiceImpl chatService, ChatSessionServiceImpl chatSessionService) {
+	public ChatController(ChatServiceImpl chatService, ChatSessionServiceImpl chatSessionService, 
+						  ImageServiceImpl imageService, UserServiceImpl userService) {
 		this.chatService = chatService;
 		this.chatSessionService = chatSessionService;
+		this.imageService = imageService;
+		this.userService = userService;
 	}
 	
 	@GetMapping("messages")
@@ -43,8 +55,9 @@ public class ChatController {
 	}
 	
 	@GetMapping("/createChat")
-	public String createChat() {
-		return "createChat";
+	public String createChat(Model model) {
+		model.addAttribute("creationTarget", "chat");
+		return "createChatOrGroup";
 	}
 	
 	@PostMapping("/createChat")
@@ -60,9 +73,25 @@ public class ChatController {
 	public String createChat(@AuthenticationPrincipal User currentUser,
 						     @PathVariable User user) {
 		Chat chat = chatService.createChat(user, currentUser);
-		chatSessionService.createNewChatSession(currentUser, chat);
-		chatSessionService.createNewChatSession(user, chat);
 		return "redirect:/chats/" + chat.getId();
+	}
+	
+	@GetMapping("chats/{chat}/album")
+	public String getChatAlbum(@AuthenticationPrincipal User currentUser, 
+							   @PathVariable Chat chat, 
+							   Model model) {
+    	ChatSession session = chatSessionService.getSession(currentUser, chat);
+		if (session != null) {
+			UserDto userDto = userService.getOneUserToChat(currentUser, chat);
+			ChatDto chatDto = chatService.getOneChat(chat);
+			Iterable<ImageDto> chatImages = imageService.findByImgChat(currentUser, chat);
+			model.addAttribute("images", chatImages);
+			model.addAttribute("user", userDto);
+			model.addAttribute("currentChat", chatDto);
+			return "album";
+		} else {
+			return "noAccessChat";
+		}
 	}
 	
 	@GetMapping("/chats/{chat}/{user}/makeOwner")
@@ -86,7 +115,6 @@ public class ChatController {
 							   Model model) {
 		model.addAttribute("chatName", chat.getChatName());
 		model.addAttribute("chatTitle", chat.getChatTitle());
-		model.addAttribute("chatPicName", chat.getChatPicName());
 		model.addAttribute("chat", chat);
 		return "chatSettings";
 	}

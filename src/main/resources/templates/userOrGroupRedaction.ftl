@@ -9,8 +9,13 @@
 				<h1 class="h3 mb-3 font-weight-normal">Your profile</h1>
 			</div>
 			<div class="form-group mt-3">
-				<@picture.pic user "bigPic" "userPic" />
-				<#include "/parts/forms/userRedactionForm.ftl">
+				<#if user??>
+					<@picture.pic user "bigPic" "userPic" />
+					<#include "/parts/forms/userRedactionForm.ftl">
+				<#elseif group??>
+					<@picture.pic group "bigPic" "groupPic" />
+					<#include "/parts/forms/groupRedactionForm.ftl">
+				</#if>
 			</div>
 		</div>
 	</div>

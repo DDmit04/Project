@@ -5,7 +5,7 @@
 		<div class="input-group mt-2">
 	  		<div class="custom-file">
 	    		<input type="file" name="file" class="custom-file-input" id="postFile" 
-	    			aria-describedby="inputGroupFileAddon03" value="${group.groupPicName?ifExists}" >
+	    			aria-describedby="inputGroupFileAddon03">
 	    		<label class="custom-file-label text-left" for="postFile">change pic</label>
 	  		</div>
 		</div>
@@ -18,6 +18,7 @@
 	</div>
 	<input type="hidden" name="_csrf" value="${_csrf.token}" />
 	<button class="btn btn-primary mt-2" type="submit">save changes</button>
+	<a class="btn btn-primary mt-2" href="/groups/${group.id}" role="button">back to group</a>
 </form>
 
 <script src="/customJs/checkFilename.js"></script>

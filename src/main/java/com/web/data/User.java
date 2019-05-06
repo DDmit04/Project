@@ -20,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -47,14 +48,17 @@ public class User implements UserDetails {
 	private boolean active;
 	private boolean deleted;
 	private LocalDateTime registrationDate;
-	private String userPicName;
 	private String userEmail;
 	private String emailConfirmCode;
 	private String emailChangeCode;
 	private String passwordRecoverCode;
 	private String userInformation;
 	private String userStatus;
-
+	
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "image_id")
+	private Image userImage;
 
 	@ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)
 	@CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
@@ -63,6 +67,9 @@ public class User implements UserDetails {
 
 	@OneToMany(mappedBy = "postAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Post> userPosts;
+	
+	@OneToMany(mappedBy = "imgUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private Set<Image> userImages;
 
 	@OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<Comment> userComments;

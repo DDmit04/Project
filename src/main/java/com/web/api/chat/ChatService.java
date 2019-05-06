@@ -23,5 +23,7 @@ public interface ChatService {
 	void updateChatSettings(User user, Chat chat, String newChatName, String chatTitle, MultipartFile file) throws IllegalStateException, IOException;
 	
 	Iterable<ChatDto> findUserChats(User user);
+	
+	ChatDto getOneChat(Chat chat);
 
 }

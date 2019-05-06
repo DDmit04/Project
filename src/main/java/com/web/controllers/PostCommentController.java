@@ -26,23 +26,23 @@ import com.web.service.GroupServiceImpl;
 import com.web.service.PostServiceImpl;
 
 @Controller
-public class CommentController {
+public class PostCommentController {
 	
 	private CommentService commentService;
 	private PostService postService;
 	private GroupService groupService;
 	
 	@Autowired
-	public CommentController(CommentServiceImpl commentService, PostServiceImpl postService, GroupServiceImpl groupService) {
+	public PostCommentController(CommentServiceImpl commentService, PostServiceImpl postService, GroupServiceImpl groupService) {
 		this.commentService = commentService;
 		this.postService = postService;
 		this.groupService = groupService;
 	}
 
 	@GetMapping("{post}/comments")
-	public String getComments(@AuthenticationPrincipal User currentUser,
-							  @PathVariable Post post,
-							  Model model) {
+	public String getPostComments(@AuthenticationPrincipal User currentUser,
+							  	  @PathVariable Post post,
+							  	  Model model) {
 		Iterable<CommentDto> searchByCommentedPost = commentService.getCommentsByCommentedPost(post);
 		PostDto commentedPost = postService.getOnePost(currentUser, post);
 		Iterable<GroupDto> adminedGroups = groupService.getAdminedGroups(currentUser);
@@ -53,20 +53,20 @@ public class CommentController {
 	}
 	
 	@PostMapping("{post}/comments")
-	public String addComment(@AuthenticationPrincipal User currentUser,
-							 @PathVariable Post post,
-							 @RequestParam("commentPic") MultipartFile commentPic,
-							 Comment comment,
-			  				 Model model) throws IllegalStateException, IOException {
+	public String addPostComment(@AuthenticationPrincipal User currentUser,
+							 	 @PathVariable Post post,
+							 	 @RequestParam("commentPic") MultipartFile commentPic,
+							 	 Comment comment,
+							 	 Model model) throws IllegalStateException, IOException {
 		commentService.createComment(currentUser, comment, post, commentPic);
 		return "redirect:/" + post.getId() + "/comments";
 	}
 	
 	@GetMapping("{post}/comments/{comment}/delete")
-	public String deleteComment(@AuthenticationPrincipal User currentUser,
-							    @PathVariable Post post,
-								@PathVariable Comment comment,
-								Model model) {
+	public String deletePostComment(@AuthenticationPrincipal User currentUser,
+							    	@PathVariable Post post,
+							    	@PathVariable Comment comment,
+							    	Model model) {
 		commentService.deleteComment(currentUser, post, comment);
 		return "redirect:/" + post.getId() + "/comments";
 	}

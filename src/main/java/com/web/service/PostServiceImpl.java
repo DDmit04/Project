@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.api.FileService;
+import com.web.api.ImageService;
 import com.web.api.post.PostService;
 import com.web.data.Group;
+import com.web.data.Image;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
@@ -24,6 +26,9 @@ public class PostServiceImpl implements PostService {
 	private FileService fileService;
 	private PostRepo postRepo;
 	private GroupRepo groupRepo;
+	
+	@Autowired
+	private ImageService imageService;
 	
 	@Autowired
 	public PostServiceImpl(FileServiceImpl fileService, PostRepo postRepo, GroupRepo groupRepo) {
@@ -51,8 +56,13 @@ public class PostServiceImpl implements PostService {
 	public Post createPost(User user, Post post, MultipartFile file) throws IllegalStateException, IOException {
 		post.setPostAuthor(user);
 		post.setPostCreationDate(LocalDateTime.now(Clock.systemUTC()));
-		post.setFilename(fileService.uploadFile(file,UploadType.POST));
+		String filename = fileService.uploadFile(user, file, UploadType.USER_PIC);
 		postRepo.save(post);
+		if(file != null && !file.isEmpty()) {
+			Image image = imageService.createImage(user, filename, file);
+			post.setPostImage(image);
+			postRepo.save(post);
+		}
 		return post;
 	}
 	
@@ -60,20 +70,32 @@ public class PostServiceImpl implements PostService {
 	public Post createPost(Group group, Post post, MultipartFile file) throws IllegalStateException, IOException {
 		post.setPostGroup(group);
 		post.setPostCreationDate(LocalDateTime.now(Clock.systemUTC()));
-		post.setFilename(fileService.uploadFile(file,UploadType.POST));
+		String filename = fileService.uploadFile(group, file, UploadType.GROUP_PIC);
 		postRepo.save(post);
+		if(!file.isEmpty()) {
+			Image image = imageService.createImage(group, filename, file);
+			post.setPostImage(image);
+			postRepo.save(post);
+		}
 		return post;
 	}
 	
 	@Override
-	public void updatePost(User currentUser, Post post, String text, String tags, MultipartFile file) throws IllegalStateException, IOException {
+	public Post updatePost(User currentUser, Post post, String text, String tags, MultipartFile file) throws IllegalStateException, IOException {
 		if(userIsAuthorOrAdmin(currentUser, post)) {
 			post.setPostText(text);
 			post.setTags(tags);
 			post.setPostCreationDate(LocalDateTime.now(Clock.systemUTC()));
-			post.setFilename(fileService.uploadFile(file, UploadType.POST));
+			String filename = null;
 			postRepo.save(post);
+			if(!file.isEmpty()) {
+				filename = fileService.uploadFile(currentUser, file, UploadType.USER_PIC);
+				Image image = imageService.createImage(currentUser, filename, file);
+				post.setPostImage(image);
+				postRepo.save(post);
+			}
 		}
+		return post;
 	}
 
 	@Override

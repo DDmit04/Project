@@ -20,13 +20,16 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.web.WebApplication;
 import com.web.data.Chat;
 import com.web.data.ChatSession;
 import com.web.data.User;
 import com.web.repository.ChatRepo;
+import com.web.repository.ImageRepo;
 import com.web.service.ChatServiceImpl;
+import com.web.service.ChatSessionServiceImpl;
 import com.web.service.FileServiceImpl;
 
 @RunWith(SpringRunner.class)
@@ -41,31 +44,40 @@ public class ChatServiceTest {
 	private ChatRepo chatRepo;
 	
 	@MockBean
+	private ImageRepo imageRepo;
+	
+	@MockBean
+	private ChatSessionServiceImpl chatSessionService;
+	
+	@MockBean
 	private FileServiceImpl fileService;
 	
 	@MockBean
 	private PasswordEncoder passwordEncoder; 
+	
+	@MockBean
+	private MultipartFile multipartFile; 
 
 	@Test
 	public void testCreateChatChatMultipartFileUser() throws IllegalStateException, IOException {
 		User user = new User("1", "1", null);
 		Chat chat = new Chat("name", null);
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
-		Chat testChat = chatService.createChat(chat, user, null);
+		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
+		doReturn(true).when(multipartFile).isEmpty();
+		Chat testChat = chatService.createChat(chat, user, file);
 		assertNotNull(testChat.getChatCreationDate());
 		assertNotNull(testChat.getLastMessageDate());
-		assertEquals(testChat.getChatPicName(), "testFilename");
 		assertEquals(testChat.getChatOwner(), user);
 		assertTrue(testChat.getChatMembers().contains(user));
 		assertTrue(testChat.getChatAdmins().contains(user));
-		Mockito.verify(chatRepo, Mockito.times(2)).save(Mockito.any());
+		Mockito.verify(chatRepo, Mockito.times(3)).save(Mockito.any());
 	}
 
 	@Test
 	public void testCreateChatUserUser() {
 		User firstUser = new User("1", "1", null);
 		User secUser = new User("2", "1", null);
-		doReturn(null).when(chatRepo).findByChatName(Mockito.any());
+		doReturn(null).when(chatRepo).findByChatName("1");
 		Chat testChat = chatService.createChat(firstUser ,secUser);
 		assertNotNull(testChat.getChatCreationDate());
 		assertNotNull(testChat.getLastMessageDate());
@@ -124,7 +136,7 @@ public class ChatServiceTest {
 		//!!!
 		doReturn(false).when(passwordEncoder).matches(Mockito.any(), Mockito.any());
 		chatService.changeChatOwner(secUser, firstUser, chat, "wrongUsername", "orWrongPassword");
-		assertEquals(chat.getChatOwner(), secUser);
+		assertNotEquals(chat.getChatOwner(), secUser);
 		Mockito.verify(chatRepo, Mockito.times(0)).save(Mockito.any());
 	}
 
@@ -136,9 +148,8 @@ public class ChatServiceTest {
 		chat.setChatOwner(user);
 		chat.getChatAdmins().add(user);
 		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
+		doReturn(true).when(multipartFile).isEmpty();
 		chatService.updateChatSettings(user, chat, "testName", "testTitle", file);
-		assertEquals(chat.getChatPicName(), "testFilename");
 		assertEquals(chat.getChatName(), "testName");
 		assertEquals(chat.getChatTitle(), "testTitle");
 		Mockito.verify(chatRepo, Mockito.times(1)).save(Mockito.any());
@@ -150,9 +161,7 @@ public class ChatServiceTest {
 		User user = new User("1", "1", null);
 		chat.setChatTitle("title");
 		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		chatService.updateChatSettings(user, chat, "testName", "testTitle", file);
-		assertNull(chat.getChatPicName());
 		assertNotEquals(chat.getChatName(), "testName");
 		assertNotEquals(chat.getChatTitle(), "testTitle");
 		Mockito.verify(chatRepo, Mockito.times(0)).save(Mockito.any());

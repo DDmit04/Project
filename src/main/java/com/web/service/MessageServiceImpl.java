@@ -15,8 +15,6 @@ import com.web.data.ChatSessionConnection;
 import com.web.data.Message;
 import com.web.data.MessageJson;
 import com.web.data.User;
-import com.web.data.dto.ChatDto;
-import com.web.data.dto.UserDto;
 import com.web.repository.ChatRepo;
 import com.web.repository.MessageRepo;
 import com.web.repository.UserRepo;
@@ -34,16 +32,6 @@ public class MessageServiceImpl implements MessageService {
 		this.messageRepo = messageRepo;
 		this.chatRepo = chatRepo;
 		this.userRepo = userRepo;
-	}
-
-	@Override
-	public UserDto getOneUserToChat(User currentUser, Chat chat) {
-		return userRepo.findOneUserToChat(currentUser.getId(), chat);
-	}
-
-	@Override
-	public ChatDto getOneChat(Chat chat) {
-		return chatRepo.findOneChat(chat.getId());
 	}
 
 	@Override

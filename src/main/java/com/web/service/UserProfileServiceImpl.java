@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.api.FileService;
+import com.web.api.ImageService;
 import com.web.api.user.UserProfileService;
 import com.web.data.Comment;
 import com.web.data.FriendRequest;
+import com.web.data.Image;
 import com.web.data.User;
 import com.web.data.dto.FriendRequestDto;
 import com.web.repository.CommentRepo;
@@ -25,9 +27,11 @@ public class UserProfileServiceImpl implements UserProfileService {
 	private UserRepo userRepo;
 	private CommentRepo commentRepo;
 	private FileService fileService;
+	private ImageService imageService;
 	
 	@Autowired
-	public UserProfileServiceImpl(FriendRequestRepo friendRequestRepo, UserRepo userRepo, CommentRepo commentRepo, FileServiceImpl fileService) {
+	public UserProfileServiceImpl(FriendRequestRepo friendRequestRepo, UserRepo userRepo, 
+								  CommentRepo commentRepo, FileServiceImpl fileService) {
 		this.friendRequestRepo = friendRequestRepo;
 		this.userRepo = userRepo;
 		this.commentRepo = commentRepo;
@@ -66,8 +70,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Override
 	public void deleteFriend(User user, User currentUser) {
-		currentUser.getUserFriends().remove(user);
-		userRepo.save(currentUser);	
+		user.getUserFriends().remove(currentUser);
+		userRepo.save(user);	
 	}
 	
 	@Override
@@ -104,22 +108,26 @@ public class UserProfileServiceImpl implements UserProfileService {
 	}
 	
 	@Override
-	public void updateUserProfile(User user, MultipartFile file, String userInformation, String userStatus) throws IllegalStateException, IOException {
-		if(userInformation != null) {
-			user.setUserInformation(userInformation);
-		}
-		if(userStatus != null) {
-			user.setUserStatus(userStatus);
-		}
-		if(file != null && !file.isEmpty()) {
+	public void updateUserProfile(User currentUser, User user, MultipartFile file, String userInformation, String userStatus) throws IllegalStateException, IOException {
+		if(user.equals(currentUser)) {
+			if(userInformation != null) {
+				user.setUserInformation(userInformation);
+			}
+			if(userStatus != null) {
+				user.setUserStatus(userStatus);
+			}
 			uploadUserPic(user, file);
+			userRepo.save(user);		
 		}
-		userRepo.save(user);		
 	}
 	
 	@Override
 	public void uploadUserPic(User user, MultipartFile userPic) throws IllegalStateException, IOException {
-		user.setUserPicName(fileService.uploadFile(userPic, UploadType.USER_PIC));
+		if(userPic != null && !userPic.isEmpty()) {
+			String filename = fileService.uploadFile(user, userPic,UploadType.USER_PIC);
+			Image image = imageService.createImage(user, filename, userPic);
+			user.setUserImage(image);
+		}	
 	}
 		
 	@Override

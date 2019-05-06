@@ -2,6 +2,7 @@ package com.web.data.dto;
 
 import java.time.LocalDateTime;
 
+import com.web.data.Image;
 import com.web.data.User;
 
 import lombok.Getter;
@@ -19,7 +20,6 @@ public class UserDto extends SearchResultsGeneric{
 	private Long blackListCount;
     private String username;
 	private LocalDateTime registrationDate;
-	private String userPicName;
 	private String userInformation;
 	private String userStatus;
 	private boolean isFriend;
@@ -31,6 +31,7 @@ public class UserDto extends SearchResultsGeneric{
 	private boolean isGroupAdmin;
 	private boolean isBannedInGroup;
 	private boolean isChatMember;
+	private Image userImage;
 
 //	user to user
 	public UserDto(User user, 
@@ -39,9 +40,9 @@ public class UserDto extends SearchResultsGeneric{
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.registrationDate = user.getRegistrationDate(); 
-		this.userPicName = user.getUserPicName();
 		this.userInformation = user.getUserInformation();
 		this.userStatus = user.getUserStatus();
+		this.userImage = user.getUserImage();
 		this.friendCount = frendCount;
 		this.isFriend = isFriend;
 		this.isRequested = isRequested;
@@ -57,7 +58,7 @@ public class UserDto extends SearchResultsGeneric{
 	public UserDto(User user, boolean isGroupSub, boolean isGroupAdmin, boolean isBannedInGroup) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.userPicName = user.getUserPicName();
+		this.userImage = user.getUserImage();
 		this.isGroupSub = isGroupSub;
 		this.isGroupAdmin = isGroupAdmin;
 		this.isBannedInGroup = isBannedInGroup;
@@ -69,7 +70,7 @@ public class UserDto extends SearchResultsGeneric{
 				   Long groupSubscriptionsCount, Long blackListCount) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.userPicName = user.getUserPicName();
+		this.userImage = user.getUserImage();
 		this.friendCount = frendCount;
 		this.subscriptionsCount = subscriptionsCount;
 		this.subscribersCount = subscribersCount;
@@ -83,7 +84,7 @@ public class UserDto extends SearchResultsGeneric{
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.registrationDate = user.getRegistrationDate();
-		this.userPicName = user.getUserPicName();
+		this.userImage = user.getUserImage();
 		this.userInformation = user.getUserInformation();
 		this.userStatus = user.getUserStatus();
 		this.friendCount = frendCount;
@@ -96,7 +97,7 @@ public class UserDto extends SearchResultsGeneric{
 	public UserDto(User user, Long frendCount, Long subscriptionsCount, Long subscribersCount, boolean isChatMember) {
 		this.id = user.getId();
 		this.username = user.getUsername();
-		this.userPicName = user.getUserPicName();
+		this.userImage = user.getUserImage();
 		this.isChatMember = isChatMember;
 		this.friendCount = frendCount;
 		this.subscriptionsCount = subscriptionsCount;

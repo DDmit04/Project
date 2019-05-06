@@ -11,7 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.api.FileService;
 import com.web.api.GroupService;
+import com.web.api.ImageService;
 import com.web.data.Group;
+import com.web.data.Image;
 import com.web.data.User;
 import com.web.data.dto.GroupDto;
 import com.web.exceptions.GroupException;
@@ -25,13 +27,16 @@ public class GroupServiceImpl implements GroupService {
 	private FileService fileService;
 	private CommentRepo commentRepo;
 	private PasswordEncoder passwordEncoder; 
+	private ImageService imageService;
 	
 	@Autowired	
-	public GroupServiceImpl(GroupRepo groupRepo, CommentRepo commentRepo, PasswordEncoder passwordEncoder, FileServiceImpl fileService) {
+	public GroupServiceImpl(GroupRepo groupRepo, CommentRepo commentRepo, 
+							PasswordEncoder passwordEncoder, FileServiceImpl fileService, ImageServiceImpl imageService) {
 		this.groupRepo = groupRepo;
 		this.fileService = fileService;
 		this.commentRepo = commentRepo;
 		this.passwordEncoder = passwordEncoder;
+		this.imageService = imageService;
 	}
 
 	private boolean userIsGroupOwner(User currentUser, Group group) {
@@ -51,12 +56,35 @@ public class GroupServiceImpl implements GroupService {
 			throw new GroupException("group with name " + groupFromDb.getGroupName() + " already exists!", groupFromDb);
 		}
 		group.setGroupCreationDate(LocalDateTime.now(Clock.systemUTC()));
-		group.setGroupPicName(fileService.uploadFile(file,UploadType.GROUP_PIC));
 		group.setGroupOwner(currentUser);
 		groupRepo.save(group);	
 		group.getGroupSubs().add(currentUser);
 		group.getGroupAdmins().add(currentUser);
-		groupRepo.save(group);	
+		groupRepo.save(group);
+		if(!file.isEmpty()) {
+			String filename = fileService.uploadFile(group, file,UploadType.GROUP_PIC);
+			Image image = imageService.createImage(group, filename, file);
+			group.setGroupImage(image);
+			groupRepo.save(group);
+		}
+		return group;
+	}
+	
+	@Override
+	public Group updateGroupInformation(Group group, MultipartFile file, String groupInformation, String groupTitle) throws IllegalStateException, IOException {
+		if(groupInformation != null) {
+			group.setGroupInformation(groupInformation);
+		}
+		if(groupTitle != null) {
+			group.setGroupTitle(groupTitle);
+		}
+		if(!file.isEmpty()) {
+			String filename = fileService.uploadFile(group, file,UploadType.GROUP_PIC);
+			Image image = imageService.createImage(group, filename, file);
+			group.setGroupImage(image);
+			groupRepo.save(group);
+		}
+		groupRepo.save(group);
 		return group;
 	}
 	
@@ -138,20 +166,6 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public Iterable<GroupDto> getAdminedGroups(User user) {
 		return groupRepo.findAdminedGroups(user);
-	}
-
-	@Override
-	public void updateGroupInformation(Group group, MultipartFile file, String groupInformation, String groupTitle) throws IllegalStateException, IOException {
-		if(groupInformation != null) {
-			group.setGroupInformation(groupInformation);
-		}
-		if(groupTitle != null) {
-			group.setGroupTitle(groupTitle);
-		}
-		if(file != null && !file.isEmpty()) {
-			group.setGroupPicName(fileService.uploadFile(file,UploadType.GROUP_PIC));
-		}
-		groupRepo.save(group);		
 	}
 
 }

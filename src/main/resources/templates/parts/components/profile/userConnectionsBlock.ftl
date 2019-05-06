@@ -12,3 +12,6 @@
 <a href="/${user.id}/profile/socialList/groups" role="button" class="btn btn-primary">
 	 groups: <span class="badge badge-light">${user.groupSubscriptionsCount}</span>
 </a>
+<a href="/${user.id}/profile/album" role="button" class="btn btn-primary mt-2">
+	album
+</a>

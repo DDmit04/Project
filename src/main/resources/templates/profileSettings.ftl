@@ -26,7 +26,7 @@
    			<button class="btn btn-link" data-toggle="collapse" data-target="#changePassword" aria-expanded="true" aria-controls="changePassword">
   				change password
  	 		</button>
-     	 		<!-- Collapse menue -->
+     	 	<!-- Collapse menue -->
   	 		<div id="changePassword" class="collapse <#if currentPasswordError != ''>show</#if> ml-2" aria-labelledby="headingOne" data-parent="#accordion">
     			<form method="post" action="/${currentUser.id}/profile/settings/changePassword" onsubmit="return validatePasswords();">
 					<div class="form-group mt-3">

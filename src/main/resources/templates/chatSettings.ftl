@@ -10,7 +10,7 @@
 			</div>
 			<div class="form-group mt-3">
 				<@picture.pic chat "bigPic" "chatPic" />
-				<#include "/parts/forms/chatSettingsForm.ftl">
+				<#include "/parts/forms/chatRedactionForm.ftl">
 			</div>
 		</div>
 	</div>

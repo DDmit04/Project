@@ -9,7 +9,7 @@ import com.web.data.dto.FriendRequestDto;
 
 public interface UserProfileService extends UserProfileFriendService, UserProfileSubscriptionService, UserProfileBanService {
 
-	void updateUserProfile(User user, MultipartFile file, String userInformation, String userTitle) throws IllegalStateException, IOException;
+	void updateUserProfile(User currentUser, User user, MultipartFile file, String userInformation, String userTitle) throws IllegalStateException, IOException;
 
 	void uploadUserPic(User user, MultipartFile userPic) throws IllegalStateException, IOException;
 

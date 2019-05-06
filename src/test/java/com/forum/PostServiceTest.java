@@ -24,6 +24,7 @@ import com.web.WebApplication;
 import com.web.data.Group;
 import com.web.data.Post;
 import com.web.data.User;
+import com.web.repository.ImageRepo;
 import com.web.repository.PostRepo;
 import com.web.service.FileServiceImpl;
 import com.web.service.PostServiceImpl;
@@ -39,6 +40,9 @@ public class PostServiceTest {
 	@MockBean
 	private PostRepo postRepo;
 	
+	@MockBean
+	private ImageRepo imageRepo;
+	
 	@Autowired
 	private PostServiceImpl postService;
 
@@ -47,12 +51,10 @@ public class PostServiceTest {
 		Post post = new Post("text", "tag", null);
 		User user = new User("1", "1", null);
 		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		Post testPost = postService.createPost(user, post, file);
 		assertTrue(testPost.getPostAuthor().equals(user));
-		assertTrue(testPost.getFilename().contentEquals("testFilename"));
 		assertNotNull(testPost.getPostCreationDate());
-		Mockito.verify(postRepo, Mockito.times(1)).save(post);
+		Mockito.verify(postRepo, Mockito.times(2)).save(post);
 	}
 
 	@Test
@@ -60,12 +62,10 @@ public class PostServiceTest {
 		Post post = new Post("text", "tag", null);
 		Group group = new Group("name", "info", "title", null);
 		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		Post testPost = postService.createPost(group, post, file);
 		assertTrue(testPost.getPostGroup().equals(group));
-		assertTrue(testPost.getFilename().contentEquals("testFilename"));
 		assertNotNull(testPost.getPostCreationDate());
-		Mockito.verify(postRepo, Mockito.times(1)).save(post);
+		Mockito.verify(postRepo, Mockito.times(2)).save(post);
 	}
 
 	@Test
@@ -74,13 +74,11 @@ public class PostServiceTest {
 		User user = new User("1", "1", null);
 		post.setPostAuthor(user);
 		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		postService.updatePost(user, post, "testText", "testTag", file);
 		assertEquals(post.getPostText(), "testText");
 		assertEquals(post.getTags(), "testTag");
-		assertEquals(post.getFilename(), "testFilename");
 		assertNotNull(post.getPostCreationDate());
-		Mockito.verify(postRepo, Mockito.times(1)).save(post);
+		Mockito.verify(postRepo, Mockito.times(2)).save(post);
 	}
 	
 	@Test
@@ -88,11 +86,9 @@ public class PostServiceTest {
 		Post post = new Post("text", "tag", null);
 		User user = new User("1", "1", null);
 		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		postService.updatePost(user, post, "testText", "testTag", file);
 		assertNotEquals(post.getPostText(), "testText");
 		assertNotEquals(post.getTags(), "testTag");
-		assertNotEquals(post.getFilename(), "testFilename");
 		assertNull(post.getPostCreationDate());
 		Mockito.verify(postRepo, Mockito.times(0)).save(post);
 	}
@@ -160,7 +156,6 @@ public class PostServiceTest {
 		Post testPost = postService.addRepost(user, post, "repText", "repTag");
 		assertEquals(testPost.getPostText(), "repText");
 		assertEquals(testPost.getTags(), "repTag");
-		assertNull(testPost.getFilename());
 		assertNotNull(testPost.getRepost());
 		assertTrue(post.getRepostsCount() == 2);
 		//1 for increment repost count, 1 to create post, 1 to create repost

@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -33,9 +34,12 @@ public class Group {
 	private Long id;
 	private String groupName;
 	private String groupInformation;
-	private String groupPicName;
 	private String groupTitle;
 	private LocalDateTime groupCreationDate;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "image_id")
+	private Image groupImage;
 	
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -63,7 +67,10 @@ public class Group {
 	private Set<User> groupAdmins = new HashSet<>();
 	
 	@OneToMany(mappedBy = "postGroup", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	private Set<Post> groupPosts;
+	private Set<Post> groupPosts = new HashSet<>();
+	
+	@OneToMany(mappedBy = "imgGroup", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private Set<Image> groupImages = new HashSet<>();
 
 	public Group(String groupName, String groupInformation, String groupTitle, LocalDateTime groupCreationDate) {
 		this.groupCreationDate = groupCreationDate;

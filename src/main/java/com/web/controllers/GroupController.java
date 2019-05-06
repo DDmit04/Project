@@ -13,16 +13,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.api.GroupService;
+import com.web.api.ImageService;
 import com.web.api.post.PostService;
 import com.web.api.user.UserService;
 import com.web.data.Group;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.GroupDto;
+import com.web.data.dto.ImageDto;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
 import com.web.exceptions.GroupException;
 import com.web.service.GroupServiceImpl;
+import com.web.service.ImageServiceImpl;
 import com.web.service.PostServiceImpl;
 import com.web.service.UserServiceImpl;
 
@@ -32,12 +35,15 @@ public class GroupController {
 	private PostService postService;
 	private GroupService groupService;
 	private UserService userService;
+	private ImageService imageService;
 	
 	@Autowired
-	public GroupController(UserServiceImpl userServiceImpl, GroupServiceImpl groupService, PostServiceImpl postService) {
+	public GroupController(UserServiceImpl userServiceImpl, GroupServiceImpl groupService, 
+						   PostServiceImpl postService, ImageServiceImpl imageService) {
 		this.userService = userServiceImpl;
 		this.groupService = groupService;
 		this.postService = postService;
+		this.imageService = imageService;
 	}
 	
 	@GetMapping("/groups")
@@ -78,8 +84,9 @@ public class GroupController {
 	}
 	
 	@GetMapping("{user}/groups/create")
-	public String createGroup() {
-		return "createGroup";
+	public String createGroup(Model model) {
+		model.addAttribute("creationTarget", "group");
+		return "createChatOrGroup";
 	}
 	
 	@PostMapping("{user}/groups/create")
@@ -103,7 +110,7 @@ public class GroupController {
 								Model model) {
 		if(group.getGroupOwner().equals(currentUser) || group.getGroupAdmins().contains(currentUser)) {
 			model.addAttribute("group", group);
-			return "groupRedaction";
+			return "userOrGroupRedaction";
 		} else {
 			return "redirect:/groups/" + group.getId();
 		}
@@ -119,6 +126,24 @@ public class GroupController {
 		groupService.updateGroupInformation(group, file, groupInformation, groupTitle);
 		model.addAttribute("group", group);
 		return "redirect:/groups/" + group.getId() + "/redact";
+	}
+	
+	@GetMapping("/groups/{group}/album")
+	public String getGroupAlbum(@AuthenticationPrincipal User currentUser,
+							    @PathVariable Group group,
+							    Model model) {
+		GroupDto oneGroup = groupService.getOneGroup(currentUser, group);
+		UserDto oneUser = userService.getOneUserToGroup(currentUser, group);
+		Iterable<GroupDto> adminedGroups = groupService.getAdminedGroups(currentUser);
+		Iterable<PostDto> groupPosts = postService.getGroupPosts(currentUser, group);
+		Iterable<ImageDto> groupImages = imageService.findByImgGroup(currentUser, group);
+		model.addAttribute("images", groupImages);
+		model.addAttribute("posts", groupPosts);
+		model.addAttribute("currentGroup", oneGroup);
+		model.addAttribute("groupSubs", group.getGroupSubs());
+		model.addAttribute("user", oneUser);
+		model.addAttribute("adminedGroups", adminedGroups);
+		return "album";
 	}
 	
 	@GetMapping("/groups/{group}/{user}/sub")
@@ -185,7 +210,6 @@ public class GroupController {
 							 	 @RequestParam String password,
 							 	 @PathVariable Group group,
 							 	 @PathVariable User user) {
-		
 		//password encoder
 		groupService.makeOwner(currentUser, user, group, username, password);
 		return "redirect:/groups/" + group.getId() + "/socialList/groupAdmins";

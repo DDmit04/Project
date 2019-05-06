@@ -16,15 +16,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.web.WebApplication;
 import com.web.data.FriendRequest;
+import com.web.data.Image;
 import com.web.data.User;
 import com.web.repository.CommentRepo;
 import com.web.repository.FriendRequestRepo;
 import com.web.repository.UserRepo;
 import com.web.service.FileServiceImpl;
+import com.web.service.ImageServiceImpl;
 import com.web.service.UserProfileServiceImpl;
 
 @RunWith(SpringRunner.class)
@@ -63,8 +64,8 @@ public class UserProfileServiceTest {
 		User user = new User("1", "1", null);
 		User userFriend = new User("2", "2", null);
 		user.getUserFriends().add(userFriend);
-		userProfileService.deleteFriend(userFriend, user);
-		Mockito.verify(userRepo, Mockito.times(1)).save(user);
+		userProfileService.deleteFriend(user, userFriend);
+		Mockito.verify(userRepo, Mockito.times(1)).save(Mockito.any());
 		assertFalse(user.getUserFriends().contains(userFriend));
 	}
 	
@@ -107,7 +108,7 @@ public class UserProfileServiceTest {
 		Mockito.verify(commentRepo, Mockito.times(1)).deleteAll(commentRepo.findBannedComments(user, bannedUser));
 		assertFalse(user.getSubscriptions().contains(bannedUser));
 		assertFalse(bannedUser.getSubscriptions().contains(user));
-		assertFalse(user.getUserFriends().contains(bannedUser));
+		assertFalse(bannedUser.getUserFriends().contains(user));
 		assertTrue(user.getBlackList().contains(bannedUser));
 	}
 
@@ -116,22 +117,18 @@ public class UserProfileServiceTest {
 		User user = new User("1", "1", null);
 		user.setUserInformation("inf");
 		user.setUserStatus("stat");
-		user.setUserPicName("filename");
-		userProfileService.updateUserProfile(user, Mockito.any(), "testInf", "testStat");
+		userProfileService.updateUserProfile(user, user, null, "testInf", "testStat");
 		Mockito.verify(userRepo, Mockito.times(1)).save(user);
 		assertEquals(user.getUserInformation(), "testInf");
 		assertEquals(user.getUserStatus(), "testStat");
 	}
 	
-	@Test
-	public void testUploadUserPic() throws IllegalStateException, IOException {
-		User user = new User("1", "1", null);
-		user.setUserPicName("filename");
-		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
-		userProfileService.uploadUserPic(user, (MultipartFile) file);
-		assertEquals(user.getUserPicName(), "testFilename");
-	}
+//	@Test
+//	public void testUploadUserPic() throws IllegalStateException, IOException {
+//		User user = new User("1", "1", null);
+//		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
+//		userProfileService.uploadUserPic(user, (MultipartFile) file);
+//	}
 
 	@Test
 	public void testRemoveFromBlackList() {

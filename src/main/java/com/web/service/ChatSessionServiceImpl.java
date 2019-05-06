@@ -12,6 +12,7 @@ import com.web.data.Chat;
 import com.web.data.ChatSession;
 import com.web.data.ChatSessionConnection;
 import com.web.data.User;
+import com.web.repository.ChatRepo;
 import com.web.repository.ChatSessionRepo;
 
 @Service
@@ -19,11 +20,13 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 	
 	private ChatSessionRepo chatSessionRepo;
 	private ChatSessionConnectionService сhatSessionConnectionService;
+	private ChatRepo chatRepo;
 	
 	@Autowired
-	public ChatSessionServiceImpl(ChatSessionRepo chatSessionRepo, ChatSessionConnectionServiceImpl сhatSessionConnectionService) {
+	public ChatSessionServiceImpl(ChatSessionRepo chatSessionRepo, ChatRepo chatRepo, ChatSessionConnectionServiceImpl сhatSessionConnectionService) {
 		this.chatSessionRepo = chatSessionRepo;
 		this.сhatSessionConnectionService = сhatSessionConnectionService;
+		this.chatRepo = chatRepo;
 	}
 
 	@Override
@@ -62,6 +65,15 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 	
 	@Override
 	public ChatSession updateLastConnectionDate(User user, Chat chat) {
+		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
+		session.setLastConnectionDate(LocalDateTime.now(Clock.systemUTC()));
+		chatSessionRepo.save(session);
+		return session;
+	}
+	
+	@Override
+	public ChatSession updateLastConnectionDate(User user, Long chatId) {
+		Chat chat = chatRepo.findChatById(chatId);
 		ChatSession session = chatSessionRepo.findSessionByChatAndUser(chat, user);
 		session.setLastConnectionDate(LocalDateTime.now(Clock.systemUTC()));
 		chatSessionRepo.save(session);

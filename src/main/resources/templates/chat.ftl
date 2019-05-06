@@ -33,6 +33,7 @@
 							<#else>
 								<a href="/chats/${chat.id}/${currentUser.id}/return" class="dropdown-item">return</a>
 							</#if>
+								<a href="/chats/${chat.id}/album" class="dropdown-item">chat album</a>
 						</div>
 					</#if>
 					<a href="/${chat.chatOwner.id}/profile" class="btn btn-primary">chat owner</a>
@@ -103,8 +104,13 @@
         </div>
     </div>
 </div>
+<#if user.userImage??>
+	<#assign userPicValue = user.userImage.imgFileName>
+<#else>
+	<#assign userPicValue = ''>
+</#if>
 <input type="hidden" id="isChatActive" value="<#if currentUserIsChatMember>1<#else>0</#if>"/>
-<input type="hidden" id="userPicName" value="${user.userPicName!''}"/>
+<input type="hidden" id="userPicName" value="${userPicValue}"/>
 
     <script>
     	var currentUsername = ${user.username};

@@ -5,7 +5,7 @@
 		<div class="input-group mt-2">
 	  		<div class="custom-file">
 	    		<input type="file" name="file" class="custom-file-input" id="postFile" 
-	    			aria-describedby="inputGroupFileAddon03" value="${chatPicName?ifExists}" >
+	    			aria-describedby="inputGroupFileAddon03">
 	    		<label class="custom-file-label text-left" for="postFile">change chat pic</label>
 	  		</div>
 		</div>
@@ -19,6 +19,7 @@
 	</div>
 	<input type="hidden" name="_csrf" value="${_csrf.token}" />
 	<button class="btn btn-primary mt-2" type="submit">save changes</button>
+	<a class="btn btn-primary mt-2" href="/chats/${chat.id}" role="button">back to chat</a>
 </form>
 
 <script src="/customJs/formValidate.js"></script>

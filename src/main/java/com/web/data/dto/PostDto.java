@@ -3,6 +3,7 @@ package com.web.data.dto;
 import java.time.LocalDateTime;
 
 import com.web.data.Group;
+import com.web.data.Image;
 import com.web.data.Post;
 import com.web.data.User;
 
@@ -18,11 +19,11 @@ public class PostDto extends SearchResultsGeneric{
 	private String postText;
 	private String tags;
 	private LocalDateTime postCreationDate;
-	private String filename;
 	private boolean liked;
 	private Post repost;
 	private User postAuthor;
 	private Group postGroup;
+	private Image postImage;
 	
 	public PostDto(Post post, Long likes, boolean liked) {
 		this.id = post.getId();
@@ -30,12 +31,12 @@ public class PostDto extends SearchResultsGeneric{
 		this.tags = post.getTags();
 		this.postAuthor = post.getPostAuthor();
 		this.postCreationDate = post.getPostCreationDate();
-		this.filename = post.getFilename();
-		this.liked = liked;
 		this.commentsCount = (long) post.getPostComments().size();
-		this.likes = likes;
 		this.repost = post.getRepost();
 		this.repostsCount = post.getRepostsCount();
 		this.postGroup = post.getPostGroup();
+		this.postImage = post.getPostImage();
+		this.likes = likes;
+		this.liked = liked;
 	}
 }

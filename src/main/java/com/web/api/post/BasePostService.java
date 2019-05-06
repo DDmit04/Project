@@ -16,7 +16,7 @@ public interface BasePostService {
 	
 	void deletePost(User user, Post post);
 	
-	void updatePost(User user, Post post, String text, String tags, MultipartFile file) throws IllegalStateException, IOException;
+	Post updatePost(User user, Post post, String text, String tags, MultipartFile file) throws IllegalStateException, IOException;
 	
 	void like(User currentUser, User user, Post post);
 

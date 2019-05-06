@@ -35,6 +35,9 @@
 				<a href="/${group.groupOwner.id}/profile" role="button" class="btn btn-primary">
  					Owner
 				</a>
+				<a href="/groups/${group.id}/album" role="button" class="btn btn-primary">
+ 					Album
+				</a>
 			</div>
 		</div>
 		<#if !user.bannedInGroup>

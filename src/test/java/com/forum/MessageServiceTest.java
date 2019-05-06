@@ -44,7 +44,7 @@ public class MessageServiceTest {
 	public void testCreateMessage() {
 		User user = new User("1", "1", null);
 		Chat chat = new Chat("1", null);
-		MessageJson Jmessage = new MessageJson((long) 1, "message", "sender", null, null);
+		MessageJson Jmessage = new MessageJson((long) 1, "message", "sender", null, null, null);
 		doReturn(user).when(userRepo).findByUsernameOrEmail(Mockito.any());
 		doReturn(chat).when(chatRepo).findChatById(Mockito.any());
 		Message message = messageService.createMessage((long) 1, Jmessage);

@@ -6,6 +6,7 @@ import org.springframework.mail.MailSendException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
+import com.web.data.Chat;
 import com.web.data.Group;
 import com.web.data.User;
 import com.web.data.dto.UserDto;
@@ -13,8 +14,7 @@ import com.web.exceptions.UserException;
 
 public interface UserService {
 	
-	void createUser(User user, MultipartFile userPic)
-			throws UserException, IllegalStateException, IOException, MailSendException, SMTPSendFailedException;
+	User createUser(User user, MultipartFile userPic) throws UserException, IllegalStateException, IOException, MailSendException, SMTPSendFailedException;
 	
 	void deleteUser(User user, String currentPassword) throws UserException;
 
@@ -27,5 +27,9 @@ public interface UserService {
 	UserDto getOneUserToGroup(User user, Group group);
 
 	UserDto getOneUserToStatistic(User user);
+
+	UserDto getOneUserToChat(User user, Chat chat);
+	
+	User findUserById(Long userId);
 
 }

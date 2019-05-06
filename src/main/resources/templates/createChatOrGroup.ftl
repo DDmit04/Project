@@ -6,7 +6,11 @@
 <div class="card shadow col-8">
 	<div class="card-body">
 		<div class="text-center card-text">
-			<#include "parts/forms/createGroupForm.ftl">
+			<#if creationTarget == "group">
+				<#include "/parts/forms/createGroupForm.ftl">
+			<#elseif creationTarget == "chat">
+				<#include "/parts/forms/createChatForm.ftl">
+			</#if>
 		</div>
 	</div>
 </div>

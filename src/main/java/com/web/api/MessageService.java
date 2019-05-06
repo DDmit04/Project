@@ -6,9 +6,6 @@ import com.web.data.Chat;
 import com.web.data.ChatSession;
 import com.web.data.Message;
 import com.web.data.MessageJson;
-import com.web.data.User;
-import com.web.data.dto.ChatDto;
-import com.web.data.dto.UserDto;
 
 public interface MessageService {
 	
@@ -19,9 +16,4 @@ public interface MessageService {
 
 	LinkedList<Message> getChatMessages(ChatSession session, Chat chat);
 	
-	UserDto getOneUserToChat(User user, Chat chat);
-
-	ChatDto getOneChat(Chat chat);
-
-
 }

@@ -14,7 +14,7 @@ public interface PostRepo extends CrudRepository<Post, Long> {
 	@Query("select new com.web.data.dto.PostDto(" +
             "   p, " +
 			"   (select count(*) from p.postLikes), " +
-            "   sum(case when pl = :currentUser then 1 else 0 end) > 0" +
+            "   sum(case when pl = :currentUser then 1 else 0 end) > 0 " +
             ") " +
             "from Post p left join p.postLikes pl " +
             "group by p")

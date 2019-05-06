@@ -14,6 +14,7 @@ public interface ChatSessionService {
 	
 	ChatSession disconnectChatSession(User user, Chat chat);
 	
+	ChatSession updateLastConnectionDate(User currentUser, Long chatId);
 	
 	
 	ChatSession updateLastConnectionDate(User user, Chat chat);
@@ -21,5 +22,5 @@ public interface ChatSessionService {
 	ChatSession getSession(User user, Chat chat);
 
 	Iterable<ChatSession> getUserChatSessions(User currentUser);
-	
+
 }

@@ -17,6 +17,7 @@ import com.sun.mail.smtp.SMTPSendFailedException;
 import com.web.api.user.UserProfileService;
 import com.web.api.user.UserService;
 import com.web.api.user.UserSettingsService;
+import com.web.data.Chat;
 import com.web.data.Group;
 import com.web.data.User;
 import com.web.data.UserRoles;
@@ -59,12 +60,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 	
 	@Override
-	public void createUser(User user, MultipartFile userPic) 
+	public User createUser(User user, MultipartFile userPic) 
 			throws UserException, IllegalStateException, IOException, MailSendException, SMTPSendFailedException {
 		User fullUser = createUser(user);
 		userProfileService.uploadUserPic(fullUser, userPic);
 		userSettingsService.realizeSendEmailConfirmCode(fullUser, fullUser.getUserEmail());
 		userRepo.save(fullUser);
+		return fullUser;
 	}
 	
 	@Override
@@ -105,6 +107,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	public UserDto getOneUserToStatistic(User currentUser) {
 		return userRepo.findOneUserToStatistic(currentUser.getId());
+	}
+	
+	@Override
+	public User findUserById(Long userId) {
+		return userRepo.findUserById(userId);
+	}
+	
+	@Override
+	public UserDto getOneUserToChat(User currentUser, Chat chat) {
+		return userRepo.findOneUserToChat(currentUser.getId(), chat);
 	}
 
 }

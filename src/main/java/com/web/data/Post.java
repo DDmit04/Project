@@ -32,7 +32,6 @@ public class Post {
 	private String postText;
 	private String tags;
 	private LocalDateTime PostCreationDate;
-	private String filename;
 	private Long repostsCount = (long) 0;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -42,7 +41,11 @@ public class Post {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
 	private Post repost;
-
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "image_id")
+	private Image postImage;
+	
 	@OneToMany(mappedBy = "commentedPost")
 	private Set<Comment> postComments;
 

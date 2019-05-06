@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -25,6 +26,7 @@ import com.web.data.User;
 import com.web.exceptions.GroupException;
 import com.web.repository.CommentRepo;
 import com.web.repository.GroupRepo;
+import com.web.repository.ImageRepo;
 import com.web.service.FileServiceImpl;
 import com.web.service.GroupServiceImpl;
 
@@ -40,6 +42,9 @@ public class GroupServiceTest {
 	private GroupRepo groupRepo;
 	
 	@MockBean
+	private ImageRepo imageRepo;
+	
+	@MockBean
 	private FileServiceImpl fileService;
 	
 	@MockBean
@@ -52,19 +57,18 @@ public class GroupServiceTest {
 	public void testCreateGroup() throws IllegalStateException, IOException, GroupException {
 		User user = new User("1", "1", null);
 		Group group = new Group("name", "inf", "title", null);
+		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
 		doReturn(null).when(groupRepo).findByGroupName(Mockito.any());
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
-		Group testGroup = groupService.createGroup(group, null, user);
+		Group testGroup = groupService.createGroup(group, file, user);
 		assertEquals(testGroup.getGroupName(), "name");
 		assertEquals(testGroup.getGroupInformation(), "inf");
 		assertEquals(testGroup.getGroupTitle(), "title");
 		assertEquals(testGroup.getGroupOwner(), user);
-		assertEquals(testGroup.getGroupPicName(), "testFilename");
 		assertTrue(testGroup.getGroupSubs().contains(user));
 		assertTrue(testGroup.getGroupAdmins().contains(user));
 		assertNotNull(testGroup.getGroupCreationDate());
 		Mockito.verify(groupRepo, Mockito.times(1)).findByGroupName(Mockito.any());
-		Mockito.verify(groupRepo, Mockito.times(2)).save(Mockito.any());
+		Mockito.verify(groupRepo, Mockito.times(3)).save(Mockito.any());
 	}
 	
 	@Test (expected = GroupException.class)
@@ -72,7 +76,6 @@ public class GroupServiceTest {
 		User user = new User("1", "1", null);
 		Group group = new Group("name", "inf", "title", null);
 		doReturn(group).when(groupRepo).findByGroupName(Mockito.any());
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		groupService.createGroup(group, null, user);
 		Mockito.verify(groupRepo, Mockito.times(1)).findByGroupName(Mockito.any());
 		Mockito.verify(groupRepo, Mockito.times(0)).save(Mockito.any());
@@ -81,7 +84,7 @@ public class GroupServiceTest {
 	@Test
 	public void testMakeOwner() {
 		User groupOwner = new User("1", "1", null);
-		User newGroupOwner = new User("1", "1", null);
+		User newGroupOwner = new User("2", "1", null);
 		Group group = new Group("name", "inf", "title", null);
 		group.setGroupOwner(groupOwner);
 		doReturn(true).when(passwordEncoder).matches(Mockito.any(), Mockito.any());
@@ -105,7 +108,7 @@ public class GroupServiceTest {
 	@Test
 	public void testBanUser() {
 		User groupAdmin = new User("1", "1", null);
-		User bannedUser = new User("1", "1", null);
+		User bannedUser = new User("2", "1", null);
 		Group group = new Group("name", "inf", "title", null);
 		group.getGroupAdmins().add(bannedUser);
 		group.getGroupAdmins().add(groupAdmin);

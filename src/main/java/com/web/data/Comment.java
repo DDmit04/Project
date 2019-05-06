@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,11 +26,18 @@ public class Comment {
 	private Long id;
 	private String commentText;
 	private LocalDateTime commentCreationDate;
-	private String commentPicName;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "post_id")
 	private Post commentedPost;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "img_id")
+	private Image commentedImage;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "image_id")
+	private Image commentImage;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")

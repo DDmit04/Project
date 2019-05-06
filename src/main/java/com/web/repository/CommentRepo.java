@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.web.data.Comment;
 import com.web.data.Group;
+import com.web.data.Image;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.CommentDto;
@@ -30,6 +31,14 @@ public interface CommentRepo extends CrudRepository<Comment, Long> {
      	    " where c.commentedPost.postAuthor = :user " +
      	    "  	 	and c.commentAuthor = :bannedUser " +
      	    " group by c")
-     Iterable<Comment> findBannedComments(@Param("user") User user, @Param("bannedUser") User bannedUser);
+    Iterable<Comment> findBannedComments(@Param("user") User user, @Param("bannedUser") User bannedUser);
+
+    @Query("select new com.web.data.dto.CommentDto(" +
+			"   c " +
+			" )" +
+			" from Comment c " +
+			" where c.commentedImage = :image " +
+			" group by c")
+	Iterable<CommentDto> getCommentsByCommentedImage(@Param("image") Image image);
     
 }

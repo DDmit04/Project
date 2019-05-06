@@ -36,7 +36,7 @@
 				</div>
 			</div>
 			<div class="card-body">
-				<#if user.userInformation??>
+				<#if user.userInformation?? && user.userInformation != "">
 					<h5>
 				        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" 
 				        		onclick="rotateIcon('userInformationIcon', 1);" aria-expanded="true" aria-controls="collapseOne">

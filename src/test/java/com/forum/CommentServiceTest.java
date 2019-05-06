@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.doReturn;
 
 import java.io.IOException;
 
@@ -14,6 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,6 +22,7 @@ import com.web.data.Comment;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.repository.CommentRepo;
+import com.web.repository.ImageRepo;
 import com.web.service.CommentServiceImpl;
 import com.web.service.FileServiceImpl;
 
@@ -37,20 +38,22 @@ public class CommentServiceTest {
 	private CommentRepo commentRepo;
 	
 	@MockBean
+	private ImageRepo imageRepo;
+	
+	@MockBean
 	private FileServiceImpl fileService;
 
 	@Test
 	public void testAddComment() throws IllegalStateException, IOException {
 		User user = new User("1", "1", null);
 		Post post = new Post("text", "tag", null);
+		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
 		Comment comment = new Comment("text", null);
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
-		commentService.createComment(user, comment, post, null);
+		commentService.createComment(user, comment, post, file);
 		assertNotNull(comment.getCommentCreationDate());
 		assertEquals(comment.getCommentedPost(), post);
-		assertEquals(comment.getCommentPicName(), "testFilename");
 		assertEquals(comment.getCommentAuthor(), user);
-		Mockito.verify(commentRepo, Mockito.times(1)).save(Mockito.any());
+		Mockito.verify(commentRepo, Mockito.times(2)).save(Mockito.any());
 	}
 
 	@Test
@@ -58,12 +61,11 @@ public class CommentServiceTest {
 		User user = new User("1", "1", null);
 		Comment comment = new Comment("text", null);
 		comment.setCommentAuthor(user);
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
-		commentService.editComment(user, comment, "testText", null);
+		MockMultipartFile file = new MockMultipartFile("file", "Hello, World!".getBytes());
+		commentService.editComment(user, comment, "testText", file);
 		assertEquals(comment.getCommentText(), "testText");
-		assertEquals(comment.getCommentPicName(), "testFilename");
 		assertNotNull(comment.getCommentCreationDate());
-		Mockito.verify(commentRepo, Mockito.times(1)).save(Mockito.any());
+		Mockito.verify(commentRepo, Mockito.times(2)).save(Mockito.any());
 	}
 	
 	@Test
@@ -72,10 +74,8 @@ public class CommentServiceTest {
 		User difUser = new User("2", "1", null);
 		Comment comment = new Comment("text", null);
 		comment.setCommentAuthor(difUser);
-		doReturn("testFilename").when(fileService).uploadFile(Mockito.any(), Mockito.any());
 		commentService.editComment(user, comment, "testText", null);
 		assertNotEquals(comment.getCommentText(), "testText");
-		assertNotEquals(comment.getCommentPicName(), "testFilename");
 		assertNull(comment.getCommentCreationDate());
 		Mockito.verify(commentRepo, Mockito.times(0)).save(Mockito.any());
 	}

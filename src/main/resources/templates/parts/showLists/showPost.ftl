@@ -72,40 +72,37 @@
 		</#if>
 		<div class="my-2 ml-1 card-text">${post.postText}</div>
 		<div class="shadow">
-			<#if post.filename??>
-	    	</#if>
-			<a data-toggle="modal" data-target="#exampleModal">
-	       		<img src="/img/${post.filename}" width="89" class="card-img-top">
-			</a>
+			<#if post.postImage??>
+				<a data-toggle="modal" data-target="#exampleModal">
+					<#if post.postAuthor??>
+						<#assign picPath = "/imgUserPic/${post.postAuthor.username}/${post.postImage.imgFileName}">
+					<#elseif post.postGroup??>
+						<#assign picPath = "/imgGroupPic/${post.postGroup.groupName}/${post.postImage.imgFileName}">
+					</#if>
+		       		<img src="${picPath}" width="89" class="card-img-top">
+				</a>
 			
-			<!-- Modal image -->
-			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			  <div class="modal-dialog" role="document">
-			    <div class="modal-content">
-			    	<div class="align-right mr-2 mt-1">
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				        	<span aria-hidden="true">&times;</span>
-				        </button>
-			        </div>
-			      <div class="modal-body">
-			        <img src="/img/${post.filename}" class="card-img-top">
-			      </div>
-			      <div class="card-footer bg-transparent">
-			        <a class="mr-3" href="/posts/${post.id}/${currentUser.id}/like">
-						<#if post.liked>
-							<i class="fas fa-heart"></i>
-						<#else>
-							<i class="far fa-heart"></i>
-						</#if>
-						${post.likes}
-					</a>
-					<a href="/${post.id}/comments">
-						<i class="far fa-comment mr-1"></i>${post.commentsCount}
-					</a>
-			      </div>
-			    </div>
-			  </div>
-			</div>
+				<!-- Modal image -->
+				<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				    	<div class="align-right mr-2 mt-1">
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					        	<span aria-hidden="true">&times;</span>
+					        </button>
+				        </div>
+				      <div class="modal-body">
+				        <img src="${picPath}" class="card-img-top">
+				      </div>
+				      <div class="card-footer bg-transparent">
+				        <a role="button" class="btn btn-primary mr-3" href="/images/${post.postImage.id}/comments">
+				        	go to image
+						</a>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</#if>
     	</div>
 <!--    starts recursion while post (or post in repost)  -->
     	<#if post.repost??>

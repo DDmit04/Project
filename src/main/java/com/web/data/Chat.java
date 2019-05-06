@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 
 import lombok.Getter;
@@ -32,9 +33,12 @@ public class Chat {
 	private Long id;
 	private String chatName;
 	private String chatTitle;
-	private String chatPicName;
 	private LocalDateTime chatCreationDate;
 	private LocalDateTime lastMessageDate;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "image_id")
+	private Image chatImage;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
@@ -42,6 +46,9 @@ public class Chat {
 	
 	@OneToMany(mappedBy = "connectedChat", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Set<ChatSession> sessions = new HashSet<>();
+	
+	@OneToMany(mappedBy = "imgChat", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private Set<Image> chatImages = new HashSet<>();
 	
 	@OrderBy("id")	
 	@OneToMany(mappedBy = "messageChat", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)

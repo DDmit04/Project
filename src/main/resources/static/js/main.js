@@ -34,9 +34,9 @@ function sendMessage(event) {
     var messageContent = messageInput.value.trim();
     var userPicName;
     if(userPic.value != "") {
-        userPicName = "/imgUserPic/" + userPic.value;
+        userPicName = "/imgUserPic/" + currentUsername + "/" + userPic.value;
     } else {
-        userPicName = "http://localhost:8080/static/images/title1.png"
+        userPicName = "http://localhost:8080/static/images/defaultUserPic.png"
     }
     if(messageContent && stompClient) {
         var chatMessage = {
@@ -101,12 +101,5 @@ function setAvatar(message) {
     return avatar; 
 }
 
-function onDisconnect() {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', chatId + '/disconnectChat', true);
-    xhr.send();
-}
-
-window.onbeforeunload = onDisconnect
 window.onload = connect
 messageForm.addEventListener('submit', sendMessage, true)
