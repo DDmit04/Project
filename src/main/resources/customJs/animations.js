@@ -10,3 +10,15 @@ function rotateIcon(elemName, id) {
 		}, 350);
 	}
 }
+
+function activateGroupSelect(id) {
+	var groupRepostSelect = document.getElementById('groupRepostSelect' + id);
+	groupRepostSelect.disabled = true;
+	var chbox = document.getElementById('groupRepostCheckbox' + id);
+	if (chbox.checked) {
+		groupRepostSelect.disabled = false;	
+	}
+	else {
+		groupRepostSelect.disabled = true;
+	}
+}

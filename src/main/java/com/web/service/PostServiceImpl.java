@@ -18,6 +18,7 @@ import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.PostDto;
 import com.web.repository.GroupRepo;
+import com.web.repository.ImageRepo;
 import com.web.repository.PostRepo;
 
 @Service
@@ -26,15 +27,15 @@ public class PostServiceImpl implements PostService {
 	private FileService fileService;
 	private PostRepo postRepo;
 	private GroupRepo groupRepo;
-	
-	@Autowired
 	private ImageService imageService;
 	
 	@Autowired
-	public PostServiceImpl(FileServiceImpl fileService, PostRepo postRepo, GroupRepo groupRepo) {
+	public PostServiceImpl(FileServiceImpl fileService, ImageServiceImpl imageService, 
+				PostRepo postRepo, GroupRepo groupRepo, ImageRepo imageRepo) {
 		this.fileService = fileService;
 		this.postRepo = postRepo;
 		this.groupRepo = groupRepo;
+		this.imageService = imageService;
 	}
 
 	private boolean userIsAuthorOrAdmin(User currentUser, Post post) {
@@ -56,9 +57,9 @@ public class PostServiceImpl implements PostService {
 	public Post createPost(User user, Post post, MultipartFile file) throws IllegalStateException, IOException {
 		post.setPostAuthor(user);
 		post.setPostCreationDate(LocalDateTime.now(Clock.systemUTC()));
-		String filename = fileService.uploadFile(user, file, UploadType.USER_PIC);
 		postRepo.save(post);
 		if(file != null && !file.isEmpty()) {
+			String filename = fileService.uploadFile(user, file, UploadType.USER_PIC);
 			Image image = imageService.createImage(user, filename, file);
 			post.setPostImage(image);
 			postRepo.save(post);
@@ -70,9 +71,9 @@ public class PostServiceImpl implements PostService {
 	public Post createPost(Group group, Post post, MultipartFile file) throws IllegalStateException, IOException {
 		post.setPostGroup(group);
 		post.setPostCreationDate(LocalDateTime.now(Clock.systemUTC()));
-		String filename = fileService.uploadFile(group, file, UploadType.GROUP_PIC);
 		postRepo.save(post);
-		if(!file.isEmpty()) {
+		if(file != null && !file.isEmpty()) {
+			String filename = fileService.uploadFile(group, file, UploadType.GROUP_PIC);
 			Image image = imageService.createImage(group, filename, file);
 			post.setPostImage(image);
 			postRepo.save(post);
@@ -86,10 +87,9 @@ public class PostServiceImpl implements PostService {
 			post.setPostText(text);
 			post.setTags(tags);
 			post.setPostCreationDate(LocalDateTime.now(Clock.systemUTC()));
-			String filename = null;
 			postRepo.save(post);
 			if(!file.isEmpty()) {
-				filename = fileService.uploadFile(currentUser, file, UploadType.USER_PIC);
+				String filename = fileService.uploadFile(currentUser, file, UploadType.USER_PIC);
 				Image image = imageService.createImage(currentUser, filename, file);
 				post.setPostImage(image);
 				postRepo.save(post);
@@ -113,6 +113,14 @@ public class PostServiceImpl implements PostService {
 		if(userIsAuthorOrAdmin(currentUser, post)) {
 			decrementAndSaveRepostsCount(post.getRepost());
 			post.setRepost(null);
+			postRepo.save(post);
+		}
+	}
+	
+	@Override
+	public void removeImage(User currentUser, Post post) {
+		if(userIsAuthorOrAdmin(currentUser, post)) {
+			post.setPostImage(null);
 			postRepo.save(post);
 		}
 	}

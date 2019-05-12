@@ -5,31 +5,7 @@
 <#include "parts/security.ftl">
 
 <div class="col-8">
-	<div class="card border-secondary shadow">
-		<div class="card-body">
-			<#if image.imgUser??>
-				<#assign picPath = "/imgUserPic/${image.imgUser.username}/${image.imgFileName}">
-			<#elseif image.imgGroup??>
-				<#assign picPath = "/imgGroupPic/${image.imgGroup.groupName}/${image.imgFileName}">
-			<#elseif image.imgChat??>
-				<#assign picPath = "/imgChatPic/${image.imgChat.chatName}/${image.imgFileName}">
-			</#if>
-       		<img src="${picPath}" width="89" class="card-img-top">
-		</div>
-	    <div class="card-footer border-secondary">
-	        <a class="mr-3" href="/images/${image.id}/${currentUser.id}/like">
-				<#if image.liked>
-					<i class="fas fa-heart"></i>
-				<#else>
-					<i class="far fa-heart"></i>
-				</#if>
-				${image.likes}
-			</a>
-			<a href="/images/${image.id}/comments">
-				<i class="far fa-comment mr-1"></i>${image.commentsCount}
-			</a>
-	      </div>
-	</div>
+	<#include "/parts/showLists/showImageFull.ftl">
 	<#list comments as comment>
 		<#include "parts/showLists/showComment.ftl">
 	<#else>
@@ -43,5 +19,8 @@
 		</#if>
 	</div>
 </div>
+
+<script src="/customJs/animations.js"></script>
+
 
 </@shell.htmlPage>

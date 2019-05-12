@@ -43,6 +43,10 @@ public class Post {
 	private Post repost;
 	
 	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "repost_image_id")
+	private Image repostImage;
+	
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "image_id")
 	private Image postImage;
 	

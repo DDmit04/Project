@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import com.web.data.Chat;
 import com.web.data.Group;
 import com.web.data.Image;
+import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.ImageDto;
 
@@ -51,5 +52,15 @@ public interface ImageRepo extends CrudRepository<Image, Long> {
 		   " where i.id = :imageId " +
 		   " group by i")
 	ImageDto getOneImage(@Param("currentUser") User currentUser, @Param("imageId") Long imageId);
+	
+	@Query("select count(*) " +
+		   "	from Post p " +
+		   "	where p.repostImage = :image and p.postAuthor = :currentUser")
+	Long findCountByRepostImageAndAuthor(@Param("currentUser") User currentUser, @Param("image") Image image);
+		
+	@Query("select count(*) " +
+		   "	from Post p " +
+		   "	where p.repostImage = :image and p.postGroup = :group")
+	Long findCountByRepostImageAndGroup(@Param("group") Group group, @Param("image") Image image);
 
 }

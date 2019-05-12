@@ -15,6 +15,7 @@ public class ImageDto {
 	private Long id;
 	private Long likes;
 	private Long commentsCount;
+	private Long imageRepostCount;
 	private LocalDateTime imgUploadDate;
 	private String imgFileName;
 	private boolean liked;
@@ -30,6 +31,7 @@ public class ImageDto {
 		this.imgGroup = image.getImgGroup();
 		this.imgChat = image.getImgChat();
 		this.commentsCount = (long) image.getImgComments().size();
+		this.imageRepostCount = image.getImageRepostCount();
 		this.liked = liked;
 		this.likes = likes;
 	}

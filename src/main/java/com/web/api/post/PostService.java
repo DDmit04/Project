@@ -15,6 +15,7 @@ public interface PostService extends BasePostService {
 	
 	Post addGroupRepost(Long groupId, Post repostedPost, String repostText, String repostTags) throws IllegalStateException, IOException;
 	
+	void removeImage(User currentUser, Post post);
 	
 	
 	PostDto getOnePost(User currentUser, Post post);

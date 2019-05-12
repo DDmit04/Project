@@ -9,16 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.web.api.CommentService;
 import com.web.api.GroupService;
-import com.web.api.ImageService;
 import com.web.data.Comment;
 import com.web.data.Image;
 import com.web.data.User;
@@ -35,20 +30,16 @@ public class ImageCommentController {
 	
 	private CommentService commentService;
 	private GroupService groupService;
-	
-	@Autowired
 	private CommentRepo commentRepo;
-	
-	@Autowired
 	private ImageRepo imageRepo;
 	
 	@Autowired
-	private ImageService imageService;
-	
-	@Autowired
-	public ImageCommentController(CommentServiceImpl commentService, GroupServiceImpl groupService) {
+	public ImageCommentController(CommentServiceImpl commentService, GroupServiceImpl groupService,
+			CommentRepo commentrRepo, ImageRepo imageRepo) {
 		this.commentService = commentService;
 		this.groupService = groupService;
+		this.imageRepo = imageRepo;
+		this.commentRepo = commentrRepo;
 	}
 	
 	@GetMapping("images/{image}/comments")
@@ -109,18 +100,4 @@ public class ImageCommentController {
 		return "redirect:/images/" + image.getId() + "/comments";
 	}
 	
-	@GetMapping("images/{image}/{user}/like")
-	public String likeImage(@AuthenticationPrincipal User currentUser,
-						    @PathVariable User user,
-						    @PathVariable Image image,
-						    @RequestHeader(required = false) String referer,
-						    RedirectAttributes redirectAttributes) {
-		imageService.likeImage(currentUser, user, image);
-		UriComponents components = UriComponentsBuilder.fromHttpUrl(referer).build();
-		components.getQueryParams()
-			.entrySet()
-			.forEach(pair -> redirectAttributes.addAttribute(pair.getKey(), pair.getValue()));
-		return "redirect:" + components.getPath();	
-	}
-
 }

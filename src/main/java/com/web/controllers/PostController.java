@@ -121,9 +121,15 @@ public class PostController {
 	
 	@GetMapping("{post}/removeRepost")
 	public String removeRepost(@AuthenticationPrincipal User currentUser,
-							   @PathVariable Post post,
-			 				   @RequestHeader(required = false) String referer) {
+							   @PathVariable Post post) {
 		postService.removeRepost(currentUser, post);
+		return "redirect:/" + post.getId() + "/edit" ;		
+	}
+	
+	@GetMapping("{post}/removeImage")
+	public String removeImage(@AuthenticationPrincipal User currentUser,
+							  @PathVariable Post post) {
+		postService.removeImage(currentUser, post);
 		return "redirect:/" + post.getId() + "/edit" ;		
 	}
 	

@@ -17,8 +17,8 @@
 			<#list userGroups as group>
 				<#assign i += 1>
 				<a href="/groups/${group.id}">
-					<#if group.groupPicName??>
-						<img class="mx-1 mt-4 rounded-circle border border-secondary" src="/imgGroupPic/${group.groupName}/${group.groupPicName}" width="50" height="50" alt="...">
+					<#if group.groupImage??>
+						<img class="mx-1 mt-4 rounded-circle border border-secondary" src="/imgGroupPic/${group.groupName}/${group.groupImage.imgFileName}" width="50" height="50" alt="...">
 					<#else>
 					  	<img class="mx-1 mt-4 rounded-circle border border-secondary" src="http://localhost:8080/static/images/defaultGroupPic.png" width="50" height="50" alt="...">
 					 </#if>	

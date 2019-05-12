@@ -13,18 +13,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.api.GroupService;
-import com.web.api.ImageService;
 import com.web.api.post.PostService;
 import com.web.api.user.UserProfileService;
 import com.web.api.user.UserService;
 import com.web.data.Post;
 import com.web.data.User;
 import com.web.data.dto.GroupDto;
-import com.web.data.dto.ImageDto;
 import com.web.data.dto.PostDto;
 import com.web.data.dto.UserDto;
 import com.web.service.GroupServiceImpl;
-import com.web.service.ImageServiceImpl;
 import com.web.service.PostServiceImpl;
 import com.web.service.UserProfileServiceImpl;
 import com.web.service.UserServiceImpl;
@@ -37,16 +34,14 @@ public class UserProfileController {
 	private GroupService groupService;
 	private UserService userService;
 	private UserProfileService userProfileService;
-	private ImageService imageService;
 	
 	@Autowired
 	public UserProfileController(UserServiceImpl userServiceImpl, UserProfileServiceImpl userProfileServiceImpl, 
-								 GroupServiceImpl groupService, PostServiceImpl postService, ImageServiceImpl imageService) {
+								 GroupServiceImpl groupService, PostServiceImpl postService) {
 		this.userService = userServiceImpl;
 		this.userProfileService = userProfileServiceImpl;
 		this.groupService = groupService;
 		this.postService = postService;
-		this.imageService = imageService;
 	}
 	
 	@GetMapping("{user}/profile")
@@ -102,17 +97,6 @@ public class UserProfileController {
 		return "redirect:/" + user.getId() + "/profile/redact";
 	}
 	
-	@GetMapping("{user}/profile/album")
-	public String getUserAlbum(@AuthenticationPrincipal User currentUser,
-							   @PathVariable User user,
-							   Model model) {
-		UserDto userProfile = userService.getOneUserToUser(user, currentUser);
-		Iterable<ImageDto> userImages = imageService.findByImgOwner(currentUser, user);
-		model.addAttribute("images", userImages);
-		model.addAttribute("viewedUser", userProfile);
-		return "album";
-	}
-
 	@GetMapping("{user}/subscribe")
 	public String subscribe(@AuthenticationPrincipal User currentUser,
 							@PathVariable User user) {

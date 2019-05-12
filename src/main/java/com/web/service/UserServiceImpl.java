@@ -63,7 +63,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	public User createUser(User user, MultipartFile userPic) 
 			throws UserException, IllegalStateException, IOException, MailSendException, SMTPSendFailedException {
 		User fullUser = createUser(user);
-		userProfileService.uploadUserPic(fullUser, userPic);
+		if(userPic != null && !userPic.isEmpty()) {
+			userProfileService.uploadUserPic(fullUser, userPic);
+		}
 		userSettingsService.realizeSendEmailConfirmCode(fullUser, fullUser.getUserEmail());
 		userRepo.save(fullUser);
 		return fullUser;

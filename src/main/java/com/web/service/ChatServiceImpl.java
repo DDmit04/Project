@@ -52,12 +52,16 @@ public class ChatServiceImpl implements ChatService {
 		chat.getChatAdmins().add(currentUser);
 		chatRepo.save(chat);
 		if(!file.isEmpty()) {
-			String filename = fileService.uploadFile(chat, file, UploadType.CHAT_PIC);
-			Image image = imageService.createImage(chat, filename, file);
-			chat.setChatImage(image);
-			chatRepo.save(chat);
+			chat.setChatImage(uploadChatPic(chat, file));
 		}
 		return chat;
+	}
+	
+	@Override
+	public Image uploadChatPic(Chat chat, MultipartFile file) throws IllegalStateException, IOException {
+		String filename = fileService.uploadFile(chat, file, UploadType.CHAT_PIC);
+		Image image = imageService.createImage(chat, filename, file);
+		return image;
 	}
 
 	@Override
@@ -102,14 +106,13 @@ public class ChatServiceImpl implements ChatService {
 			throws IllegalStateException, IOException {
 		if(currentUser.equals(chat.getChatOwner()) || chat.getChatAdmins().contains(currentUser)) {
 			chat.setChatTitle(chatTitle);
-			updateChatPicsFolder(chat, newChatName);
+			if(newChatName != chat.getChatName() && newChatName != null) {
+				updateChatPicsFolder(chat, newChatName);
+			}
 			chat.setChatName(newChatName);
 			chatRepo.save(chat);
 			if(!file.isEmpty()) {
-				String filename = fileService.uploadFile(chat, file, UploadType.CHAT_PIC);
-				Image image = imageService.createImage(chat, filename, file);
-				chat.setChatImage(image);
-				chatRepo.save(chat);
+				chat.setChatImage(uploadChatPic(chat, file));
 			}
 		}
 	}

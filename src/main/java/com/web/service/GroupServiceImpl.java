@@ -62,10 +62,7 @@ public class GroupServiceImpl implements GroupService {
 		group.getGroupAdmins().add(currentUser);
 		groupRepo.save(group);
 		if(!file.isEmpty()) {
-			String filename = fileService.uploadFile(group, file,UploadType.GROUP_PIC);
-			Image image = imageService.createImage(group, filename, file);
-			group.setGroupImage(image);
-			groupRepo.save(group);
+			group.setGroupImage(uploadGroupPic(group, file));
 		}
 		return group;
 	}
@@ -79,13 +76,17 @@ public class GroupServiceImpl implements GroupService {
 			group.setGroupTitle(groupTitle);
 		}
 		if(!file.isEmpty()) {
-			String filename = fileService.uploadFile(group, file,UploadType.GROUP_PIC);
-			Image image = imageService.createImage(group, filename, file);
-			group.setGroupImage(image);
-			groupRepo.save(group);
+			group.setGroupImage(uploadGroupPic(group, file));
 		}
 		groupRepo.save(group);
 		return group;
+	}
+	
+	@Override
+	public Image uploadGroupPic(Group group, MultipartFile file) throws IllegalStateException, IOException {
+		String filename = fileService.uploadFile(group, file,UploadType.GROUP_PIC);
+		Image image = imageService.createImage(group, filename, file);
+		return image;
 	}
 	
 	@Override

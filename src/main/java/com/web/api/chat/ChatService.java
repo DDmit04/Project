@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.Chat;
+import com.web.data.Image;
 import com.web.data.User;
 import com.web.data.dto.ChatDto;
 
@@ -16,6 +17,7 @@ public interface ChatService {
 	
 	void deleteChat(Chat chat);
 	
+	Image uploadChatPic(Chat chat, MultipartFile file) throws IllegalStateException, IOException;
 	
 	
 	void changeChatOwner(User user, User currentUser, Chat chat, String username, String password);
@@ -25,5 +27,6 @@ public interface ChatService {
 	Iterable<ChatDto> findUserChats(User user);
 	
 	ChatDto getOneChat(Chat chat);
+
 
 }

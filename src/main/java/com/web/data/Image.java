@@ -31,6 +31,7 @@ public class Image {
 	private Long id;
 	private LocalDateTime imageUploadDate;
 	private String imgFileName;
+	private Long imageRepostCount = (long) 0;
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "post_id")

@@ -24,6 +24,7 @@ public class PostDto extends SearchResultsGeneric{
 	private User postAuthor;
 	private Group postGroup;
 	private Image postImage;
+	private Image repostImage;
 	
 	public PostDto(Post post, Long likes, boolean liked) {
 		this.id = post.getId();
@@ -36,6 +37,7 @@ public class PostDto extends SearchResultsGeneric{
 		this.repostsCount = post.getRepostsCount();
 		this.postGroup = post.getPostGroup();
 		this.postImage = post.getPostImage();
+		this.repostImage = post.getRepostImage();
 		this.likes = likes;
 		this.liked = liked;
 	}

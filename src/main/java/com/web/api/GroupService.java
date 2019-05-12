@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.data.Group;
+import com.web.data.Image;
 import com.web.data.User;
 import com.web.data.dto.GroupDto;
 import com.web.exceptions.GroupException;
@@ -29,6 +30,7 @@ public interface GroupService {
 	
 	Group updateGroupInformation(Group group, MultipartFile file, String groupInformation, String groupTitle) throws IllegalStateException, IOException;
 	
+	Image uploadGroupPic(Group group, MultipartFile file) throws IllegalStateException, IOException;
 	
 
 	Iterable<GroupDto> getAdminedGroups(User user);

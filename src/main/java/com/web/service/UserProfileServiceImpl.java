@@ -31,11 +31,12 @@ public class UserProfileServiceImpl implements UserProfileService {
 	
 	@Autowired
 	public UserProfileServiceImpl(FriendRequestRepo friendRequestRepo, UserRepo userRepo, 
-								  CommentRepo commentRepo, FileServiceImpl fileService) {
+								  CommentRepo commentRepo, FileServiceImpl fileService, ImageServiceImpl imageService) {
 		this.friendRequestRepo = friendRequestRepo;
 		this.userRepo = userRepo;
 		this.commentRepo = commentRepo;
 		this.fileService = fileService;
+		this.imageService = imageService;
 	}
 
 	@Override
@@ -116,18 +117,18 @@ public class UserProfileServiceImpl implements UserProfileService {
 			if(userStatus != null) {
 				user.setUserStatus(userStatus);
 			}
-			uploadUserPic(user, file);
+			if(file != null && !file.isEmpty()) {
+				user.setUserImage(uploadUserPic(user, file));
+			}
 			userRepo.save(user);		
 		}
 	}
 	
 	@Override
-	public void uploadUserPic(User user, MultipartFile userPic) throws IllegalStateException, IOException {
-		if(userPic != null && !userPic.isEmpty()) {
-			String filename = fileService.uploadFile(user, userPic,UploadType.USER_PIC);
-			Image image = imageService.createImage(user, filename, userPic);
-			user.setUserImage(image);
-		}	
+	public Image uploadUserPic(User user, MultipartFile userPic) throws IllegalStateException, IOException {
+		String filename = fileService.uploadFile(user, userPic, UploadType.USER_PIC);
+		Image image = imageService.createImage(user, filename, userPic);
+		return image;
 	}
 		
 	@Override

@@ -17,11 +17,16 @@ public interface ImageService {
 	Image createImage(Chat chat, String imgFilename, MultipartFile file);
 
 	void likeImage(User currentUser, User user, Image image);
+	
+	void deleteImage(User user, Image image);
+	
+	
 
 	Iterable<ImageDto> findByImgGroup(User currentUser, Group group);
 
 	Iterable<ImageDto> findByImgOwner(User currentUser, User user);
 
 	Iterable<ImageDto> findByImgChat(User currentUser, Chat chat);
+
 
 }
