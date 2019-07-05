@@ -1,4 +1,4 @@
-# spring boot project by me copies part of social network funcinality:
+# spring boot learning project by me copies part of social network funcinality:
 
 ## user profile  
 1. user subscription  
@@ -12,7 +12,7 @@
 9. user account deletion (still save on database) 
 
 ## images
-1. upload images  
+1. image upload
 2. image likes  
 3. image comments  
 4. image reposts  
@@ -37,7 +37,7 @@
 1. user, group, posts(tag) search  
 2. friends, subsccriptions posts sorting  
 
-# Missing functionalyty:   
+## Missing functionalyty:   
 
 1. user can't close profile from posts non blocked users  
 2. user can't create separate images album  
