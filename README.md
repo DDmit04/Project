@@ -1,47 +1,49 @@
-spring boot project by mecopies part of social network funcinality:
+# spring boot project by me copies part of social network funcinality:
 
-. upload images
-. image likes
-. image comments
-. image reposts
+## user profile  
+1. user subscription  
+2. user subscribers  
+3. user private messages (chat 1 to 1)  
+4. user email confirmation  
+6. user friendlist (and frend request list)  
+6. user block option  
+7. user images album  
+8. user password recover with confimed email  
+9. user account deletion (still save on database) 
 
-. user profile
-. user subscription
-. user subscribers
-. user private messages (chat 1 to 1)
-. user email confirmation
-. user friendlist (and frend request list)
-. user block option
-. user images album
-. user password recover with confimed email
-. user account deletion (still save on database)
+## images
+1. upload images  
+2. image likes  
+3. image comments  
+4. image reposts  
 
-. groups
-. griup subscribers
-. group admins (and owner)
-. group images album
+## groups  
+1. griup subscribers  
+2. group admins (and owner)  
+3. group images album  
 
-. chat (websocket)
-. chat admins (and owner)
-. chat invate users
+## chat (websocket)  
+1. chat admins (and owner)  
+2. chat invate users  
 
-. posts
-. post tag (no more then one for each)
-. post remove
-. posts likes
-. post comments (and comment remove)
-. post reposts
+## posts  
+1. post tag (no more then one for each)  
+2. post remove  
+3. posts likes  
+4. post comments (and comment remove)  
+5. post reposts  
 
-. user, group, posts(tag) search
-. friends, subsccriptions posts sorting
+## other
+1. user, group, posts(tag) search  
+2. friends, subsccriptions posts sorting  
 
-Missing functionalyty: 
+# Missing functionalyty:   
 
-. user can't close profile from posts non blocked users
-. user can't create separate images album
-. no infirmation about user activity (online / offline)
-. only admins and owner can post to a group
-. chat does not support image in messages
-. chat message notifications not reactive 
-. no pagination (posts, comments, friendlist, groups...)
-. can't watch any app content without registration
+1. user can't close profile from posts non blocked users  
+2. user can't create separate images album  
+3. no infirmation about user activity (online / offline)  
+4. only admins and owner can post to a group  
+5. chat does not support image in messages  
+6. chat message notifications not reactive  
+7. no pagination (posts, comments, friendlist, groups...)  
+8. can't watch any app content without registration  
